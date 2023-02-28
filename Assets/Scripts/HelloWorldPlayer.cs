@@ -3,8 +3,26 @@ using UnityEngine;
 
 namespace HelloWorld
 {
+    struct InputHolder : INetworkSerializable
+    {
+        public float vertical;
+        public float horizontal;
+        public bool action;
+
+        public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
+        {
+            serializer.SerializeValue(ref vertical);
+            serializer.SerializeValue(ref horizontal);
+            serializer.SerializeValue(ref action);
+        }
+    }
+
+
     public class HelloWorldPlayer : NetworkBehaviour
     {
+        [SerializeField]
+        private float playerSpeed = 5;
+
         public NetworkVariable<Vector3> Position = new NetworkVariable<Vector3>();
 
         public override void OnNetworkSpawn()
@@ -38,28 +56,31 @@ namespace HelloWorld
         }
 
         [ServerRpc]
-        void KeyChangeServerRpc(string i_key, ServerRpcParams rpcParams = default)
+        void KeyChangeServerRpc(InputHolder inputs, ServerRpcParams rpcParams = default)
         {
-           
-            switch(i_key)
-            {
-                case "U":
-                    Position.Value = new Vector3(0,2,0);
-                    break;
+            /*
+             switch(i_key)
+             {
+                 case "U":
+                     Position.Value = new Vector3(0,2,0);
+                     break;
 
-                case "D":
-                    Position.Value = new Vector3(0,-2,0);
-                    break;
+                 case "D":
+                     Position.Value = new Vector3(0,-2,0);
+                     break;
 
-                case "L":
-                    Position.Value = new Vector3(-2,0,0);
-                    break;
- 
-                case "R":
-                    Position.Value = new Vector3(2,0,0);
-                    break;
-            }
-            
+                 case "L":
+                     Position.Value = new Vector3(-2,0,0);
+                     break;
+
+                 case "R":
+                     Position.Value = new Vector3(2,0,0);
+                     break;
+             }
+             */
+            Vector3 velocity = Vector3.right * inputs.horizontal + Vector3.up * inputs.vertical;
+            Position.Value += velocity.normalized * Time.deltaTime * playerSpeed;
+
         }
 
         static Vector3 GetRandomPositionOnPlane()
@@ -69,10 +90,12 @@ namespace HelloWorld
 
         void Update()
         {
+            InputHolder inputs = new InputHolder();
             transform.position = Position.Value;
 
             if(NetworkManager.Singleton.IsClient)
             {
+                /*
                 string i_key = "";
                 if(Input.GetKey("up"))
                 {
@@ -95,6 +118,13 @@ namespace HelloWorld
                 }
 
                 KeyChangeServerRpc(i_key);
+                */
+
+                inputs.horizontal = Input.GetAxis("Horizontal");
+                inputs.vertical = Input.GetAxis("Vertical");
+                inputs.action = Input.GetButton("Fire1");
+
+                KeyChangeServerRpc(inputs);
             }
         }
     }
