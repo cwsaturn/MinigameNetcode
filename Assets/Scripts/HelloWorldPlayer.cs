@@ -1,4 +1,5 @@
 using Unity.Netcode;
+using Unity.Netcode.Components;
 using UnityEngine;
 
 namespace HelloWorld
@@ -22,6 +23,8 @@ namespace HelloWorld
     {
         [SerializeField]
         private float playerSpeed = 5;
+
+        private Rigidbody2D rigidbody2d;
 
         public NetworkVariable<Vector3> Position = new NetworkVariable<Vector3>();
 
@@ -79,8 +82,12 @@ namespace HelloWorld
              }
              */
             Vector3 velocity = Vector3.right * inputs.horizontal + Vector3.up * inputs.vertical;
-            Position.Value += velocity.normalized * Time.deltaTime * playerSpeed;
-
+            if (velocity.magnitude > 1)
+            {
+                velocity = velocity.normalized;
+            }
+            //Position.Value += velocity.normalized * Time.deltaTime * playerSpeed;
+            rigidbody2d.AddForce(velocity * playerSpeed);
         }
 
         static Vector3 GetRandomPositionOnPlane()
@@ -88,12 +95,19 @@ namespace HelloWorld
             return new Vector3(Random.Range(-3f, 3f), 1f, Random.Range(-3f, 3f));
         }
 
+        private void Start()
+        {
+            rigidbody2d = GetComponent<Rigidbody2D>();
+            transform.position = Position.Value;
+        }
+
         void Update()
         {
             InputHolder inputs = new InputHolder();
-            transform.position = Position.Value;
+            //transform.position = rigidbody2d.transform.position;
+            //transform.position = Position.Value;
 
-            if(NetworkManager.Singleton.IsClient)
+            if (NetworkManager.Singleton.IsClient)
             {
                 /*
                 string i_key = "";
