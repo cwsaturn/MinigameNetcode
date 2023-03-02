@@ -1,5 +1,7 @@
 using Unity.Netcode;
 using UnityEngine;
+using Network.Movement;
+
 
 namespace HelloWorld
 {
@@ -17,11 +19,12 @@ namespace HelloWorld
         }
     }
 
-
     public class HelloWorldPlayer : NetworkBehaviour
     {
-        [SerializeField]
-        private float playerSpeed = 5;
+        [SerializeField] private float playerSpeed = 5;
+
+        //new
+        [SerializeField] private NetworkMovementComponent _playerMovement;
 
         public NetworkVariable<Vector3> Position = new NetworkVariable<Vector3>();
 
@@ -124,7 +127,12 @@ namespace HelloWorld
                 inputs.vertical = Input.GetAxis("Vertical");
                 inputs.action = Input.GetButton("Fire1");
 
-                KeyChangeServerRpc(inputs);
+                //new
+                Vector2 pos = new Vector2(inputs.horizontal, inputs.vertical);
+
+                _playerMovement.ProcessLocalPlayerMovement(pos, pos);
+
+                //KeyChangeServerRpc(inputs);
             }
         }
     }
