@@ -24,39 +24,43 @@ public class ClientPlatformer : NetworkBehaviour
     private int jumpWait = 0;
     private int jumpWaitFrames = 2;
 
-    private NetworkVariable<Color> playerColor = new NetworkVariable<Color>();
+    private NetworkVariable<Color> playerColorNet = new NetworkVariable<Color>(Color.white);
+    private SpriteRenderer playerSprite;
 
     [ServerRpc]
     void ColorSetServerRpc(float hue, ServerRpcParams rpcParams = default)
     {
-        playerColor.Value = Color.HSVToRGB(hue, 1f, 1f);
+        playerColorNet.Value = Color.HSVToRGB(hue, 1f, 1f);
     }
 
 
+    private void Awake()
+    {
+        playerSprite = GetComponent<SpriteRenderer>();
+    }
+
     private void Start()
     {
-        ColorSetServerRpc(Random.Range(0f, 1f));
-        GetComponent<SpriteRenderer>().color = playerColor.Value;
-
         if (IsLocalPlayer)
         {
             Camera.main.GetComponent<CameraScript>().setTarget(transform);
+
+            float colorValue = Random.Range(0f, 1f);
+            ColorSetServerRpc(colorValue);
         }
 
 
         if (!IsClient) return;
         playerRigidbody = GetComponent<Rigidbody2D>();
 
-        SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
-    }
-
-    private void OnConnectedToServer()
-    {
-        GetComponent<SpriteRenderer>().color = playerColor.Value;
+        //SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
+        //spriteRenderer.color = playerColor.Value;
     }
 
     void FixedUpdate()
     {
+        playerSprite.color = playerColorNet.Value;
+
         if (!IsClient) return;
         Vector3 movementVector = inputVector * movementSpeed;
 
@@ -95,6 +99,11 @@ public class ClientPlatformer : NetworkBehaviour
         {
             playerRigidbody.gravityScale = normalGrav;
             jumpReleased = true;
+        }
+
+        if (Input.GetButtonDown("Fire1"))
+        {
+            ColorSetServerRpc(Random.Range(0f, 1f));
         }
     }
 
