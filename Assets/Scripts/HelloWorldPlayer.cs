@@ -32,34 +32,7 @@ namespace HelloWorld
         [ServerRpc]
         void SubmitPositionRequestServerRpc(ServerRpcParams rpcParams = default)
         {
-           
             Position.Value = GetRandomPositionOnPlane();
-            
-        }
-
-        [ServerRpc]
-        void KeyChangeServerRpc(string i_key, ServerRpcParams rpcParams = default)
-        {
-           
-            switch(i_key)
-            {
-                case "U":
-                    Position.Value = new Vector3(0,2,0);
-                    break;
-
-                case "D":
-                    Position.Value = new Vector3(0,-2,0);
-                    break;
-
-                case "L":
-                    Position.Value = new Vector3(-2,0,0);
-                    break;
- 
-                case "R":
-                    Position.Value = new Vector3(2,0,0);
-                    break;
-            }
-            
         }
 
         static Vector3 GetRandomPositionOnPlane()
@@ -70,32 +43,6 @@ namespace HelloWorld
         void Update()
         {
             transform.position = Position.Value;
-
-            if(NetworkManager.Singleton.IsClient)
-            {
-                string i_key = "";
-                if(Input.GetKey("up"))
-                {
-                    i_key = "U";
-                }
-
-                else if(Input.GetKey("down"))
-                {
-                    i_key = "D";
-                }
-
-                else if(Input.GetKey("left"))
-                {
-                    i_key = "L";
-                }
-
-                else if(Input.GetKey("right"))
-                {
-                    i_key = "R";
-                }
-
-                KeyChangeServerRpc(i_key);
-            }
         }
     }
 }
