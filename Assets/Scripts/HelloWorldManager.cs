@@ -5,25 +5,28 @@ namespace HelloWorld
 {
     public class HelloWorldManager : MonoBehaviour
     {
-        void Start()
-        {
-            string IsPlayerHost = PlayerPrefs.GetString("IsHost");
-
-            if (IsPlayerHost == "True")
-            {
-                NetworkManager.Singleton.StartHost();
-            }
-
-            else
-            {
-                NetworkManager.Singleton.StartClient();
-            }
-        }
-
         void OnGUI()
         {
             GUILayout.BeginArea(new Rect(10, 10, 300, 300));
+            if (!NetworkManager.Singleton.IsClient && !NetworkManager.Singleton.IsServer)
+            {
+                StartButtons();
+            }
+            else
+            {
+                //StatusLabels();
+
+                //SubmitNewPosition();
+            }
+
             GUILayout.EndArea();
+        }
+
+        static void StartButtons()
+        {
+            if (GUILayout.Button("Host")) NetworkManager.Singleton.StartHost();
+            if (GUILayout.Button("Client")) NetworkManager.Singleton.StartClient();
+            if (GUILayout.Button("Server")) NetworkManager.Singleton.StartServer();
         }
 
         static void StatusLabels()
@@ -36,5 +39,22 @@ namespace HelloWorld
             GUILayout.Label("Mode: " + mode);
         }
 
+        static void SubmitNewPosition()
+        {
+            if (GUILayout.Button(NetworkManager.Singleton.IsServer ? "Move" : "Request Position Change"))
+            {
+                if (NetworkManager.Singleton.IsServer && !NetworkManager.Singleton.IsClient)
+                {
+                    foreach (ulong uid in NetworkManager.Singleton.ConnectedClientsIds)
+                        NetworkManager.Singleton.SpawnManager.GetPlayerNetworkObject(uid).GetComponent<HelloWorldPlayer>().Move();
+                }
+                else
+                {
+                    var playerObject = NetworkManager.Singleton.SpawnManager.GetLocalPlayerObject();
+                    var player = playerObject.GetComponent<HelloWorldPlayer>();
+                    player.Move();
+                }
+            }
+        }
     }
 }
