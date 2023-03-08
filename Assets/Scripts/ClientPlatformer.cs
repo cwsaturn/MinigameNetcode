@@ -49,7 +49,6 @@ public class ClientPlatformer : NetworkBehaviour
             ColorSetServerRpc(colorValue);
         }
 
-
         if (!IsClient) return;
         playerRigidbody = GetComponent<Rigidbody2D>();
 
@@ -103,7 +102,13 @@ public class ClientPlatformer : NetworkBehaviour
 
         if (Input.GetButtonDown("Fire1"))
         {
-            ColorSetServerRpc(Random.Range(0f, 1f));
+            if (IsOwner)
+            {
+                ColorSetServerRpc(Random.Range(0f, 1f));
+                ServerScript ServerObj = GameObject.FindGameObjectWithTag("GameController").GetComponent<ServerScript>();
+                ServerObj.AddColorServerRpc(Random.Range(0f, 1f));
+            }
+                
         }
     }
 
