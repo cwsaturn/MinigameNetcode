@@ -1,9 +1,12 @@
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ClientPlatformer : NetworkBehaviour
 {
+    public Text scoreText;
+
     [SerializeField]
     private float movementSpeed = 50f;
     [SerializeField]
@@ -26,6 +29,10 @@ public class ClientPlatformer : NetworkBehaviour
 
     private NetworkVariable<Color> playerColorNet = new NetworkVariable<Color>(Color.white);
     private SpriteRenderer playerSprite;
+    private NetworkVariable<int> playerScoreNet = new NetworkVariable<int>(0);
+
+
+    
 
     [ServerRpc]
     void ColorSetServerRpc(float hue, ServerRpcParams rpcParams = default)
@@ -34,10 +41,18 @@ public class ClientPlatformer : NetworkBehaviour
     }
 
 
+    [ServerRpc]
+    void ScoreSetServerRpc(ServerRpcParams rpcParams = default)
+    {
+        playerScoreNet.Value++;
+    }
+
+
     private void Awake()
     {
         playerSprite = GetComponent<SpriteRenderer>();
     }
+
 
     private void Start()
     {
@@ -51,15 +66,11 @@ public class ClientPlatformer : NetworkBehaviour
 
         if (!IsClient) return;
         playerRigidbody = GetComponent<Rigidbody2D>();
-
-        //SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
-        //spriteRenderer.color = playerColor.Value;
     }
+
 
     void FixedUpdate()
     {
-        playerSprite.color = playerColorNet.Value;
-
         if (!IsClient) return;
         Vector3 movementVector = inputVector * movementSpeed;
 
@@ -81,6 +92,35 @@ public class ClientPlatformer : NetworkBehaviour
             }
         }
     }
+
+
+    public override void OnNetworkSpawn()
+    {
+        // Subscribe to value changes
+        playerColorNet.OnValueChanged += OnColorChange;
+        playerScoreNet.OnValueChanged += OnScoreChange;
+    }
+
+
+    public override void OnNetworkDespawn()
+    {
+        // Unsubscribe to value changes
+        playerColorNet.OnValueChanged -= OnColorChange;
+        playerScoreNet.OnValueChanged -= OnScoreChange;
+    }
+
+
+    public void OnColorChange(Color previous, Color current)
+    {
+        playerSprite.color = playerColorNet.Value;
+    }
+
+
+    public void OnScoreChange(int previous, int current)
+    {
+        scoreText.text = playerScoreNet.Value.ToString();
+    }
+
 
     private void Update()
     {
@@ -104,11 +144,9 @@ public class ClientPlatformer : NetworkBehaviour
         {
             if (IsOwner)
             {
+                ScoreSetServerRpc();
                 ColorSetServerRpc(Random.Range(0f, 1f));
-                ServerScript ServerObj = GameObject.FindGameObjectWithTag("GameController").GetComponent<ServerScript>();
-                ServerObj.AddColorServerRpc(Random.Range(0f, 1f));
             }
-                
         }
     }
 
