@@ -41,6 +41,8 @@ public class ClientPlatformer : NetworkBehaviour
 
     private void Start()
     {
+        DontDestroyOnLoad(gameObject);
+
         if (IsLocalPlayer)
         {
             Camera.main.GetComponent<CameraScript>().setTarget(transform);

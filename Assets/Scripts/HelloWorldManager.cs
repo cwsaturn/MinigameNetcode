@@ -5,6 +5,38 @@ namespace HelloWorld
 {
     public class HelloWorldManager : MonoBehaviour
     {
+        [SerializeField]
+        public GameObject PrefabToSpawn;
+
+        private GameObject m_PrefabInstance;
+        private NetworkObject m_SpawnedNetworkObject;
+
+        void Start()  // Spawn the chracters
+        {
+            /*// Initiate
+            m_PrefabInstance = Instantiate(PrefabToSpawn);
+
+            // Get the instance's NetworkObject and Spawn
+            m_SpawnedNetworkObject = m_PrefabInstance.GetComponent<NetworkObject>();
+            m_SpawnedNetworkObject.Spawn();*/
+
+            /*var clientId = NetworkManager.Singleton.LocalClientId;
+
+            GameObject go = Instantiate(PrefabToSpawn, Vector3.zero, Quaternion.identity);
+            // go.GetComponent<NetworkObject>().Spawn();
+            go.GetComponent<NetworkObject>().SpawnWithOwnership(clientId);*/
+
+
+            // var clientId = NetworkManager.Singleton.LocalClientId;
+            // NetworkLog.LogInfoServer("Potato");  // Not his log syntax doesn't work either
+            // GetComponent<NetworkObject>().SpawnAsPlayerObject(clientId);
+
+            // var clientIdList = NetworkManager.LocalClient.PlayerObject;
+
+            // GameObject go = Instantiate(myPrefab, Vector3.zero, Quaternion.identity);
+            // go.GetComponent<NetworkObject>().Spawn();
+        }
+
         void OnGUI()
         {
             GUILayout.BeginArea(new Rect(10, 10, 300, 300));

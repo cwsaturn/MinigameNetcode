@@ -2,10 +2,18 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+
+
 namespace HelloWorld
 {
     public class LobbyManager : MonoBehaviour
     {
+        [SerializeField]
+        public GameObject PrefabToSpawn;
+
+        private GameObject m_PrefabInstance;
+        private NetworkObject m_SpawnedNetworkObject;
+
         void Start()
         {
             string IsPlayerHost = PlayerPrefs.GetString("IsHost");
@@ -19,6 +27,13 @@ namespace HelloWorld
             {
                 NetworkManager.Singleton.StartClient();
             }
+
+            var clientId = NetworkManager.Singleton.LocalClientId;
+
+            GameObject go = Instantiate(PrefabToSpawn, Vector3.zero, Quaternion.identity);
+            // go.GetComponent<NetworkObject>().Spawn();
+            go.GetComponent<NetworkObject>().SpawnWithOwnership(clientId);
+
         }
 
         void OnGUI()

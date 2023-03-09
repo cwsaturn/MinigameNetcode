@@ -960,6 +960,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d601813dd31c004b87c1f3fef40d1ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PrefabToSpawn: {fileID: 6082976955032821125, guid: 3bb187cc6a6b211429183f2cd7711170, type: 3}
 --- !u!1 &1372736442
 GameObject:
   m_ObjectHideFlags: 0
