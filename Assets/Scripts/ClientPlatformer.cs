@@ -25,12 +25,16 @@ public class ClientPlatformer : NetworkBehaviour
     private Rigidbody2D playerRigidbody;
 
     private int jumpWait = 0;
-    private int jumpWaitFrames = 2;
+    private int jumpWaitFrames = 1;
 
     private NetworkVariable<Color> playerColorNet = new NetworkVariable<Color>(Color.white);
+    public Color PlayerColor
+    { get { return playerColorNet.Value; } }
+
     private SpriteRenderer playerSprite;
     private NetworkVariable<int> playerScoreNet = new NetworkVariable<int>(0);
 
+    private ServerScript serverObj;
 
     
 
@@ -51,6 +55,7 @@ public class ClientPlatformer : NetworkBehaviour
     private void Awake()
     {
         playerSprite = GetComponent<SpriteRenderer>();
+        serverObj = GameObject.FindGameObjectWithTag("GameController").GetComponent<ServerScript>();
     }
 
 
@@ -60,12 +65,17 @@ public class ClientPlatformer : NetworkBehaviour
         {
             Camera.main.GetComponent<CameraScript>().setTarget(transform);
 
+            Debug.Log("test1");
+
             float colorValue = Random.Range(0f, 1f);
             ColorSetServerRpc(colorValue);
         }
 
+        Debug.Log("test2");
+
         if (!IsClient) return;
         playerRigidbody = GetComponent<Rigidbody2D>();
+        SyncNetVariables();
     }
 
 
@@ -119,6 +129,12 @@ public class ClientPlatformer : NetworkBehaviour
     public void OnScoreChange(int previous, int current)
     {
         scoreText.text = playerScoreNet.Value.ToString();
+    }
+
+    public void SyncNetVariables()
+    {
+        scoreText.text = playerScoreNet.Value.ToString();
+        playerSprite.color = playerColorNet.Value;
     }
 
 
