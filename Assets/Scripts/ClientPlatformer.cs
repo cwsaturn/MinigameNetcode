@@ -1,11 +1,18 @@
 using System.Collections.Generic;
+using TMPro;
 using Unity.Netcode;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class ClientPlatformer : NetworkBehaviour
 {
     public Text scoreText;
+
+    [SerializeField]
+    private TextMeshProUGUI timeText;
+
+    private GameObject finishFlag;
 
     [SerializeField]
     private float movementSpeed = 50f;
@@ -17,6 +24,8 @@ public class ClientPlatformer : NetworkBehaviour
     private float reducedGrav = 8f;
 
     private bool jumpReleased = true;
+
+    private float timePassed = 0f;
 
     private Vector3 inputVector = Vector3.zero;
 
@@ -33,8 +42,6 @@ public class ClientPlatformer : NetworkBehaviour
 
     private SpriteRenderer playerSprite;
     private NetworkVariable<int> playerScoreNet = new NetworkVariable<int>(0);
-
-    private ServerScript serverObj;
 
     
 
@@ -55,7 +62,8 @@ public class ClientPlatformer : NetworkBehaviour
     private void Awake()
     {
         playerSprite = GetComponent<SpriteRenderer>();
-        serverObj = GameObject.FindGameObjectWithTag("GameController").GetComponent<ServerScript>();
+        timeText = FindObjectOfType<TextMeshProUGUI>();
+        finishFlag = GameObject.FindGameObjectWithTag("Finish");
     }
 
 
@@ -164,6 +172,8 @@ public class ClientPlatformer : NetworkBehaviour
                 ColorSetServerRpc(Random.Range(0f, 1f));
             }
         }
+        timePassed += Time.deltaTime;
+        timeText.text = timePassed.ToString();
     }
 
     private void Jump()
@@ -211,6 +221,19 @@ public class ClientPlatformer : NetworkBehaviour
         if (Input.GetButton("Jump") && jumpReleased)
         {
             CollectNormals(collision);
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (!IsClient) return;
+
+        Debug.Log(collision.gameObject.name);
+        Debug.Log(collision.gameObject.tag == "Finish");
+
+        if (collision.gameObject.tag == "Finish")
+        {
+            Debug.Log(timePassed);
         }
     }
 }

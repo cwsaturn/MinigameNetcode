@@ -37,7 +37,7 @@ public class ServerScript : NetworkBehaviour
 
     void Update()
     {
-        text.text = networkFloat.Value.ToString();
+        //text.text = networkFloat.Value.ToString();
 
         if (Input.GetKeyDown("w"))
         {

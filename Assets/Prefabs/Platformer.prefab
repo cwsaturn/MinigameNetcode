@@ -160,7 +160,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 67eea17597b338a4b877dc511dc2c41b, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 7493cb490f5593d428a614e6c136e377, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -285,6 +285,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   scoreText: {fileID: 1026515639380057258}
+  goalFlag: {fileID: 524483961759151506, guid: 7ae93170fcdb8104ba7d7a7bfb462f3a, type: 3}
   movementSpeed: 50
   jumpPower: 20
   normalGrav: 6
