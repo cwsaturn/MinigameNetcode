@@ -1,9 +1,12 @@
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ClientPlatformer : NetworkBehaviour
 {
+    public Text scoreText;
+
     [SerializeField]
     private float movementSpeed = 50f;
     [SerializeField]
@@ -22,10 +25,18 @@ public class ClientPlatformer : NetworkBehaviour
     private Rigidbody2D playerRigidbody;
 
     private int jumpWait = 0;
-    private int jumpWaitFrames = 2;
+    private int jumpWaitFrames = 1;
 
     private NetworkVariable<Color> playerColorNet = new NetworkVariable<Color>(Color.white);
+    public Color PlayerColor
+    { get { return playerColorNet.Value; } }
+
     private SpriteRenderer playerSprite;
+    private NetworkVariable<int> playerScoreNet = new NetworkVariable<int>(0);
+
+    private ServerScript serverObj;
+
+    
 
     [ServerRpc]
     void ColorSetServerRpc(float hue, ServerRpcParams rpcParams = default)
@@ -34,10 +45,19 @@ public class ClientPlatformer : NetworkBehaviour
     }
 
 
+    [ServerRpc]
+    void ScoreSetServerRpc(ServerRpcParams rpcParams = default)
+    {
+        playerScoreNet.Value++;
+    }
+
+
     private void Awake()
     {
         playerSprite = GetComponent<SpriteRenderer>();
+        serverObj = GameObject.FindGameObjectWithTag("GameController").GetComponent<ServerScript>();
     }
+
 
     private void Start()
     {
@@ -47,22 +67,22 @@ public class ClientPlatformer : NetworkBehaviour
         {
             Camera.main.GetComponent<CameraScript>().setTarget(transform);
 
+            Debug.Log("test1");
+
             float colorValue = Random.Range(0f, 1f);
             ColorSetServerRpc(colorValue);
         }
 
+        Debug.Log("test2");
 
         if (!IsClient) return;
         playerRigidbody = GetComponent<Rigidbody2D>();
-
-        //SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
-        //spriteRenderer.color = playerColor.Value;
+        SyncNetVariables();
     }
+
 
     void FixedUpdate()
     {
-        playerSprite.color = playerColorNet.Value;
-
         if (!IsClient) return;
         Vector3 movementVector = inputVector * movementSpeed;
 
@@ -85,6 +105,41 @@ public class ClientPlatformer : NetworkBehaviour
         }
     }
 
+
+    public override void OnNetworkSpawn()
+    {
+        // Subscribe to value changes
+        playerColorNet.OnValueChanged += OnColorChange;
+        playerScoreNet.OnValueChanged += OnScoreChange;
+    }
+
+
+    public override void OnNetworkDespawn()
+    {
+        // Unsubscribe to value changes
+        playerColorNet.OnValueChanged -= OnColorChange;
+        playerScoreNet.OnValueChanged -= OnScoreChange;
+    }
+
+
+    public void OnColorChange(Color previous, Color current)
+    {
+        playerSprite.color = playerColorNet.Value;
+    }
+
+
+    public void OnScoreChange(int previous, int current)
+    {
+        scoreText.text = playerScoreNet.Value.ToString();
+    }
+
+    public void SyncNetVariables()
+    {
+        scoreText.text = playerScoreNet.Value.ToString();
+        playerSprite.color = playerColorNet.Value;
+    }
+
+
     private void Update()
     {
         if (!IsClient) return;
@@ -105,7 +160,11 @@ public class ClientPlatformer : NetworkBehaviour
 
         if (Input.GetButtonDown("Fire1"))
         {
-            ColorSetServerRpc(Random.Range(0f, 1f));
+            if (IsOwner)
+            {
+                ScoreSetServerRpc();
+                ColorSetServerRpc(Random.Range(0f, 1f));
+            }
         }
     }
 
