@@ -9,10 +9,6 @@ public class ServerScript : NetworkBehaviour
     public NetworkList<float> floatList;
     public NetworkVariable<float> networkFloat = new NetworkVariable<float>(0f);
 
-    private List<GameObject> clientList = new List<GameObject>();
-
-    //private NetworkList<GameObject> players;
-
     [SerializeField]
     private TextMeshProUGUI text;
 
@@ -27,12 +23,40 @@ public class ServerScript : NetworkBehaviour
     }
 
 
-
     [ServerRpc(RequireOwnership = false)]
     public void ChangeNumberServerRpc(ServerRpcParams rpcParams = default)
     {
         networkFloat.Value = Random.Range(0f, 1f);
         //colorList.Value.Add(color);
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void PlayerFinishedServerRpc(ulong clientId, ServerRpcParams rpcParams = default)
+    {
+        int playersFinished = 0;
+        bool allFinished = true;
+        foreach (NetworkClient player in NetworkManager.Singleton.ConnectedClients.Values)
+        {
+            bool finished = player.PlayerObject.GetComponent<ClientPlatformer>().PlayerFinished;
+            if (finished)
+            {
+                playersFinished += 1;
+            }
+            else
+            {
+                allFinished = false;
+            }
+        }
+
+        if (allFinished)
+        {
+            //Debug.Log("all done");
+            //swtich scenes?
+        }
+        Debug.Log("(server) players finished: " + playersFinished);
+
+        NetworkClient finishedClient = NetworkManager.Singleton.ConnectedClients[clientId];
+        finishedClient.PlayerObject.GetComponent<ClientPlatformer>().ScoreSetClient(playersFinished);
     }
 
     void Update()

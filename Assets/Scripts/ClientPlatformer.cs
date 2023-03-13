@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using TMPro;
 using Unity.Netcode;
 using Unity.VisualScripting;
@@ -13,6 +14,7 @@ public class ClientPlatformer : NetworkBehaviour
     private TextMeshProUGUI timeText;
 
     private GameObject finishFlag;
+    private ServerScript serverScript;
 
     [SerializeField]
     private float movementSpeed = 50f;
@@ -43,7 +45,9 @@ public class ClientPlatformer : NetworkBehaviour
     private SpriteRenderer playerSprite;
     private NetworkVariable<int> playerScoreNet = new NetworkVariable<int>(0);
 
-    
+    public NetworkVariable<bool> playerFinished = new NetworkVariable<bool>(false);
+    public bool PlayerFinished
+    { get { return playerFinished.Value; } }
 
     [ServerRpc]
     void ColorSetServerRpc(float hue, ServerRpcParams rpcParams = default)
@@ -51,11 +55,23 @@ public class ClientPlatformer : NetworkBehaviour
         playerColorNet.Value = Color.HSVToRGB(hue, 1f, 1f);
     }
 
+    public void ScoreSetClient(int score)
+    {
+        FindObjectOfType<UniversalPlayer>().AddToScoreServerRpc(score);
+        ScoreSetServerRpc(score);
+    }
 
     [ServerRpc]
-    void ScoreSetServerRpc(ServerRpcParams rpcParams = default)
+    public void ScoreSetServerRpc(int score)
     {
-        playerScoreNet.Value++;
+        playerScoreNet.Value = score;
+    }
+
+    [ServerRpc]
+    void FinishedSetServerRpc(ServerRpcParams rpcParams = default)
+    {
+        playerFinished.Value = true;
+        serverScript.PlayerFinishedServerRpc(NetworkManager.Singleton.LocalClientId);
     }
 
 
@@ -64,6 +80,7 @@ public class ClientPlatformer : NetworkBehaviour
         playerSprite = GetComponent<SpriteRenderer>();
         timeText = FindObjectOfType<TextMeshProUGUI>();
         finishFlag = GameObject.FindGameObjectWithTag("Finish");
+        serverScript = FindObjectOfType<ServerScript>();
     }
 
 
@@ -168,7 +185,7 @@ public class ClientPlatformer : NetworkBehaviour
         {
             if (IsOwner)
             {
-                ScoreSetServerRpc();
+                //ScoreSetServerRpc();
                 ColorSetServerRpc(Random.Range(0f, 1f));
             }
         }
@@ -234,6 +251,11 @@ public class ClientPlatformer : NetworkBehaviour
         if (collision.gameObject.tag == "Finish")
         {
             Debug.Log(timePassed);
+            if (IsOwner)
+            {
+                FinishedSetServerRpc();
+            }
+            
         }
     }
 }
