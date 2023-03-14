@@ -3,16 +3,10 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 
-
 namespace HelloWorld
 {
     public class LobbyManager : MonoBehaviour
     {
-        [SerializeField]
-        public GameObject PrefabToSpawn;
-
-        private GameObject m_PrefabInstance;
-        private NetworkObject m_SpawnedNetworkObject;
 
         void Start()
         {
@@ -20,19 +14,22 @@ namespace HelloWorld
 
             if (IsPlayerHost == "True")
             {
+                Debug.Log("LobbyManager: Start(), Host");
                 NetworkManager.Singleton.StartHost();
             }
 
             else
             {
+                Debug.Log("LobbyManager: Start(), Client");
                 NetworkManager.Singleton.StartClient();
             }
 
             var clientId = NetworkManager.Singleton.LocalClientId;
 
-            GameObject go = Instantiate(PrefabToSpawn, Vector3.zero, Quaternion.identity);
-            // go.GetComponent<NetworkObject>().Spawn();
-            go.GetComponent<NetworkObject>().SpawnWithOwnership(clientId);
+
+            // GameObject go = Instantiate(PrefabToSpawn, Vector3.zero, Quaternion.identity);
+            // //go.GetComponent<NetworkObject>().Spawn();
+            // go.GetComponent<NetworkObject>().SpawnWithOwnership(clientId);
 
         }
 
@@ -50,7 +47,11 @@ namespace HelloWorld
 
             if (mode == "Host")
             {
-                if (GUILayout.Button("Start Game")) SceneManager.LoadScene("Platformer", LoadSceneMode.Single);
+                if (GUILayout.Button("Start Game"))
+                { 
+                    //SceneManager.LoadScene("Platformer", LoadSceneMode.Single);
+                    NetworkManager.Singleton.SceneManager.LoadScene("Platformer", LoadSceneMode.Single);
+                }
             }
         }
 

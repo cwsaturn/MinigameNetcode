@@ -62,3 +62,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Platformer: {fileID: 6082976955032821125, guid: 3bb187cc6a6b211429183f2cd7711170, type: 3}
+  Player: {fileID: 6082976955032821125, guid: 12657366b26452e4291f02f6194a4158, type: 3}
+  sceneLoaded:
+    m_InternalValue: 0

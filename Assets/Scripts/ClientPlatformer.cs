@@ -61,7 +61,7 @@ public class ClientPlatformer : NetworkBehaviour
 
     private void Start()
     {
-        DontDestroyOnLoad(gameObject);
+        //DontDestroyOnLoad(gameObject);
 
         if (IsLocalPlayer)
         {
@@ -77,9 +77,8 @@ public class ClientPlatformer : NetworkBehaviour
 
         if (!IsClient) return;
         playerRigidbody = GetComponent<Rigidbody2D>();
-        SyncNetVariables();
+        SyncNetVariables();    
     }
-
 
     void FixedUpdate()
     {
