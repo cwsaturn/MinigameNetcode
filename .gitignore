@@ -10,6 +10,9 @@
 /[Ll]ogs/
 /[Mm]emoryCaptures/
 /[Uu]ser[Ss]ettings/
+/[Mm]ono[Bb]leeding[Ee]dge/
+/[Mm]inigame[Nn]etcode_[Dd]ata/
+/*_DoNotShip/
 
 # Asset meta data should only be ignored when the corresponding asset is also ignored
 !/[Aa]ssets/**/*.meta
@@ -43,6 +46,8 @@ ExportedObj/
 *.mdb
 *.opendb
 *.VC.db
+*.exe
+*.dll
 
 # Unity3D generated meta files
 *.pidb.meta
