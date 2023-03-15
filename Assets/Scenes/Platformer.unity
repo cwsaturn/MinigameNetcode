@@ -3814,6 +3814,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b4c681949d6983438a115b72a9536fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PrefabToSpawn: {fileID: 0}
 --- !u!4 &1303485056
 Transform:
   m_ObjectHideFlags: 0
@@ -5109,11 +5110,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3161988448399602065, guid: 85812a2b44edc3e44827d5c520661b86, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -24.17
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 3161988448399602065, guid: 85812a2b44edc3e44827d5c520661b86, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.58
+      value: 35
       objectReference: {fileID: 0}
     - target: {fileID: 3161988448399602065, guid: 85812a2b44edc3e44827d5c520661b86, type: 3}
       propertyPath: m_LocalPosition.z

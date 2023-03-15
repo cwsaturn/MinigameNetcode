@@ -32,7 +32,7 @@ public class ClientPlatformer : NetworkBehaviour
 
     private int jumpWait = 0;
     private int jumpWaitFrames = 1;
-
+    public bool active = true;
 
     private void Start()
     {
@@ -44,6 +44,7 @@ public class ClientPlatformer : NetworkBehaviour
 
     void FixedUpdate()
     {
+        if (!active) return;
         if (!IsClient) return;
         Vector3 movementVector = inputVector * movementSpeed;
 
@@ -70,6 +71,13 @@ public class ClientPlatformer : NetworkBehaviour
     private void Update()
     {
         if (!IsClient) return;
+
+        if (!active)
+        {
+            inputVector = Vector3.zero;
+            return;
+        }
+
         inputVector = Vector3.right * Input.GetAxisRaw("Horizontal");
 
         if (inputVector.magnitude > 1)

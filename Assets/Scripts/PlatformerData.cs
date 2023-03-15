@@ -18,7 +18,13 @@ public class PlatformerData : NetworkBehaviour
 
     private NetworkVariable<int> playerScoreNet = new NetworkVariable<int>(0);
     private NetworkVariable<Color> playerColorNet = new NetworkVariable<Color>(Color.white);
-    public NetworkVariable<bool> playerFinished = new NetworkVariable<bool>(false);
+    private NetworkVariable<bool> playerFinished = new NetworkVariable<bool>(false);
+    public bool PlayerFinished
+    {
+        get { return playerFinished.Value; }
+    }
+    private bool active = true;
+
     public Color PlayerColor
     { get { return playerColorNet.Value; } }
 
@@ -35,25 +41,20 @@ public class PlatformerData : NetworkBehaviour
         playerFinished.Value = true;
 
         int playersFinished = 0;
-        bool allFinished = true;
 
         foreach (NetworkClient player in NetworkManager.Singleton.ConnectedClients.Values)
         {
-            bool finished = player.PlayerObject.GetComponent<PlatformerData>().playerFinished.Value;
+            bool finished = player.PlayerObject.GetComponent<PlatformerData>().PlayerFinished;
             if (finished)
             {
                 playersFinished += 1;
-                Debug.Log("finished");
-            }
-            else
-            {
-                Debug.Log("not finished");
-                allFinished = false;
             }
         }
 
-        playerScoreNet.Value = 10 - playersFinished;
-        Debug.Log("score: " + (10 - playersFinished));
+        playerScoreNet.Value = 11 - playersFinished;
+        Debug.Log("score: " + (11 - playersFinished));
+
+        playerSprite.enabled = false;
     }
 
     public override void OnNetworkSpawn()
@@ -61,6 +62,7 @@ public class PlatformerData : NetworkBehaviour
         // Subscribe to value changes
         playerColorNet.OnValueChanged += OnColorChange;
         playerScoreNet.OnValueChanged += OnScoreChange;
+        playerFinished.OnValueChanged += OnFinishChange;
     }
 
 
@@ -69,6 +71,7 @@ public class PlatformerData : NetworkBehaviour
         // Unsubscribe to value changes
         playerColorNet.OnValueChanged -= OnColorChange;
         playerScoreNet.OnValueChanged -= OnScoreChange;
+        playerFinished.OnValueChanged -= OnFinishChange;
     }
 
     public void OnColorChange(Color previous, Color current)
@@ -86,6 +89,14 @@ public class PlatformerData : NetworkBehaviour
         //scoreText.text = playerScoreNet.Value.ToString();
     }
 
+    public void OnFinishChange(bool previous, bool current)
+    {
+        if (playerFinished.Value)
+        {
+            playerSprite.enabled = false;
+        }
+    }
+
     public void SyncNetVariables()
     {
         //scoreText.text = playerScoreNet.Value.ToString();
@@ -97,8 +108,6 @@ public class PlatformerData : NetworkBehaviour
         playerSprite = GetComponent<SpriteRenderer>();
         timeText = FindObjectOfType<TextMeshProUGUI>();
         universalPlayer = FindObjectOfType<UniversalPlayer>();
-        //finishFlag = GameObject.FindGameObjectWithTag("Finish");
-        //serverScript = FindObjectOfType<ServerScript>();
     }
 
     // Start is called before the first frame update
@@ -137,6 +146,8 @@ public class PlatformerData : NetworkBehaviour
     {
         if (!IsClient) return;
 
+        if (!active) return;
+
         Debug.Log(collision.gameObject.name);
         Debug.Log(collision.gameObject.tag == "Finish");
 
@@ -146,8 +157,9 @@ public class PlatformerData : NetworkBehaviour
             if (IsOwner)
             {
                 FinishedSetServerRpc();
+                GetComponent<ClientPlatformer>().active = false;
+                active = false;
             }
-
         }
     }
 }

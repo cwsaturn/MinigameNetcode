@@ -45,7 +45,7 @@ public class UniversalPlayer : NetworkBehaviour
         bool allFinished = true;
         foreach (NetworkClient player in NetworkManager.Singleton.ConnectedClients.Values)
         {
-            bool finished = player.PlayerObject.GetComponent<PlatformerData>().playerFinished.Value;
+            bool finished = player.PlayerObject.GetComponent<PlatformerData>().PlayerFinished;
             if (!finished)
             {
                 allFinished = false;
