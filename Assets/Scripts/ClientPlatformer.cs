@@ -42,7 +42,6 @@ public class ClientPlatformer : NetworkBehaviour
         playerRigidbody = GetComponent<Rigidbody2D>();
     }
 
-
     void FixedUpdate()
     {
         if (!IsClient) return;
