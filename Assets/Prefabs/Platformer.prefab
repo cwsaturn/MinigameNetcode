@@ -96,6 +96,7 @@ GameObject:
   - component: {fileID: -4116069279423211655}
   - component: {fileID: -3675157821929384387}
   - component: {fileID: -4212803870404786686}
+  - component: {fileID: 3155786208896750889}
   m_Layer: 6
   m_Name: Platformer
   m_TagString: Player
@@ -284,12 +285,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2741170750a2a1d4ea254103b4980d68, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scoreText: {fileID: 1026515639380057258}
-  goalFlag: {fileID: 524483961759151506, guid: 7ae93170fcdb8104ba7d7a7bfb462f3a, type: 3}
+  timeText: {fileID: 0}
   movementSpeed: 50
   jumpPower: 20
   normalGrav: 6
   reducedGrav: 3
+--- !u!114 &3155786208896750889
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6082976955032821125}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c694644e2e29bc4d8fd9ef929f40f4c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scoreText: {fileID: 0}
+  playerFinished:
+    m_InternalValue: 0
 --- !u!1 &8984141802061042603
 GameObject:
   m_ObjectHideFlags: 0

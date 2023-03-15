@@ -30,6 +30,7 @@ public class ServerScript : NetworkBehaviour
         //colorList.Value.Add(color);
     }
 
+    /*
     [ServerRpc(RequireOwnership = false)]
     public void PlayerFinishedServerRpc(ulong clientId, ServerRpcParams rpcParams = default)
     {
@@ -58,6 +59,7 @@ public class ServerScript : NetworkBehaviour
         NetworkClient finishedClient = NetworkManager.Singleton.ConnectedClients[clientId];
         finishedClient.PlayerObject.GetComponent<ClientPlatformer>().ScoreSetClient(playersFinished);
     }
+    */
 
     void Update()
     {
@@ -81,8 +83,8 @@ public class ServerScript : NetworkBehaviour
             {
                 foreach (NetworkClient player in NetworkManager.Singleton.ConnectedClients.Values)
                 {
-                    Color color = player.PlayerObject.GetComponent<ClientPlatformer>().PlayerColor;
-                    Debug.Log(player.ClientId + "\n" + color.ToHexString());
+                    //Color color = player.PlayerObject.GetComponent<ClientPlatformer>().PlayerColor;
+                    //Debug.Log(player.ClientId + "\n" + color.ToHexString());
                 }
             }
         }

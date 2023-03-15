@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class UniversalPlayer : NetworkBehaviour
 {
@@ -9,7 +10,7 @@ public class UniversalPlayer : NetworkBehaviour
 
     [SerializeField]
     private GameObject Platformer;
-
+    private NetworkVariable<int> currentGameScore = new NetworkVariable<int>(0);
     private NetworkVariable<int> playerScore = new NetworkVariable<int>(0);
 
     [ServerRpc(RequireOwnership = false)]
@@ -21,10 +22,26 @@ public class UniversalPlayer : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void AddToScoreServerRpc(int score, ServerRpcParams rpcParams = default)
+    public void SetScorePlatformerServerRpc(int score, ServerRpcParams rpcParams = default)
     {
-        playerScore.Value += score;
-        Debug.Log("made it here. Score : " + playerScore.Value);
+        currentGameScore.Value = score;
+        Debug.Log("Universal Player Score : " + score);
+        bool allFinished = true;
+        foreach (NetworkClient player in NetworkManager.Singleton.ConnectedClients.Values)
+        {
+            bool finished = player.PlayerObject.GetComponent<PlatformerData>().playerFinished.Value;
+            if (!finished)
+            {
+                allFinished = false;
+                break;
+            }
+        }
+
+        if (allFinished)
+        {
+            //NetworkManager.Singleton.SceneManager.LoadScene("Scrap", LoadSceneMode.Single);
+            Debug.Log("!Switch Scene!");
+        }
     }
 
     private void OnLevelWasLoaded(int level)
@@ -44,22 +61,6 @@ public class UniversalPlayer : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (myPlayer != null)
-        {
-            if (Input.GetKeyDown("r"))
-            {
-                Debug.Log("player done: " + myPlayer.GetComponent<ClientPlatformer>().PlayerFinished);
-            }
-        }
 
-
-        if (IsLocalPlayer)
-        {
-            if (Input.GetKeyDown("p"))
-            {
-                //CreatePlayerServerRpc(NetworkManager.Singleton.LocalClientId);
-            }
-        }
-        
     }
 }

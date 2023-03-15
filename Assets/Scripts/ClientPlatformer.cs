@@ -8,13 +8,10 @@ using UnityEngine.UI;
 
 public class ClientPlatformer : NetworkBehaviour
 {
-    public Text scoreText;
+    //public Text scoreText;
 
     [SerializeField]
     private TextMeshProUGUI timeText;
-
-    private GameObject finishFlag;
-    private ServerScript serverScript;
 
     [SerializeField]
     private float movementSpeed = 50f;
@@ -27,8 +24,6 @@ public class ClientPlatformer : NetworkBehaviour
 
     private bool jumpReleased = true;
 
-    private float timePassed = 0f;
-
     private Vector3 inputVector = Vector3.zero;
 
     private List<Vector3> normalVectors = new List<Vector3>();
@@ -38,69 +33,13 @@ public class ClientPlatformer : NetworkBehaviour
     private int jumpWait = 0;
     private int jumpWaitFrames = 1;
 
-    private NetworkVariable<Color> playerColorNet = new NetworkVariable<Color>(Color.white);
-    public Color PlayerColor
-    { get { return playerColorNet.Value; } }
-
-    private SpriteRenderer playerSprite;
-    private NetworkVariable<int> playerScoreNet = new NetworkVariable<int>(0);
-
-    public NetworkVariable<bool> playerFinished = new NetworkVariable<bool>(false);
-    public bool PlayerFinished
-    { get { return playerFinished.Value; } }
-
-    [ServerRpc]
-    void ColorSetServerRpc(float hue, ServerRpcParams rpcParams = default)
-    {
-        playerColorNet.Value = Color.HSVToRGB(hue, 1f, 1f);
-    }
-
-    public void ScoreSetClient(int score)
-    {
-        FindObjectOfType<UniversalPlayer>().AddToScoreServerRpc(score);
-        ScoreSetServerRpc(score);
-    }
-
-    [ServerRpc]
-    public void ScoreSetServerRpc(int score)
-    {
-        playerScoreNet.Value = score;
-    }
-
-    [ServerRpc]
-    void FinishedSetServerRpc(ServerRpcParams rpcParams = default)
-    {
-        playerFinished.Value = true;
-        serverScript.PlayerFinishedServerRpc(NetworkManager.Singleton.LocalClientId);
-    }
-
-
-    private void Awake()
-    {
-        playerSprite = GetComponent<SpriteRenderer>();
-        timeText = FindObjectOfType<TextMeshProUGUI>();
-        finishFlag = GameObject.FindGameObjectWithTag("Finish");
-        serverScript = FindObjectOfType<ServerScript>();
-    }
-
 
     private void Start()
     {
-        if (IsLocalPlayer)
-        {
-            Camera.main.GetComponent<CameraScript>().setTarget(transform);
-
-            Debug.Log("test1");
-
-            float colorValue = Random.Range(0f, 1f);
-            ColorSetServerRpc(colorValue);
-        }
-
         Debug.Log("test2");
 
         if (!IsClient) return;
         playerRigidbody = GetComponent<Rigidbody2D>();
-        SyncNetVariables();
     }
 
 
@@ -129,40 +68,6 @@ public class ClientPlatformer : NetworkBehaviour
     }
 
 
-    public override void OnNetworkSpawn()
-    {
-        // Subscribe to value changes
-        playerColorNet.OnValueChanged += OnColorChange;
-        playerScoreNet.OnValueChanged += OnScoreChange;
-    }
-
-
-    public override void OnNetworkDespawn()
-    {
-        // Unsubscribe to value changes
-        playerColorNet.OnValueChanged -= OnColorChange;
-        playerScoreNet.OnValueChanged -= OnScoreChange;
-    }
-
-
-    public void OnColorChange(Color previous, Color current)
-    {
-        playerSprite.color = playerColorNet.Value;
-    }
-
-
-    public void OnScoreChange(int previous, int current)
-    {
-        scoreText.text = playerScoreNet.Value.ToString();
-    }
-
-    public void SyncNetVariables()
-    {
-        scoreText.text = playerScoreNet.Value.ToString();
-        playerSprite.color = playerColorNet.Value;
-    }
-
-
     private void Update()
     {
         if (!IsClient) return;
@@ -180,17 +85,6 @@ public class ClientPlatformer : NetworkBehaviour
             playerRigidbody.gravityScale = normalGrav;
             jumpReleased = true;
         }
-
-        if (Input.GetButtonDown("Fire1"))
-        {
-            if (IsOwner)
-            {
-                //ScoreSetServerRpc();
-                ColorSetServerRpc(Random.Range(0f, 1f));
-            }
-        }
-        timePassed += Time.deltaTime;
-        timeText.text = timePassed.ToString();
     }
 
     private void Jump()
@@ -238,24 +132,6 @@ public class ClientPlatformer : NetworkBehaviour
         if (Input.GetButton("Jump") && jumpReleased)
         {
             CollectNormals(collision);
-        }
-    }
-
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (!IsClient) return;
-
-        Debug.Log(collision.gameObject.name);
-        Debug.Log(collision.gameObject.tag == "Finish");
-
-        if (collision.gameObject.tag == "Finish")
-        {
-            Debug.Log(timePassed);
-            if (IsOwner)
-            {
-                FinishedSetServerRpc();
-            }
-            
         }
     }
 }
