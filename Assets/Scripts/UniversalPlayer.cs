@@ -55,8 +55,8 @@ public class UniversalPlayer : NetworkBehaviour
 
         if (allFinished)
         {
-            //NetworkManager.Singleton.SceneManager.LoadScene("Scrap", LoadSceneMode.Single);
-            Debug.Log("!Switch Scene!");
+            NetworkManager.Singleton.SceneManager.LoadScene("Scrap", LoadSceneMode.Single);
+            //Debug.Log("!Switch Scene!");
         }
     }
 
