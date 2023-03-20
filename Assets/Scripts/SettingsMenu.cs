@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
 using System;
+using UnityEngine.UI;
 
 public class SettingsMenu : MonoBehaviour
 {
@@ -14,10 +15,23 @@ public class SettingsMenu : MonoBehaviour
     private float init_time;
     private float volumeUpdate;
 
+    public Slider music;
+    public Slider announcer;
+    public Slider sfx;
+
     void Start() {
         prev_vol = 0;
         init_time = Time.deltaTime;
         volumeUpdate = Time.deltaTime - init_time;
+
+        audioMixer.SetFloat("Music Volume", PlayerPrefs.GetFloat("music_vol", 0));
+        audioMixer.SetFloat("Announcer Volume", PlayerPrefs.GetFloat("announcer_vol", 0));
+        audioMixer.SetFloat("SFX Volume", PlayerPrefs.GetFloat("sfx_vol", 0));
+
+        music.value = PlayerPrefs.GetFloat("music_vol", 0);
+        announcer.value = PlayerPrefs.GetFloat("announcer_vol", 0);
+        sfx.value = PlayerPrefs.GetFloat("sfx_vol", 0);
+
     }
 
     public void SetMusicVolume (float volume)
@@ -34,7 +48,7 @@ public class SettingsMenu : MonoBehaviour
             volumeUpdate = 0;
             increasingVolume.Play();
         } 
-        else if ((volume < prev_vol) && ((volumeUpdate > 0.02) || (volumeUpdate == 0)))
+        else if ((volume < prev_vol) && (volumeUpdate > 0.02))
         {
             volumeUpdate = 0;
             decreasingVolume.Play();

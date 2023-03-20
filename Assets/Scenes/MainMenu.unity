@@ -1505,6 +1505,7 @@ GameObject:
   - component: {fileID: 182488697}
   - component: {fileID: 182488696}
   - component: {fileID: 182488695}
+  - component: {fileID: 182488699}
   m_Layer: 6
   m_Name: Exit Interact
   m_TagString: Untagged
@@ -1683,6 +1684,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 182488693}
   m_CullTransparentMesh: 1
+--- !u!114 &182488699
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 182488693}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f159591b21d2c446a14673bb1a619e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &187890342
 GameObject:
   m_ObjectHideFlags: 0
@@ -18333,6 +18346,9 @@ MonoBehaviour:
   audioMixer: {fileID: 24100000, guid: fe5f753c62ab2ca469b29045a59b29de, type: 2}
   increasingVolume: {fileID: 1787154414}
   decreasingVolume: {fileID: 311821229}
+  music: {fileID: 1704155875}
+  announcer: {fileID: 1210641578}
+  sfx: {fileID: 774470617}
 --- !u!1 &1345713947
 GameObject:
   m_ObjectHideFlags: 0
