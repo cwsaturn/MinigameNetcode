@@ -19,6 +19,9 @@ public class SettingsMenu : MonoBehaviour
     public Slider announcer;
     public Slider sfx;
 
+    public List<ResItem> resolutions = new List<ResItem>();
+    private int selectedResolution;
+
     void Start() {
         prev_vol = 0;
         init_time = Time.deltaTime;
@@ -31,7 +34,6 @@ public class SettingsMenu : MonoBehaviour
         music.value = PlayerPrefs.GetFloat("music_vol", 0);
         announcer.value = PlayerPrefs.GetFloat("announcer_vol", 0);
         sfx.value = PlayerPrefs.GetFloat("sfx_vol", 0);
-
     }
 
     public void SetMusicVolume (float volume)
@@ -62,4 +64,16 @@ public class SettingsMenu : MonoBehaviour
     {
         audioMixer.SetFloat("SFX Volume", volume);
     }
+
+    public void ResDropdown(int index)
+    {
+        Screen.SetResolution(resolutions[index].horizontal, resolutions[index].vertical, true);
+    }
+}
+
+[System.Serializable]
+public class ResItem
+{
+    public int horizontal;
+    public int vertical;
 }
