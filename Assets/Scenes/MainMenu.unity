@@ -19160,6 +19160,7 @@ MonoBehaviour:
   music: {fileID: 1704155875}
   announcer: {fileID: 1210641578}
   sfx: {fileID: 774470617}
+  dropdown: {fileID: 1596082214}
   resolutions:
   - horizontal: 3840
     vertical: 2160
@@ -29731,7 +29732,7 @@ MonoBehaviour:
   m_Placeholder: {fileID: 0}
   m_ItemText: {fileID: 789611208}
   m_ItemImage: {fileID: 0}
-  m_Value: 2
+  m_Value: 0
   m_Options:
     m_Options:
     - m_Text: 3840 X 2160
