@@ -12,17 +12,31 @@ public class PlatformerData : NetworkBehaviour
 
     private SpriteRenderer playerSprite;
     private TextMeshProUGUI timeText;
+
+    [SerializeField]
+    private TextMeshProUGUI scoreText;
     //private ServerScript serverScript;
     //private GameObject finishFlag;
-    private UniversalPlayer universalPlayer;
+    public UniversalPlayer universalPlayer;
 
     private NetworkVariable<int> playerScoreNet = new NetworkVariable<int>(0);
+    private NetworkVariable<float> finalTimeNet = new NetworkVariable<float>(0f);
+    public float FinalTime
+    {
+        get { return finalTimeNet.Value; }
+    }
     private NetworkVariable<Color> playerColorNet = new NetworkVariable<Color>(Color.white);
     private NetworkVariable<bool> playerFinished = new NetworkVariable<bool>(false);
     public bool PlayerFinished
     {
         get { return playerFinished.Value; }
     }
+    private NetworkVariable<bool> playerScoreDone = new NetworkVariable<bool>(false);
+    public bool PlayerScoreDone
+    {
+        get { return playerScoreDone.Value; }
+    }
+
     private bool active = true;
 
     public Color PlayerColor
@@ -35,27 +49,32 @@ public class PlatformerData : NetworkBehaviour
         playerColorNet.Value = Color.HSVToRGB(hue, 1f, 1f);
     }
 
-    [ServerRpc]
-    void FinishedSetServerRpc(ServerRpcParams rpcParams = default)
+    [ServerRpc(RequireOwnership = false)]
+    public void ScoreSetServerRpc(int score, ServerRpcParams rpcParams = default)
     {
-        playerFinished.Value = true;
-
-        int playersFinished = 0;
-
-        foreach (NetworkClient player in NetworkManager.Singleton.ConnectedClients.Values)
-        {
-            bool finished = player.PlayerObject.GetComponent<PlatformerData>().PlayerFinished;
-            if (finished)
-            {
-                playersFinished += 1;
-            }
-        }
-
-        playerScoreNet.Value = 11 - playersFinished;
-        Debug.Log("score: " + (11 - playersFinished));
-
-        playerSprite.enabled = false;
+        playerScoreNet.Value = score;
     }
+
+
+    //GAME FINISHED==========
+    [ServerRpc]
+    void FinishedSetServerRpc(float finalTime, ServerRpcParams rpcParams = default)
+    {
+        finalTimeNet.Value = finalTime;
+        playerFinished.Value = true;
+        playerSprite.enabled = false;
+        FindObjectOfType<ServerScript>().CheckPlayersFinished();
+    }
+
+    //[ClientRpc]
+    public void AddFinalScore(int rank)
+    {
+        if (!IsServer) return;
+        universalPlayer.AddScore(11 - rank);
+        //ScoreCompleteServerRpc();
+    }
+    //GAME FINISHED==========
+
 
     public override void OnNetworkSpawn()
     {
@@ -64,7 +83,6 @@ public class PlatformerData : NetworkBehaviour
         playerScoreNet.OnValueChanged += OnScoreChange;
         playerFinished.OnValueChanged += OnFinishChange;
     }
-
 
     public override void OnNetworkDespawn()
     {
@@ -81,12 +99,7 @@ public class PlatformerData : NetworkBehaviour
 
     public void OnScoreChange(int previous, int current)
     {
-        if (IsOwner)
-        {
-            Debug.Log("on score change: " + playerScoreNet.Value);
-            universalPlayer.SetScorePlatformerServerRpc(playerScoreNet.Value);
-        }
-        //scoreText.text = playerScoreNet.Value.ToString();
+        scoreText.text = playerScoreNet.Value.ToString();
     }
 
     public void OnFinishChange(bool previous, bool current)
@@ -99,15 +112,14 @@ public class PlatformerData : NetworkBehaviour
 
     public void SyncNetVariables()
     {
-        //scoreText.text = playerScoreNet.Value.ToString();
+        scoreText.text = playerScoreNet.Value.ToString();
         playerSprite.color = playerColorNet.Value;
     }
 
     private void Awake()
     {
         playerSprite = GetComponent<SpriteRenderer>();
-        timeText = FindObjectOfType<TextMeshProUGUI>();
-        universalPlayer = FindObjectOfType<UniversalPlayer>();
+        timeText = GameObject.Find("Canvas/Time").GetComponent<TextMeshProUGUI>();
     }
 
     // Start is called before the first frame update
@@ -136,7 +148,6 @@ public class PlatformerData : NetworkBehaviour
         {
             if (IsOwner)
             {
-                //ScoreSetServerRpc();
                 ColorSetServerRpc(Random.Range(0f, 1f));
             }
         }
@@ -156,7 +167,7 @@ public class PlatformerData : NetworkBehaviour
             Debug.Log(timePassed);
             if (IsOwner)
             {
-                FinishedSetServerRpc();
+                FinishedSetServerRpc(timePassed);
                 GetComponent<ClientPlatformer>().active = false;
                 active = false;
             }

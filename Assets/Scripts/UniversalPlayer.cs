@@ -10,11 +10,13 @@ public class UniversalPlayer : NetworkBehaviour
 
     [SerializeField]
     private GameObject Platformer;
-    private NetworkVariable<int> currentGameScore = new NetworkVariable<int>(0);
-    private NetworkVariable<int> playerScore = new NetworkVariable<int>(0);
+    public NetworkVariable<int> playerScore = new NetworkVariable<int>(0);
+    //private NetworkVariable<int> playerScore = new NetworkVariable<int>(0);
 
     [SerializeField]
     private GameObject Player;
+
+    //public int playerScore = 0;
 
     [ServerRpc]
     //[ServerRpc(RequireOwnership = false)]
@@ -35,34 +37,20 @@ public class UniversalPlayer : NetworkBehaviour
         player_obj.GetComponent<NetworkObject>().SpawnAsPlayerObject(clientId, true); // destroyWithScene = true 
         player_obj.GetComponent<NetworkObject>().ChangeOwnership(clientId);
         Debug.Log("UniversalPlayer: Spawned a player object for: " + clientId);
-    }
 
-    [ServerRpc(RequireOwnership = false)]
-    public void SetScorePlatformerServerRpc(int score, ServerRpcParams rpcParams = default)
-    {
-        currentGameScore.Value = score;
-        Debug.Log("Universal Player Score : " + score);
-        bool allFinished = true;
-        foreach (NetworkClient player in NetworkManager.Singleton.ConnectedClients.Values)
+        if (scene_name == "Platformer")
         {
-            bool finished = player.PlayerObject.GetComponent<PlatformerData>().PlayerFinished;
-            if (!finished)
-            {
-                allFinished = false;
-                break;
-            }
-        }
-
-        if (allFinished)
-        {
-            NetworkManager.Singleton.SceneManager.LoadScene("Scrap", LoadSceneMode.Single);
-            //Debug.Log("!Switch Scene!");
+            PlatformerData playerData = player_obj.GetComponent<PlatformerData>();
+            playerData.universalPlayer = this;
+            playerData.ScoreSetServerRpc(playerScore.Value);
         }
     }
 
-    private void OnLevelWasLoaded(int level)
+    //only call with server
+    public void AddScore(int score)
     {
-        Debug.Log("Level: " + level);
+        if (!IsServer) return;
+        playerScore.Value += score;
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode) // Spawn appropriate prefab depending on scene 
