@@ -31,13 +31,8 @@ public class PlatformerData : NetworkBehaviour
     {
         get { return playerFinished.Value; }
     }
-    private NetworkVariable<bool> playerScoreDone = new NetworkVariable<bool>(false);
-    public bool PlayerScoreDone
-    {
-        get { return playerScoreDone.Value; }
-    }
 
-    private bool active = true;
+    private bool playerActive = true;
 
     public Color PlayerColor
     { get { return playerColorNet.Value; } }
@@ -66,7 +61,7 @@ public class PlatformerData : NetworkBehaviour
         FindObjectOfType<ServerScript>().CheckPlayersFinished();
     }
 
-    //[ClientRpc]
+    //only call from server
     public void AddFinalScore(int rank)
     {
         if (!IsServer) return;
@@ -141,8 +136,12 @@ public class PlatformerData : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!playerActive) return;
+
         timePassed += Time.deltaTime;
-        timeText.text = timePassed.ToString();
+
+        if (IsOwner)
+            timeText.text = timePassed.ToString();
 
         if (Input.GetButtonDown("Fire1"))
         {
@@ -155,9 +154,9 @@ public class PlatformerData : NetworkBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (!IsClient) return;
+        if (!IsOwner) return;
 
-        if (!active) return;
+        if (!playerActive) return;
 
         Debug.Log(collision.gameObject.name);
         Debug.Log(collision.gameObject.tag == "Finish");
@@ -165,12 +164,10 @@ public class PlatformerData : NetworkBehaviour
         if (collision.gameObject.tag == "Finish")
         {
             Debug.Log(timePassed);
-            if (IsOwner)
-            {
-                FinishedSetServerRpc(timePassed);
-                GetComponent<ClientPlatformer>().active = false;
-                active = false;
-            }
+            FinishedSetServerRpc(timePassed);
+            GetComponent<ClientPlatformer>().active = false;
+            playerActive = false;
+            timeText.text = timePassed.ToString();
         }
     }
 }

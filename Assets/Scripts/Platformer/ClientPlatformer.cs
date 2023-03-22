@@ -10,8 +10,8 @@ public class ClientPlatformer : NetworkBehaviour
 {
     //public Text scoreText;
 
-    [SerializeField]
-    private TextMeshProUGUI timeText;
+    //[SerializeField]
+    //private TextMeshProUGUI timeText;
 
     [SerializeField]
     private float movementSpeed = 50f;
