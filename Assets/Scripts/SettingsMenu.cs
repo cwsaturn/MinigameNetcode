@@ -43,8 +43,8 @@ public class SettingsMenu : MonoBehaviour
         sfx.value = PlayerPrefs.GetFloat("sfx_vol", 0);
 
         //resolution
-        int res_index = PlayerPrefs.GetInt("res_index", 0);
-        Screen.SetResolution(resolutions[res_index].horizontal, resolutions[res_index].vertical, false);
+        int res_index = PlayerPrefs.GetInt("res_index", 3);
+        Screen.SetResolution(resolutions[res_index].horizontal, resolutions[res_index].vertical, true);
         dropdown.value = res_index;
 
     }
@@ -80,7 +80,7 @@ public class SettingsMenu : MonoBehaviour
 
     public void ResDropdown(int index)
     {
-        Screen.SetResolution(resolutions[index].horizontal, resolutions[index].vertical, false);
+        Screen.SetResolution(resolutions[index].horizontal, resolutions[index].vertical, true);
         PlayerPrefs.SetInt("res_index", index);
     }
 }
