@@ -25,6 +25,10 @@ public class SettingsMenu : MonoBehaviour
     public List<ResItem> resolutions = new List<ResItem>();
     private int selectedResolution;
 
+    //Monitors
+    public Toggle fpsToggle;
+    public Toggle pingToggle;
+
 
     void Start() {
         //glados variables
@@ -46,6 +50,9 @@ public class SettingsMenu : MonoBehaviour
         int res_index = PlayerPrefs.GetInt("res_index", 3);
         Screen.SetResolution(resolutions[res_index].horizontal, resolutions[res_index].vertical, true);
         dropdown.value = res_index;
+
+        fpsToggle.isOn = PlayerPrefs.GetInt("fps")  == 1 ? true : false;
+        pingToggle.isOn = PlayerPrefs.GetInt("ping")  == 1 ? true : false;
 
     }
 
@@ -82,6 +89,16 @@ public class SettingsMenu : MonoBehaviour
     {
         Screen.SetResolution(resolutions[index].horizontal, resolutions[index].vertical, true);
         PlayerPrefs.SetInt("res_index", index);
+    }
+
+    public void fpsCounter()
+    {
+        PlayerPrefs.SetInt("fps", fpsToggle.isOn?1:0);
+    }
+
+    public void pingCounter()
+    {
+        PlayerPrefs.SetInt("ping", pingToggle.isOn?1:0);
     }
 }
 
