@@ -38,12 +38,13 @@ public class PlatformerData : NetworkBehaviour
     { get { return playerColorNet.Value; } }
 
 
-    [ServerRpc]
-    void ColorSetServerRpc(float hue, ServerRpcParams rpcParams = default)
+    public void ColorSet(Color color)
     {
-        playerColorNet.Value = Color.HSVToRGB(hue, 1f, 1f);
+        if (!IsServer) return;
+        playerColorNet.Value = color;
     }
 
+    //Set by universalPlayer
     [ServerRpc(RequireOwnership = false)]
     public void ScoreSetServerRpc(int score, ServerRpcParams rpcParams = default)
     {
@@ -62,10 +63,18 @@ public class PlatformerData : NetworkBehaviour
     }
 
     //only call from server
-    public void AddFinalScore(int rank)
+    public void AddFinalScore(int rank, int players)
     {
         if (!IsServer) return;
-        universalPlayer.AddScore(11 - rank);
+
+        if (players == 0)
+        {
+            universalPlayer.AddScore(1);
+            return;
+        }
+
+        int score = 10 * (players - rank + 1) / players;
+        universalPlayer.AddScore(score);
         //ScoreCompleteServerRpc();
     }
     //GAME FINISHED==========
@@ -127,7 +136,7 @@ public class PlatformerData : NetworkBehaviour
             Debug.Log("test1");
 
             float colorValue = Random.Range(0f, 1f);
-            ColorSetServerRpc(colorValue);
+            //ColorSetServerRpc(colorValue);
         }
 
         SyncNetVariables();
@@ -147,7 +156,7 @@ public class PlatformerData : NetworkBehaviour
         {
             if (IsOwner)
             {
-                ColorSetServerRpc(Random.Range(0f, 1f));
+                //ColorSetServerRpc(Random.Range(0f, 1f));
             }
         }
     }

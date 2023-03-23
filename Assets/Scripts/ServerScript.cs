@@ -30,6 +30,7 @@ public class ServerScript : NetworkBehaviour
 
         //All are done
         finalTimes.Sort();
+        int playerCount = NetworkManager.Singleton.ConnectedClients.Count;
 
         foreach (NetworkClient player in NetworkManager.Singleton.ConnectedClients.Values)
         {
@@ -39,7 +40,7 @@ public class ServerScript : NetworkBehaviour
             {
                 if (playerTime <= finalTimes[playerRank])
                 {
-                    playerData.AddFinalScore(playerRank + 1);
+                    playerData.AddFinalScore(playerRank + 1, playerCount);
                     break;
                 }
             }

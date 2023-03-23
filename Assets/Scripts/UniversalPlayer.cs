@@ -43,6 +43,25 @@ public class UniversalPlayer : NetworkBehaviour
             PlatformerData playerData = player_obj.GetComponent<PlatformerData>();
             playerData.universalPlayer = this;
             playerData.ScoreSetServerRpc(playerScore.Value);
+
+            Color playerColor = Color.white;
+            switch (OwnerClientId)
+            {
+                case 0:
+                    playerColor = Color.red;
+                    break;
+                case 1:
+                    playerColor = Color.blue;
+                    break;
+                case 2:
+                    playerColor = Color.green;
+                    break;
+                case 3:
+                    playerColor = Color.yellow;
+                    break;
+            }
+
+            playerData.ColorSet(playerColor);
         }
     }
 
