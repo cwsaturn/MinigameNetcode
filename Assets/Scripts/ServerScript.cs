@@ -1,67 +1,54 @@
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using Unity.Netcode;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class ServerScript : NetworkBehaviour
 {
-    public NetworkList<float> floatList;
-    public NetworkVariable<float> networkFloat = new NetworkVariable<float>(0f);
-
-    private List<GameObject> clientList = new List<GameObject>();
-
-    //private NetworkList<GameObject> players;
-
-    [SerializeField]
-    private TextMeshProUGUI text;
-
-    private void Awake()
-    {
-        floatList = new NetworkList<float>();
-    }
-
     private void Start()
     {
 
     }
 
-
-
-    [ServerRpc(RequireOwnership = false)]
-    public void ChangeNumberServerRpc(ServerRpcParams rpcParams = default)
+    //call from server
+    public void CheckPlayersFinished()
     {
-        networkFloat.Value = Random.Range(0f, 1f);
-        //colorList.Value.Add(color);
+        if (!IsServer) return;
+
+        List<float> finalTimes = new List<float>();
+        foreach (NetworkClient player in NetworkManager.Singleton.ConnectedClients.Values)
+        {
+            PlatformerData playerData = player.PlayerObject.GetComponent<PlatformerData>();
+            if (!playerData.PlayerFinished)
+                return;
+
+            finalTimes.Add(playerData.FinalTime);
+        }
+
+        //All are done
+        finalTimes.Sort();
+        int playerCount = NetworkManager.Singleton.ConnectedClients.Count;
+
+        foreach (NetworkClient player in NetworkManager.Singleton.ConnectedClients.Values)
+        {
+            PlatformerData playerData = player.PlayerObject.GetComponent<PlatformerData>();
+            float playerTime = playerData.FinalTime;
+            for (int playerRank = 0; playerRank < finalTimes.Count; playerRank++)
+            {
+                if (playerTime <= finalTimes[playerRank])
+                {
+                    playerData.AddFinalScore(playerRank + 1, playerCount);
+                    break;
+                }
+            }
+            NetworkManager.Singleton.SceneManager.LoadScene("Scrap", LoadSceneMode.Single);
+        }
     }
 
     void Update()
     {
-        text.text = networkFloat.Value.ToString();
-
-        if (Input.GetKeyDown("w"))
-        {
-            ChangeNumberServerRpc();
-        }
-
-        if (IsClient)
-        {
-            if (Input.GetKeyDown("q"))
-            {
-                Debug.Log("color " + networkFloat.Value);
-                Debug.Log("\n");
-            }
-            
-
-            if (Input.GetKeyDown("e"))
-            {
-                foreach (NetworkClient player in NetworkManager.Singleton.ConnectedClients.Values)
-                {
-                    Color color = player.PlayerObject.GetComponent<ClientPlatformer>().PlayerColor;
-                    Debug.Log(player.ClientId + "\n" + color.ToHexString());
-                }
-            }
-        }
-
     }
 }
