@@ -5,6 +5,7 @@ using UnityEngine.Audio;
 using System;
 using UnityEngine.UI;
 using TMPro;
+using System.Reflection;
 
 public class SettingsMenu : MonoBehaviour
 {
@@ -24,10 +25,12 @@ public class SettingsMenu : MonoBehaviour
 
     public List<ResItem> resolutions = new List<ResItem>();
     private int selectedResolution;
+    private bool fullscreen;
 
     //Monitors
     public Toggle fpsToggle;
     public Toggle pingToggle;
+    public Toggle fullscreenToggle;
 
 
     void Start() {
@@ -47,9 +50,11 @@ public class SettingsMenu : MonoBehaviour
         sfx.value = PlayerPrefs.GetFloat("sfx_vol", 0);
 
         //resolution
-        int res_index = PlayerPrefs.GetInt("res_index", 3);
-        Screen.SetResolution(resolutions[res_index].horizontal, resolutions[res_index].vertical, true);
-        dropdown.value = res_index;
+        selectedResolution = PlayerPrefs.GetInt("res_index", 3);
+        fullscreen = PlayerPrefs.GetInt("fullscreen", 1) == 1 ? true : false;
+        fullscreenToggle.isOn = fullscreen;
+        setScreen();
+        dropdown.value = selectedResolution;
 
         fpsToggle.isOn = PlayerPrefs.GetInt("fps")  == 1 ? true : false;
         pingToggle.isOn = PlayerPrefs.GetInt("ping")  == 1 ? true : false;
@@ -87,8 +92,9 @@ public class SettingsMenu : MonoBehaviour
 
     public void ResDropdown(int index)
     {
-        Screen.SetResolution(resolutions[index].horizontal, resolutions[index].vertical, true);
+        selectedResolution = index;
         PlayerPrefs.SetInt("res_index", index);
+        setScreen();
     }
 
     public void fpsCounter()
@@ -99,6 +105,18 @@ public class SettingsMenu : MonoBehaviour
     public void pingCounter()
     {
         PlayerPrefs.SetInt("ping", pingToggle.isOn?1:0);
+    }
+
+    public void fullscreenToggled()
+    {
+        fullscreen = fullscreenToggle.isOn ? true : false;
+        PlayerPrefs.SetInt("fullscreen", fullscreen ? 1 : 0);
+        setScreen();
+    }
+
+    private void setScreen()
+    {
+        Screen.SetResolution(resolutions[selectedResolution].horizontal, resolutions[selectedResolution].vertical, fullscreen);
     }
 }
 

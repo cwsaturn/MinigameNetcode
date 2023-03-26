@@ -76,6 +76,8 @@ public class UniversalPlayer : NetworkBehaviour
     {
         if(NetworkManager.Singleton.IsClient)
         {
+            if (!IsOwner) return;
+
             Debug.Log("Scene loaded");
             CreatePlayerServerRpc(NetworkManager.Singleton.LocalClientId, scene.name);
         }
