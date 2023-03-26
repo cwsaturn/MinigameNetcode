@@ -36,8 +36,6 @@ public class ClientPlatformer : NetworkBehaviour
 
     private void Start()
     {
-        Debug.Log("test2");
-
         if (!IsClient) return;
         playerRigidbody = GetComponent<Rigidbody2D>();
     }

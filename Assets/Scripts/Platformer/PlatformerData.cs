@@ -123,7 +123,6 @@ public class PlatformerData : NetworkBehaviour
     private void Awake()
     {
         playerSprite = GetComponent<SpriteRenderer>();
-        timeText = GameObject.Find("Canvas/Time").GetComponent<TextMeshProUGUI>();
     }
 
     // Start is called before the first frame update
@@ -133,10 +132,9 @@ public class PlatformerData : NetworkBehaviour
         {
             Camera.main.GetComponent<CameraScript>().setTarget(transform);
 
-            Debug.Log("test1");
-
             float colorValue = Random.Range(0f, 1f);
             //ColorSetServerRpc(colorValue);
+            timeText = GameObject.Find("Canvas/Time").GetComponent<TextMeshProUGUI>();
         }
 
         SyncNetVariables();
@@ -167,12 +165,8 @@ public class PlatformerData : NetworkBehaviour
 
         if (!playerActive) return;
 
-        Debug.Log(collision.gameObject.name);
-        Debug.Log(collision.gameObject.tag == "Finish");
-
         if (collision.gameObject.tag == "Finish")
         {
-            Debug.Log(timePassed);
             FinishedSetServerRpc(timePassed);
             GetComponent<ClientPlatformer>().active = false;
             playerActive = false;
