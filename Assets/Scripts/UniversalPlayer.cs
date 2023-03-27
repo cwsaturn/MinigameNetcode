@@ -10,12 +10,12 @@ public class UniversalPlayer : NetworkBehaviour
 
     [SerializeField]
     private GameObject Platformer;
-    public NetworkVariable<int> playerScore = new NetworkVariable<int>(0);
-    //private NetworkVariable<int> playerScore = new NetworkVariable<int>(0);
-
     [SerializeField]
     private GameObject Player;
-
+    private Color playerColor = Color.white;
+    
+    public NetworkVariable<int> playerScore = new NetworkVariable<int>(0);
+    //private NetworkVariable<int> playerScore = new NetworkVariable<int>(0);
     //public int playerScore = 0;
 
     [ServerRpc]
@@ -43,26 +43,45 @@ public class UniversalPlayer : NetworkBehaviour
             PlatformerData playerData = player_obj.GetComponent<PlatformerData>();
             playerData.universalPlayer = this;
             playerData.ScoreSetServerRpc(playerScore.Value);
-
-            Color playerColor = Color.white;
-            switch (OwnerClientId)
-            {
-                case 0:
-                    playerColor = Color.red;
-                    break;
-                case 1:
-                    playerColor = Color.blue;
-                    break;
-                case 2:
-                    playerColor = Color.green;
-                    break;
-                case 3:
-                    playerColor = Color.yellow;
-                    break;
-            }
-
+            
+            playerColor = SetPlayerColor(OwnerClientId);
             playerData.ColorSet(playerColor);
         }
+
+        else // Lots of repeated code here, should probably be cleaned up 
+        {
+            NetworkTransformTest playerData = player_obj.GetComponent<NetworkTransformTest>();
+            playerData.universalPlayer = this;
+
+            playerColor = SetPlayerColor(OwnerClientId);
+            playerData.ColorSet(playerColor);
+
+        }
+    }
+
+    /* 
+    TODO_ACM: Can we just set 'SpriteRenderer.color' of the player prefab in UniversalPlayer?
+    Seems like it would cleanup a lot of repetitive code
+    */
+    private Color SetPlayerColor(ulong OwnerClientId)
+    {
+        switch (OwnerClientId)
+        {
+            case 0:
+                playerColor = Color.red;
+                break;
+            case 1:
+                playerColor = Color.blue;
+                break;
+            case 2:
+                playerColor = Color.green;
+                break;
+            case 3:
+                playerColor = Color.yellow;
+                break;
+        }
+
+        return playerColor;
     }
 
     //only call with server

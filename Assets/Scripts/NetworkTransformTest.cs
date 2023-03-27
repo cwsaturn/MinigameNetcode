@@ -7,8 +7,10 @@ public class NetworkTransformTest : NetworkBehaviour
 {
     [SerializeField]
     private float movementSpeed = 5f;
-
     private Rigidbody2D playerRigidbody;
+    private NetworkVariable<Color> playerColorNet = new NetworkVariable<Color>(Color.blue);
+    public UniversalPlayer universalPlayer;
+    
 
     private void Start()
     {
@@ -30,4 +32,29 @@ public class NetworkTransformTest : NetworkBehaviour
             playerRigidbody.AddForce(movementVector, ForceMode2D.Force);
         }
     }
+
+    // Reused color setting code from 'PlatformerData'...can probably be cleaned up 
+    public void ColorSet(Color color)
+    {
+        if (!IsServer) return;
+        playerColorNet.Value = color;
+    }
+
+    public void OnColorChange(Color previous, Color current)
+    {
+        GetComponent<SpriteRenderer>().color = playerColorNet.Value;
+    }
+
+
+    public override void OnNetworkSpawn()
+    {
+        playerColorNet.OnValueChanged += OnColorChange;
+        GetComponent<SpriteRenderer>().color = playerColorNet.Value;
+    }
+
+    public override void OnNetworkDespawn()
+    {
+        playerColorNet.OnValueChanged -= OnColorChange;
+    }
+
 }
