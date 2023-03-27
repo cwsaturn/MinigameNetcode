@@ -11,6 +11,7 @@ public class UniversalPlayer : NetworkBehaviour
     [SerializeField]
     private GameObject Platformer;
     public NetworkVariable<int> playerScore = new NetworkVariable<int>(0);
+    private NetworkVariable<Color> playerColor = new NetworkVariable<Color>(Color.white);
     //private NetworkVariable<int> playerScore = new NetworkVariable<int>(0);
 
     [SerializeField]
@@ -38,30 +39,17 @@ public class UniversalPlayer : NetworkBehaviour
         player_obj.GetComponent<NetworkObject>().ChangeOwnership(clientId);
         Debug.Log("UniversalPlayer: Spawned a player object for: " + clientId);
 
+        if (scene_name == "Scrap")
+        {
+            player_obj.GetComponent<DefaultPlayer>().ColorSet(playerColor.Value);
+        }
+
         if (scene_name == "Platformer")
         {
             PlatformerData playerData = player_obj.GetComponent<PlatformerData>();
             playerData.universalPlayer = this;
             playerData.ScoreSetServerRpc(playerScore.Value);
-
-            Color playerColor = Color.white;
-            switch (OwnerClientId)
-            {
-                case 0:
-                    playerColor = Color.red;
-                    break;
-                case 1:
-                    playerColor = Color.blue;
-                    break;
-                case 2:
-                    playerColor = Color.green;
-                    break;
-                case 3:
-                    playerColor = Color.yellow;
-                    break;
-            }
-
-            playerData.ColorSet(playerColor);
+            playerData.ColorSet(playerColor.Value);
         }
     }
 
@@ -70,6 +58,29 @@ public class UniversalPlayer : NetworkBehaviour
     {
         if (!IsServer) return;
         playerScore.Value += score;
+    }
+
+    [ServerRpc]
+    private void SetColorServerRpc()
+    {
+        switch (OwnerClientId)
+        {
+            case 0:
+                playerColor.Value = Color.red;
+                return;
+            case 1:
+                playerColor.Value = Color.blue;
+                return;
+            case 2:
+                playerColor.Value = Color.green;
+                return;
+            case 3:
+                playerColor.Value = Color.yellow;
+                return;
+            default:
+                playerColor.Value = Random.ColorHSV(0f, 1f);
+                return;
+        }
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode) // Spawn appropriate prefab depending on scene 
@@ -86,9 +97,12 @@ public class UniversalPlayer : NetworkBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        DontDestroyOnLoad(gameObject); 
+        DontDestroyOnLoad(gameObject);
+
         if (IsLocalPlayer)
         {
+            SetColorServerRpc();
+
             CreatePlayerServerRpc(NetworkManager.Singleton.LocalClientId);
         }
     }
