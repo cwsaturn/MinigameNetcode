@@ -67,11 +67,7 @@ public class PlatformerData : NetworkBehaviour
     {
         if (!IsServer) return;
 
-        if (players == 0)
-        {
-            universalPlayer.AddScore(1);
-            return;
-        }
+        if (players <= 0) return;
 
         int score = 10 * (players - rank + 1) / players;
         universalPlayer.AddScore(score);
@@ -83,27 +79,13 @@ public class PlatformerData : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         // Subscribe to value changes
-        playerColorNet.OnValueChanged += OnColorChange;
-        playerScoreNet.OnValueChanged += OnScoreChange;
         playerFinished.OnValueChanged += OnFinishChange;
     }
 
     public override void OnNetworkDespawn()
     {
         // Unsubscribe to value changes
-        playerColorNet.OnValueChanged -= OnColorChange;
-        playerScoreNet.OnValueChanged -= OnScoreChange;
         playerFinished.OnValueChanged -= OnFinishChange;
-    }
-
-    public void OnColorChange(Color previous, Color current)
-    {
-        playerSprite.color = playerColorNet.Value;
-    }
-
-    public void OnScoreChange(int previous, int current)
-    {
-        scoreText.text = playerScoreNet.Value.ToString();
     }
 
     public void OnFinishChange(bool previous, bool current)
@@ -116,8 +98,8 @@ public class PlatformerData : NetworkBehaviour
 
     public void SyncNetVariables()
     {
-        scoreText.text = playerScoreNet.Value.ToString();
-        playerSprite.color = playerColorNet.Value;
+        //scoreText.text = playerScoreNet.Value.ToString();
+        //playerSprite.color = playerColorNet.Value;
     }
 
     private void Awake()
@@ -131,13 +113,10 @@ public class PlatformerData : NetworkBehaviour
         if (IsLocalPlayer)
         {
             Camera.main.GetComponent<CameraScript>().setTarget(transform);
-
-            float colorValue = Random.Range(0f, 1f);
-            //ColorSetServerRpc(colorValue);
             timeText = GameObject.Find("Canvas/Time").GetComponent<TextMeshProUGUI>();
         }
 
-        SyncNetVariables();
+        //SyncNetVariables();
     }
 
     // Update is called once per frame
@@ -149,14 +128,6 @@ public class PlatformerData : NetworkBehaviour
 
         if (IsOwner)
             timeText.text = timePassed.ToString();
-
-        if (Input.GetButtonDown("Fire1"))
-        {
-            if (IsOwner)
-            {
-                //ColorSetServerRpc(Random.Range(0f, 1f));
-            }
-        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

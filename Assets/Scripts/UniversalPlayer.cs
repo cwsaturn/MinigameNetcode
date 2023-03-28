@@ -8,16 +8,13 @@ public class UniversalPlayer : NetworkBehaviour
 {
     //GameObject myPlayer;
 
-    [SerializeField]
-    private GameObject Platformer;
     public NetworkVariable<int> playerScore = new NetworkVariable<int>(0);
     private NetworkVariable<Color> playerColor = new NetworkVariable<Color>(Color.gray);
-    //private NetworkVariable<int> playerScore = new NetworkVariable<int>(0);
 
     [SerializeField]
     private GameObject Player;
-
-    //public int playerScore = 0;
+    [SerializeField]
+    private GameObject Platformer;
 
     [ServerRpc]
     //[ServerRpc(RequireOwnership = false)]
@@ -41,7 +38,6 @@ public class UniversalPlayer : NetworkBehaviour
 
         if (scene_name == "Scrap")
         {
-            //player_obj.GetComponent<DefaultPlayer>().ColorSet(playerColor.Value);
             PlayerInitiatedClientRpc();
         }
 
@@ -50,17 +46,34 @@ public class UniversalPlayer : NetworkBehaviour
             PlatformerData playerData = player_obj.GetComponent<PlatformerData>();
             playerData.universalPlayer = this;
             PlayerInitiatedClientRpc();
-            //playerData.ScoreSetServerRpc(playerScore.Value);
-            //playerData.ColorSet(playerColor.Value);
         }
     }
 
+    ///*
     [ClientRpc]
     private void PlayerInitiatedClientRpc(ClientRpcParams clientRpcParams = default)
     {
         SetPlayerColor();
         Debug.Log("client rpc");
         Debug.Log("color set to " + playerColor.Value.ToString());
+    }
+    //*/
+
+    public override void OnNetworkSpawn()
+    {
+        // Subscribe to value changes
+        playerColor.OnValueChanged += OnColorChange;
+    }
+
+    public override void OnNetworkDespawn()
+    {
+        // Unsubscribe to value changes
+        playerColor.OnValueChanged -= OnColorChange;
+    }
+
+    public void OnColorChange(Color previous, Color current)
+    {
+        SetPlayerColor();
     }
 
     //only call with server
@@ -128,7 +141,7 @@ public class UniversalPlayer : NetworkBehaviour
             CreatePlayerServerRpc(NetworkManager.Singleton.LocalClientId, scene.name);
         }
 
-        SetPlayerColor();
+        //SetPlayerColor();
     }
 
     // Start is called before the first frame update
