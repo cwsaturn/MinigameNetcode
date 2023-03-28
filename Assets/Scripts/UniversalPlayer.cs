@@ -6,12 +6,12 @@ using UnityEngine.SceneManagement;
 
 public class UniversalPlayer : NetworkBehaviour
 {
-    GameObject myPlayer;
+    //GameObject myPlayer;
 
     [SerializeField]
     private GameObject Platformer;
     public NetworkVariable<int> playerScore = new NetworkVariable<int>(0);
-    private NetworkVariable<Color> playerColor = new NetworkVariable<Color>(Color.white);
+    private NetworkVariable<Color> playerColor = new NetworkVariable<Color>(Color.gray);
     //private NetworkVariable<int> playerScore = new NetworkVariable<int>(0);
 
     [SerializeField]
@@ -41,16 +41,26 @@ public class UniversalPlayer : NetworkBehaviour
 
         if (scene_name == "Scrap")
         {
-            player_obj.GetComponent<DefaultPlayer>().ColorSet(playerColor.Value);
+            //player_obj.GetComponent<DefaultPlayer>().ColorSet(playerColor.Value);
+            PlayerInitiatedClientRpc();
         }
 
         if (scene_name == "Platformer")
         {
             PlatformerData playerData = player_obj.GetComponent<PlatformerData>();
             playerData.universalPlayer = this;
-            playerData.ScoreSetServerRpc(playerScore.Value);
-            playerData.ColorSet(playerColor.Value);
+            PlayerInitiatedClientRpc();
+            //playerData.ScoreSetServerRpc(playerScore.Value);
+            //playerData.ColorSet(playerColor.Value);
         }
+    }
+
+    [ClientRpc]
+    private void PlayerInitiatedClientRpc(ClientRpcParams clientRpcParams = default)
+    {
+        SetPlayerColor();
+        Debug.Log("client rpc");
+        Debug.Log("color set to " + playerColor.Value.ToString());
     }
 
     //only call with server
@@ -63,6 +73,7 @@ public class UniversalPlayer : NetworkBehaviour
     [ServerRpc]
     private void SetColorServerRpc()
     {
+        Debug.Log("setting color");
         switch (OwnerClientId)
         {
             case 0:
@@ -83,6 +94,30 @@ public class UniversalPlayer : NetworkBehaviour
         }
     }
 
+    private void SetPlayerColor()
+    {
+        GameObject player = FindPlayer();
+        if (player != null)
+        {
+            player.GetComponent<SpriteRenderer>().color = playerColor.Value;
+            Debug.Log("player found");
+            Debug.Log("color set to " + playerColor.Value.ToString());
+        }
+    }
+
+    private GameObject FindPlayer()
+    {
+        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+        foreach (GameObject player in players)
+        {
+            if (player.GetComponent<NetworkObject>().OwnerClientId == OwnerClientId)
+            {
+                return player;
+            }
+        }
+        return null;
+    }
+
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode) // Spawn appropriate prefab depending on scene 
     {
         if(NetworkManager.Singleton.IsClient)
@@ -92,6 +127,8 @@ public class UniversalPlayer : NetworkBehaviour
             Debug.Log("Scene loaded");
             CreatePlayerServerRpc(NetworkManager.Singleton.LocalClientId, scene.name);
         }
+
+        SetPlayerColor();
     }
 
     // Start is called before the first frame update
@@ -105,6 +142,8 @@ public class UniversalPlayer : NetworkBehaviour
 
             CreatePlayerServerRpc(NetworkManager.Singleton.LocalClientId);
         }
+
+        SetPlayerColor();
     }
 
     void OnEnable()

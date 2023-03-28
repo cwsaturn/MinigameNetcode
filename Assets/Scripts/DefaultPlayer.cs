@@ -11,6 +11,7 @@ public class DefaultPlayer : NetworkBehaviour
     private Rigidbody2D playerRigidbody;
     private SpriteRenderer playerSprite;
 
+    /*
     private NetworkVariable<Color> playerColor = new NetworkVariable<Color>(Color.white);
 
     public void ColorSet(Color color)
@@ -35,6 +36,7 @@ public class DefaultPlayer : NetworkBehaviour
     {
         playerSprite.color = playerColor.Value;
     }
+    */
 
     private void Awake()
     {
@@ -45,7 +47,7 @@ public class DefaultPlayer : NetworkBehaviour
     private void Start()
     {
         //playerSprite = GetComponent<SpriteRenderer>();
-        playerSprite.color = playerColor.Value;
+        //playerSprite.color = playerColor.Value;
     }
 
     void FixedUpdate()
