@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class ClientButton : MonoBehaviour
+public class HostButton : MonoBehaviour
 {
     public void OnButtonPress()
     {
-      PlayerPrefs.SetString("IsHost", "False");
-      SceneManager.LoadScene("Scrap", LoadSceneMode.Single);
+      PlayerPrefs.SetString("IsHost", "True");
+      SceneManager.LoadScene("StartLobby", LoadSceneMode.Single);
     }
 }

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement; 
@@ -10,15 +11,18 @@ public class UniversalPlayer : NetworkBehaviour
 
     public NetworkVariable<int> playerScore = new NetworkVariable<int>(0);
     private NetworkVariable<Color> playerColor = new NetworkVariable<Color>(Color.gray);
+    private NetworkVariable<FixedString32Bytes> username = new NetworkVariable<FixedString32Bytes>("");
 
     [SerializeField]
     private GameObject Player;
     [SerializeField]
     private GameObject Platformer;
 
+    private GameObject currentPlayer;
+
     [ServerRpc]
     //[ServerRpc(RequireOwnership = false)]
-    void CreatePlayerServerRpc(ulong clientId, string scene_name = "Scrap", ServerRpcParams rpcParams = default)
+    void CreatePlayerServerRpc(ulong clientId, string scene_name = "StartLobby", ServerRpcParams rpcParams = default)
     {
 
         GameObject player_obj;
@@ -36,24 +40,27 @@ public class UniversalPlayer : NetworkBehaviour
         player_obj.GetComponent<NetworkObject>().ChangeOwnership(clientId);
         Debug.Log("UniversalPlayer: Spawned a player object for: " + clientId);
 
-        if (scene_name == "Scrap")
+        if (scene_name == "StartLobby")
         {
-            PlayerInitiatedClientRpc();
+            //
         }
 
         if (scene_name == "Platformer")
         {
             PlatformerData playerData = player_obj.GetComponent<PlatformerData>();
             playerData.universalPlayer = this;
-            PlayerInitiatedClientRpc();
+            
         }
+        PlayerInitiatedClientRpc();
     }
 
     ///*
     [ClientRpc]
     private void PlayerInitiatedClientRpc(ClientRpcParams clientRpcParams = default)
     {
+        FindPlayer();
         SetPlayerColor();
+        SetPlayerName();
         Debug.Log("client rpc");
         Debug.Log("color set to " + playerColor.Value.ToString());
     }
@@ -63,17 +70,40 @@ public class UniversalPlayer : NetworkBehaviour
     {
         // Subscribe to value changes
         playerColor.OnValueChanged += OnColorChange;
+        username.OnValueChanged += OnUsernameChange;
     }
 
     public override void OnNetworkDespawn()
     {
         // Unsubscribe to value changes
         playerColor.OnValueChanged -= OnColorChange;
+        username.OnValueChanged -= OnUsernameChange;
     }
 
     public void OnColorChange(Color previous, Color current)
     {
         SetPlayerColor();
+    }
+
+    public void OnUsernameChange(FixedString32Bytes previous, FixedString32Bytes current)
+    {
+        SetPlayerName();
+    }
+
+    private void SetPlayerColor()
+    {
+        if (currentPlayer != null)
+        {
+            currentPlayer.GetComponent<SpriteRenderer>().color = playerColor.Value;
+        }
+    }
+
+    private void SetPlayerName()
+    {
+        if (currentPlayer != null)
+        {
+            currentPlayer.GetComponent<UsernameScript>().SetUsername(username.Value.ToString());
+        }
     }
 
     //only call with server
@@ -107,28 +137,23 @@ public class UniversalPlayer : NetworkBehaviour
         }
     }
 
-    private void SetPlayerColor()
+    [ServerRpc(RequireOwnership = false)]
+    public void SetUsernameServerRpc(string newName)
     {
-        GameObject player = FindPlayer();
-        if (player != null)
-        {
-            player.GetComponent<SpriteRenderer>().color = playerColor.Value;
-            Debug.Log("player found");
-            Debug.Log("color set to " + playerColor.Value.ToString());
-        }
+        username.Value = newName;
     }
 
-    private GameObject FindPlayer()
+    private void FindPlayer()
     {
         GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
         foreach (GameObject player in players)
         {
             if (player.GetComponent<NetworkObject>().OwnerClientId == OwnerClientId)
             {
-                return player;
+                currentPlayer = player;
+                return;
             }
         }
-        return null;
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode) // Spawn appropriate prefab depending on scene 
@@ -156,7 +181,9 @@ public class UniversalPlayer : NetworkBehaviour
             CreatePlayerServerRpc(NetworkManager.Singleton.LocalClientId);
         }
 
+        FindPlayer();
         SetPlayerColor();
+        SetPlayerName();
     }
 
     void OnEnable()

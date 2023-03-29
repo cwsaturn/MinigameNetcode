@@ -11,33 +11,6 @@ public class DefaultPlayer : NetworkBehaviour
     private Rigidbody2D playerRigidbody;
     private SpriteRenderer playerSprite;
 
-    /*
-    private NetworkVariable<Color> playerColor = new NetworkVariable<Color>(Color.white);
-
-    public void ColorSet(Color color)
-    {
-        if (!IsServer) return;
-        playerColor.Value = color;
-    }
-
-    public override void OnNetworkSpawn()
-    {
-        // Subscribe to value changes
-        playerColor.OnValueChanged += OnColorChange;
-    }
-
-    public override void OnNetworkDespawn()
-    {
-        // Unsubscribe to value changes
-        playerColor.OnValueChanged -= OnColorChange;
-    }
-
-    public void OnColorChange(Color previous, Color current)
-    {
-        playerSprite.color = playerColor.Value;
-    }
-    */
-
     private void Awake()
     {
         playerSprite = GetComponent<SpriteRenderer>();

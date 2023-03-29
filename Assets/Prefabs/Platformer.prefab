@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: -3675157821929384387}
   - component: {fileID: -4212803870404786686}
   - component: {fileID: 3155786208896750889}
+  - component: {fileID: 24905804657622565}
   m_Layer: 6
   m_Name: Platformer
   m_TagString: Player
@@ -205,7 +206,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2741170750a2a1d4ea254103b4980d68, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timeText: {fileID: 0}
   movementSpeed: 50
   jumpPower: 20
   normalGrav: 6
@@ -224,6 +224,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   scoreText: {fileID: 4262369258767891619}
+  universalPlayer: {fileID: 0}
+--- !u!114 &24905804657622565
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6082976955032821125}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 296af5d16ee985f4c8ca4dbc12bab23a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  text: {fileID: 4262369258767891619}
 --- !u!1 &7374446556977247790
 GameObject:
   m_ObjectHideFlags: 0
@@ -236,7 +250,7 @@ GameObject:
   - component: {fileID: 5466842750617810327}
   - component: {fileID: 4262369258767891619}
   m_Layer: 5
-  m_Name: Score
+  m_Name: Username
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -290,10 +304,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Score
+  m_text: name
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: a83551e6dbc67084abbc560b168d77e3, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: a83551e6dbc67084abbc560b168d77e3, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
