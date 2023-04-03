@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 6551400759770234067}
   m_Layer: 0
   m_Name: UniversalPlayer
-  m_TagString: Untagged
+  m_TagString: UniversalPlayer
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -61,7 +61,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af42590f6dce1fa4ebf01eab8e21c449, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Platformer: {fileID: 6082976955032821125, guid: 3bb187cc6a6b211429183f2cd7711170, type: 3}
-  Player: {fileID: 6082976955032821125, guid: 12657366b26452e4291f02f6194a4158, type: 3}
-  sceneLoaded:
+  playerScore:
     m_InternalValue: 0
+  Player: {fileID: 6082976955032821125, guid: 12657366b26452e4291f02f6194a4158, type: 3}
+  Platformer: {fileID: 6082976955032821125, guid: 3bb187cc6a6b211429183f2cd7711170, type: 3}
