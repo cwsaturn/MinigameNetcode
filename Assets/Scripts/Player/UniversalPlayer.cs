@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Collections;
 using Unity.Netcode;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement; 
 
@@ -17,8 +18,12 @@ public class UniversalPlayer : NetworkBehaviour
     private GameObject Player;
     [SerializeField]
     private GameObject Platformer;
+    [SerializeField]
+    private GameObject Driver;
 
     private GameObject currentPlayer;
+
+    private PlayerScoring playerScoring;
 
     [ServerRpc]
     //[ServerRpc(RequireOwnership = false)]
@@ -31,7 +36,10 @@ public class UniversalPlayer : NetworkBehaviour
         {
             player_obj = Instantiate(Platformer, Vector3.zero, Quaternion.identity);
         }
-
+        else if(scene_name == "Kart")
+        {
+            player_obj = Instantiate(Driver, Vector3.zero, Quaternion.identity);
+        }
         else
         {
             player_obj = Instantiate(Player, Vector3.zero, Quaternion.identity);
@@ -47,10 +55,10 @@ public class UniversalPlayer : NetworkBehaviour
 
         if (scene_name == "Platformer")
         {
-            PlatformerData playerData = player_obj.GetComponent<PlatformerData>();
-            playerData.universalPlayer = this;
-            
+            PlayerScript playerData = player_obj.GetComponent<PlayerScript>();
+            playerData.playerScoring = playerScoring;
         }
+        playerScoring.NewGame();
         PlayerInitiatedClientRpc();
     }
 
@@ -102,7 +110,7 @@ public class UniversalPlayer : NetworkBehaviour
     {
         if (currentPlayer != null)
         {
-            currentPlayer.GetComponent<UsernameScript>().SetUsername(username.Value.ToString());
+            currentPlayer.GetComponent<PlayerScript>().SetUsername(username.Value.ToString());
         }
     }
 
@@ -110,6 +118,7 @@ public class UniversalPlayer : NetworkBehaviour
     public void AddScore(int score)
     {
         if (!IsServer) return;
+
         playerScore.Value += score;
     }
 
@@ -173,6 +182,8 @@ public class UniversalPlayer : NetworkBehaviour
     void Start()
     {
         DontDestroyOnLoad(gameObject);
+
+        playerScoring = GetComponent<PlayerScoring>();
 
         if (IsLocalPlayer)
         {

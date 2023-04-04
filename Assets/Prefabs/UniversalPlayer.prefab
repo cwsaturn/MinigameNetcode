@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 6551400759770234064}
   - component: {fileID: 6551400759770234065}
   - component: {fileID: 6551400759770234067}
+  - component: {fileID: 8626011257086364263}
   m_Layer: 0
   m_Name: UniversalPlayer
   m_TagString: UniversalPlayer
@@ -65,3 +66,19 @@ MonoBehaviour:
     m_InternalValue: 0
   Player: {fileID: 6082976955032821125, guid: 12657366b26452e4291f02f6194a4158, type: 3}
   Platformer: {fileID: 6082976955032821125, guid: 3bb187cc6a6b211429183f2cd7711170, type: 3}
+--- !u!114 &8626011257086364263
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6551400759770234062}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95fd790db4374b244b20f44ca3fd7417, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  intermediateScore:
+    m_InternalValue: 0
+  playerFinished:
+    m_InternalValue: 0

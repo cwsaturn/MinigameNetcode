@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using Unity.Netcode;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,12 +13,11 @@ public class PlatformerData : NetworkBehaviour
 
     private SpriteRenderer playerSprite;
     private TextMeshProUGUI timeText;
+    private PlayerScript playerScript;
 
     [SerializeField]
     private TextMeshProUGUI scoreText;
-    //private ServerScript serverScript;
-    //private GameObject finishFlag;
-    public UniversalPlayer universalPlayer;
+    public PlayerScoring playerScoring;
 
     private NetworkVariable<int> playerScoreNet = new NetworkVariable<int>(0);
     private NetworkVariable<float> finalTimeNet = new NetworkVariable<float>(0f);
@@ -34,77 +34,10 @@ public class PlatformerData : NetworkBehaviour
 
     private bool playerActive = true;
 
-    public Color PlayerColor
-    { get { return playerColorNet.Value; } }
-
-
-    public void ColorSet(Color color)
-    {
-        if (!IsServer) return;
-        playerColorNet.Value = color;
-    }
-
-    //Set by universalPlayer
-    [ServerRpc(RequireOwnership = false)]
-    public void ScoreSetServerRpc(int score, ServerRpcParams rpcParams = default)
-    {
-        playerScoreNet.Value = score;
-    }
-
-
-    //GAME FINISHED==========
-    [ServerRpc]
-    void FinishedSetServerRpc(float finalTime, ServerRpcParams rpcParams = default)
-    {
-        finalTimeNet.Value = finalTime;
-        playerFinished.Value = true;
-        playerSprite.enabled = false;
-        FindObjectOfType<ServerScript>().CheckPlayersFinished();
-    }
-
-    //only call from server
-    public void AddFinalScore(int rank, int players)
-    {
-        if (!IsServer) return;
-
-        if (players <= 0) return;
-
-        int score = 10 * (players - rank + 1) / players;
-        universalPlayer.AddScore(score);
-        //ScoreCompleteServerRpc();
-    }
-    //GAME FINISHED==========
-
-
-    public override void OnNetworkSpawn()
-    {
-        // Subscribe to value changes
-        playerFinished.OnValueChanged += OnFinishChange;
-    }
-
-    public override void OnNetworkDespawn()
-    {
-        // Unsubscribe to value changes
-        playerFinished.OnValueChanged -= OnFinishChange;
-    }
-
-    public void OnFinishChange(bool previous, bool current)
-    {
-        if (playerFinished.Value)
-        {
-            playerSprite.enabled = false;
-        }
-    }
-
-    public void SyncNetVariables()
-    {
-        //scoreText.text = playerScoreNet.Value.ToString();
-        //playerSprite.color = playerColorNet.Value;
-    }
-
     private void Awake()
     {
         playerSprite = GetComponent<SpriteRenderer>();
+        playerScript = GetComponent<PlayerScript>();
     }
 
     // Start is called before the first frame update
@@ -138,7 +71,7 @@ public class PlatformerData : NetworkBehaviour
 
         if (collision.gameObject.tag == "Finish")
         {
-            FinishedSetServerRpc(timePassed);
+            playerScript.FinishedServerRpc(-timePassed);
             GetComponent<ClientPlatformer>().active = false;
             playerActive = false;
             timeText.text = timePassed.ToString();
