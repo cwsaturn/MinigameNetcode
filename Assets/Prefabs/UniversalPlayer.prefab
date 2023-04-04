@@ -66,6 +66,7 @@ MonoBehaviour:
     m_InternalValue: 0
   Player: {fileID: 6082976955032821125, guid: 12657366b26452e4291f02f6194a4158, type: 3}
   Platformer: {fileID: 6082976955032821125, guid: 3bb187cc6a6b211429183f2cd7711170, type: 3}
+  Driver: {fileID: 5118524332375770083, guid: 1285d6ca7befd9740b4c175d4e5dbe00, type: 3}
 --- !u!114 &8626011257086364263
 MonoBehaviour:
   m_ObjectHideFlags: 0

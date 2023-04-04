@@ -20,4 +20,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/StartLobby.unity
     guid: 7e940605d3488c04993d8a1f797fd835
+  - enabled: 1
+    path: Assets/Scenes/Kart.unity
+    guid: e6ac692c3dae16b4c807d2775e2f15cf
   m_configObjects: {}

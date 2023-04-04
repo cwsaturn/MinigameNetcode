@@ -8,10 +8,10 @@ public class PlayerScript : NetworkBehaviour
 {
     [SerializeField]
     private TextMeshProUGUI text;
+    [SerializeField]
+    private SpriteRenderer playerSprite;
 
     public PlayerScoring playerScoring;
-
-    private SpriteRenderer playerSprite;
 
     private NetworkVariable<bool> playerFinished = new NetworkVariable<bool>(false);
 
@@ -31,9 +31,14 @@ public class PlayerScript : NetworkBehaviour
     {
         if (playerFinished.Value)
         {
-            playerSprite.enabled = false;
+            if (playerSprite != null) playerSprite.enabled = false;
             text.enabled = false;
         }
+    }
+
+    public void SetColor(Color color)
+    {
+        playerSprite.color = color;
     }
 
     public void SetUsername(string username)
@@ -45,7 +50,7 @@ public class PlayerScript : NetworkBehaviour
     public void FinishedServerRpc(float intermediateScore, ServerRpcParams rpcParams = default)
     {
         playerFinished.Value = true;
-        playerSprite.enabled = false;
+        //playerSprite.enabled = false;
         playerScoring.SetPlayerFinished(intermediateScore);
         //FindObjectOfType<ServerScript>().CheckPlayersFinished();
     }

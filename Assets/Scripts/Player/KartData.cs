@@ -2,23 +2,24 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using Unity.Netcode;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.UI;
 
-public class PlatformerData : NetworkBehaviour
+public class KartData : NetworkBehaviour
 {
-    //public Text scoreText;
     private float timePassed = 0f;
 
     private TextMeshProUGUI timeText;
+    [SerializeField]
     private PlayerScript playerScript;
+
+    [SerializeField]
+    GameObject canvas;
 
     private bool playerActive = true;
 
     private void Awake()
     {
-        playerScript = GetComponent<PlayerScript>();
+        //playerScript = GetComponent<PlayerScript>();
     }
 
     // Start is called before the first frame update
@@ -42,10 +43,14 @@ public class PlatformerData : NetworkBehaviour
 
         if (IsOwner)
             timeText.text = timePassed.ToString();
+
+        canvas.transform.position = transform.position;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        Debug.Log("collision");
+
         if (!IsOwner) return;
 
         if (!playerActive) return;
@@ -53,7 +58,7 @@ public class PlatformerData : NetworkBehaviour
         if (collision.gameObject.tag == "Finish")
         {
             playerScript.FinishedServerRpc(-timePassed);
-            GetComponent<ClientPlatformer>().active = false;
+            GetComponent<KartMovement>().active = false;
             playerActive = false;
             timeText.text = timePassed.ToString();
         }

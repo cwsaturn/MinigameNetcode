@@ -48,17 +48,13 @@ public class UniversalPlayer : NetworkBehaviour
         player_obj.GetComponent<NetworkObject>().ChangeOwnership(clientId);
         Debug.Log("UniversalPlayer: Spawned a player object for: " + clientId);
 
-        if (scene_name == "StartLobby")
-        {
-            //
-        }
-
-        if (scene_name == "Platformer")
+        //Setup PlayerScript and PlayerScoring
+        if (scene_name != "StartLobby")
         {
             PlayerScript playerData = player_obj.GetComponent<PlayerScript>();
             playerData.playerScoring = playerScoring;
+            playerScoring.NewGame();
         }
-        playerScoring.NewGame();
         PlayerInitiatedClientRpc();
     }
 
@@ -69,8 +65,6 @@ public class UniversalPlayer : NetworkBehaviour
         FindPlayer();
         SetPlayerColor();
         SetPlayerName();
-        Debug.Log("client rpc");
-        Debug.Log("color set to " + playerColor.Value.ToString());
     }
     //*/
 
@@ -102,7 +96,7 @@ public class UniversalPlayer : NetworkBehaviour
     {
         if (currentPlayer != null)
         {
-            currentPlayer.GetComponent<SpriteRenderer>().color = playerColor.Value;
+            currentPlayer.GetComponent<PlayerScript>().SetColor(playerColor.Value);
         }
     }
 
@@ -125,7 +119,6 @@ public class UniversalPlayer : NetworkBehaviour
     [ServerRpc]
     private void SetColorServerRpc()
     {
-        Debug.Log("setting color");
         switch (OwnerClientId)
         {
             case 0:
