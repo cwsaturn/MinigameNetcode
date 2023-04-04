@@ -14,6 +14,7 @@ public class UniversalPlayer : NetworkBehaviour
     private NetworkVariable<Color> playerColor = new NetworkVariable<Color>(Color.gray);
     private NetworkVariable<FixedString32Bytes> username = new NetworkVariable<FixedString32Bytes>("");
 
+    //REMEMBER TO ADD TO NETWORK PREFABS
     [SerializeField]
     private GameObject Player;
     [SerializeField]

@@ -31,7 +31,7 @@ public class PlayerScript : NetworkBehaviour
     {
         if (playerFinished.Value)
         {
-            if (playerSprite != null) playerSprite.enabled = false;
+            playerSprite.enabled = false;
             text.enabled = false;
         }
     }
@@ -58,7 +58,7 @@ public class PlayerScript : NetworkBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        playerSprite = GetComponent<SpriteRenderer>();
+        //playerSprite = GetComponent<SpriteRenderer>();
     }
 
     // Update is called once per frame

@@ -44,24 +44,30 @@ namespace HelloWorld
         void OnGUI()
         {
             GUILayout.BeginArea(new Rect(10, 10, 300, 300));
-            StartButton();
+            StartButton("Platformer", "Start Platformer");
+            GUILayout.EndArea();
+
+            GUILayout.BeginArea(new Rect(10, 40, 300, 300));
+            StartButton("Kart", "Start Kart Game");
             GUILayout.EndArea();
         }
 
-        static void StartButton()
+        static void StartButton(string sceneName, string buttonText)
         {
             var mode = NetworkManager.Singleton.IsHost ?
                 "Host" : NetworkManager.Singleton.IsServer ? "Server" : "Client";
 
             if (mode == "Host")
             {
-                if (GUILayout.Button("Start Game"))
+                if (GUILayout.Button(buttonText))
                 { 
                     //SceneManager.LoadScene("Platformer", LoadSceneMode.Single);
-                    NetworkManager.Singleton.SceneManager.LoadScene("Platformer", LoadSceneMode.Single);
+                    NetworkManager.Singleton.SceneManager.LoadScene(sceneName, LoadSceneMode.Single);
                 }
             }
         }
+
+
 
 
         //Ref: https://docs-multiplayer.unity3d.com/netcode/current/basics/connection-approval/index.html
