@@ -481,8 +481,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   active: 1
   kart: {fileID: 2712984291527297709}
-  linearSpeed: 300
-  turningSpeed: 9
+  linearSpeed: 550
+  turningSpeed: 10
 --- !u!114 &858435150888885491
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -495,5 +495,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d365f823b59850741b85caf0ff19bfce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  checkpointNum: 3
+  laps: 3
   playerScript: {fileID: 1783688632949241791}
   canvas: {fileID: 7453011634683820725}

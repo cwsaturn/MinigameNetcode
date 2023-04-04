@@ -6,6 +6,7 @@ TagManager:
   tags:
   - UniversalPlayer
   - NetworkManager
+  - Checkpoint
   layers:
   - Default
   - TransparentFX
