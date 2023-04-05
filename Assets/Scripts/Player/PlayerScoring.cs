@@ -14,6 +14,7 @@ public class PlayerScoring : NetworkBehaviour
     private List<float> finalScores = new List<float>();
     private List<PlayerScoring> playerList = new List<PlayerScoring>();
 
+
     // Start is called before the first frame update
     void Start()
     {
@@ -76,6 +77,8 @@ public class PlayerScoring : NetworkBehaviour
         finalScores.Sort();
         int playerCount = playerList.Count;
 
+        
+
         foreach (PlayerScoring player in playerList)
         {
             float playerScore = player.intermediateScore.Value;
@@ -89,7 +92,9 @@ public class PlayerScoring : NetworkBehaviour
             }
         }
 
-        NetworkManager.Singleton.SceneManager.LoadScene("Scrap", LoadSceneMode.Single);
+        playerList.Clear();
+
+        NetworkManager.Singleton.SceneManager.LoadScene("MidgameLobby", LoadSceneMode.Single);
     }
 
     public void AddScore(int rank, int players)

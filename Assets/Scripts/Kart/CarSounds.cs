@@ -23,6 +23,7 @@ public class CarSounds : MonoBehaviour
 
     void Update()
     {
+        if (carRb == null) return;
         EngineSound();
     }
 

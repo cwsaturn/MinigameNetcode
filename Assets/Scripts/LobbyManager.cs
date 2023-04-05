@@ -92,7 +92,9 @@ namespace HelloWorld
             if (!NetworkManager.Singleton.IsHost)
             {
                 Debug.Log("LobbyManager: Denied Approval");
-                Application.Quit();
+                //Application.Quit();
+                NetworkManager.Singleton.Shutdown();
+                SceneManager.LoadScene("MainMenu");
             }
         }
 

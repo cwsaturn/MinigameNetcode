@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6082976955032821176}
   - component: {fileID: 4293545291588328128}
   - component: {fileID: 1783688632949241791}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Driver2
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -65,6 +65,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   text: {fileID: 4262369258767891619}
   playerSprite: {fileID: 5682209929604119116}
+  collider: {fileID: 5797604286863131196}
+  rigidbody: {fileID: 2712984291527297709}
   playerScoring: {fileID: 0}
 --- !u!1 &7374446556977247790
 GameObject:
@@ -77,7 +79,7 @@ GameObject:
   - component: {fileID: 1209596362286815676}
   - component: {fileID: 5466842750617810327}
   - component: {fileID: 4262369258767891619}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Username
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -213,7 +215,7 @@ GameObject:
   - component: {fileID: 8171039826313460453}
   - component: {fileID: 2033913385384826857}
   - component: {fileID: 8940736328957837735}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -318,7 +320,7 @@ GameObject:
   - component: {fileID: 4149681730664437505}
   - component: {fileID: 2698911972328083348}
   - component: {fileID: 858435150888885491}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Kart
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -332,14 +334,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8776562381778959416}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6082976955032821176}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
 --- !u!212 &5682209929604119116
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -430,8 +432,8 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 5
-  m_LinearDrag: 5
+  m_Mass: 8
+  m_LinearDrag: 2
   m_AngularDrag: 5
   m_GravityScale: 0
   m_Material: {fileID: 6200000, guid: 84133ef01ac562e45b1fce531d025e08, type: 2}
@@ -481,8 +483,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   active: 1
   kart: {fileID: 2712984291527297709}
-  linearSpeed: 550
-  turningSpeed: 10
+  linearSpeed: 350
+  turningSpeed: 15
 --- !u!114 &858435150888885491
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -496,6 +498,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   checkpointNum: 3
-  laps: 3
+  laps: 1
   playerScript: {fileID: 1783688632949241791}
   canvas: {fileID: 7453011634683820725}
+  text: {fileID: 0}
+  playerSprite: {fileID: 0}

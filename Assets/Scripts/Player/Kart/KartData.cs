@@ -14,9 +14,10 @@ public class KartData : NetworkBehaviour
     [SerializeField]
     private int checkpointNum = 3;
     [SerializeField]
-    private int laps = 3;
+    private int laps = 1;
 
     private TextMeshProUGUI timeText;
+    private TextMeshProUGUI lapText;
     [SerializeField]
     private PlayerScript playerScript;
 
@@ -24,6 +25,11 @@ public class KartData : NetworkBehaviour
     GameObject canvas;
 
     private bool playerActive = true;
+
+    [SerializeField]
+    private TextMeshProUGUI text;
+    [SerializeField]
+    private SpriteRenderer playerSprite;
 
     private void Awake()
     {
@@ -37,6 +43,9 @@ public class KartData : NetworkBehaviour
         {
             Camera.main.GetComponent<CameraScript>().setTarget(transform);
             timeText = GameObject.Find("Canvas/Time").GetComponent<TextMeshProUGUI>();
+            lapText = GameObject.Find("Canvas/Lap").GetComponent<TextMeshProUGUI>();
+
+            lapText.text = "Lap 1 / " + laps.ToString();
         }
 
         //SyncNetVariables();
@@ -44,7 +53,7 @@ public class KartData : NetworkBehaviour
 
     void localFinish()
     {
-        playerScript.FinishedServerRpc(-timePassed);
+        playerScript.FinishedServerRpc(timePassed);
         GetComponent<KartMovement>().active = false;
         playerActive = false;
         timeText.text = timePassed.ToString();
@@ -79,18 +88,19 @@ public class KartData : NetworkBehaviour
         if (index == previousCheckpoint) return;
 
         if (index == (previousCheckpoint + 1) % checkpointNum)
-        {
             progress += 1;
-        }
         else
-        {
             progress -= 1;
-        }
+
         previousCheckpoint = index;
 
         if (progress / checkpointNum >= laps)
-        {
             localFinish();
+
+        if (IsOwner)
+        {
+            int currentLap = Mathf.Min(1 + (progress / checkpointNum), laps);
+            lapText.text = "Lap " + currentLap + " / " + laps.ToString();
         }
     }
 }

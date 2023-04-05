@@ -13,6 +13,8 @@ public class UniversalPlayer : NetworkBehaviour
     public NetworkVariable<int> playerScore = new NetworkVariable<int>(0);
     private NetworkVariable<Color> playerColor = new NetworkVariable<Color>(Color.gray);
     private NetworkVariable<FixedString32Bytes> username = new NetworkVariable<FixedString32Bytes>("");
+    public string Username
+    { get { return username.Value.ToString(); } }
 
     //REMEMBER TO ADD TO NETWORK PREFABS
     [SerializeField]
@@ -33,17 +35,30 @@ public class UniversalPlayer : NetworkBehaviour
 
         GameObject player_obj;
 
+        if (scene_name == "StartLobby")
+        {
+            username.Value = PlayerPrefs.GetString("username", "Player" + clientId);
+        }
+
         if(scene_name == "Platformer")
         {
             player_obj = Instantiate(Platformer, Vector3.zero, Quaternion.identity);
         }
         else if(scene_name == "Kart")
         {
-            player_obj = Instantiate(Driver, Vector3.zero, Quaternion.identity);
+            Vector3 offset = Vector3.zero;
+            int playerNum = (int)clientId;
+            offset.x = 2 * (playerNum % 4);
+            offset.y = -2 * (playerNum / 4);
+            player_obj = Instantiate(Driver, offset, Quaternion.identity);
         }
         else
         {
-            player_obj = Instantiate(Player, Vector3.zero, Quaternion.identity);
+            Vector3 offset = Vector3.zero;
+            int playerNum = (int)clientId;
+            offset.x = 4 * (playerNum % 2);
+            offset.y = -4 * (playerNum / 2);
+            player_obj = Instantiate(Player, offset, Quaternion.identity);
         }
         player_obj.GetComponent<NetworkObject>().SpawnAsPlayerObject(clientId, true); // destroyWithScene = true 
         player_obj.GetComponent<NetworkObject>().ChangeOwnership(clientId);

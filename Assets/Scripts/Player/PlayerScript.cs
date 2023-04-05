@@ -10,6 +10,10 @@ public class PlayerScript : NetworkBehaviour
     private TextMeshProUGUI text;
     [SerializeField]
     private SpriteRenderer playerSprite;
+    [SerializeField]
+    private Collider2D collider;
+    [SerializeField]
+    private Rigidbody2D rigidbody;
 
     public PlayerScoring playerScoring;
 
@@ -33,6 +37,14 @@ public class PlayerScript : NetworkBehaviour
         {
             playerSprite.enabled = false;
             text.enabled = false;
+            if (collider != null)
+            {
+                collider.enabled = false;
+            }
+            if (rigidbody != null)
+            {
+                rigidbody.simulated = false;
+            }
         }
     }
 
@@ -50,7 +62,7 @@ public class PlayerScript : NetworkBehaviour
     public void FinishedServerRpc(float intermediateScore, ServerRpcParams rpcParams = default)
     {
         playerFinished.Value = true;
-        //playerSprite.enabled = false;
+        playerSprite.enabled = false;
         playerScoring.SetPlayerFinished(intermediateScore);
         //FindObjectOfType<ServerScript>().CheckPlayersFinished();
     }

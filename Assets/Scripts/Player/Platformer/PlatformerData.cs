@@ -5,10 +5,16 @@ using Unity.Netcode;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+using static System.Net.Mime.MediaTypeNames;
 
 public class PlatformerData : NetworkBehaviour
 {
     //public Text scoreText;
+    [SerializeField]
+    private TextMeshProUGUI text;
+    [SerializeField]
+    private SpriteRenderer playerSprite;
+
     private float timePassed = 0f;
 
     private TextMeshProUGUI timeText;
@@ -52,7 +58,7 @@ public class PlatformerData : NetworkBehaviour
 
         if (collision.gameObject.tag == "Finish")
         {
-            playerScript.FinishedServerRpc(-timePassed);
+            playerScript.FinishedServerRpc(timePassed);
             GetComponent<ClientPlatformer>().active = false;
             playerActive = false;
             timeText.text = timePassed.ToString();
