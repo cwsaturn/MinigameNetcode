@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
@@ -30,6 +31,9 @@ public class PlayerScoring : NetworkBehaviour
     public void SetPlayerFinished(float score)
     {
         if (!IsServer) return;
+
+        playerList = new List<PlayerScoring>();
+        finalScores = new List<float>();
 
         playerFinished.Value = true;
         intermediateScore.Value = score;
@@ -91,8 +95,6 @@ public class PlayerScoring : NetworkBehaviour
                 }
             }
         }
-
-        playerList.Clear();
 
         NetworkManager.Singleton.SceneManager.LoadScene("MidgameLobby", LoadSceneMode.Single);
     }
