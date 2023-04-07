@@ -40,7 +40,7 @@ public class UniversalPlayer : NetworkBehaviour
             username.Value = PlayerPrefs.GetString("username", "Player" + clientId);
         }
 
-        if(scene_name == "Platformer")
+        if(scene_name == "Platformer" || scene_name == "Platformer2")
         {
             player_obj = Instantiate(Platformer, Vector3.zero, Quaternion.identity);
         }

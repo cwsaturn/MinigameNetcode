@@ -13,7 +13,7 @@
 /[Mm]ono[Bb]leeding[Ee]dge/
 /[Mm]inigame[Nn]etcode_[Dd]ata/
 /*_DoNotShip/
-/TextMesh*Pro/
+/[Aa]ssets/TextMesh*Pro/
 
 # Asset meta data should only be ignored when the corresponding asset is also ignored
 !/[Aa]ssets/**/*.meta

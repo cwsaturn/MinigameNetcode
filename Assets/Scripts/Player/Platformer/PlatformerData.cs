@@ -39,6 +39,11 @@ public class PlatformerData : NetworkBehaviour
         //SyncNetVariables();
     }
 
+    private void SetTime(float time)
+    {
+        timeText.text = "Time: " + time.ToString("0.00");
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -47,7 +52,7 @@ public class PlatformerData : NetworkBehaviour
         timePassed += Time.deltaTime;
 
         if (IsOwner)
-            timeText.text = timePassed.ToString();
+            SetTime(timePassed);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -61,7 +66,7 @@ public class PlatformerData : NetworkBehaviour
             playerScript.FinishedServerRpc(timePassed);
             GetComponent<ClientPlatformer>().active = false;
             playerActive = false;
-            timeText.text = timePassed.ToString();
+            SetTime(timePassed);
         }
     }
 }
