@@ -445,3 +445,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   text: {fileID: 5541969693599019468}
+  playerSprite: {fileID: 6082976955032821127}
+  playerScoring: {fileID: 0}

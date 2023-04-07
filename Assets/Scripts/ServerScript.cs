@@ -14,6 +14,7 @@ public class ServerScript : NetworkBehaviour
     }
 
     //call from server
+    /*
     public void CheckPlayersFinished()
     {
         if (!IsServer) return;
@@ -47,6 +48,7 @@ public class ServerScript : NetworkBehaviour
             NetworkManager.Singleton.SceneManager.LoadScene("Scrap", LoadSceneMode.Single);
         }
     }
+    */
 
     void Update()
     {

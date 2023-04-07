@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Collections;
 using Unity.Netcode;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement; 
 
@@ -12,13 +13,20 @@ public class UniversalPlayer : NetworkBehaviour
     public NetworkVariable<int> playerScore = new NetworkVariable<int>(0);
     private NetworkVariable<Color> playerColor = new NetworkVariable<Color>(Color.gray);
     private NetworkVariable<FixedString32Bytes> username = new NetworkVariable<FixedString32Bytes>("");
+    public string Username
+    { get { return username.Value.ToString(); } }
 
+    //REMEMBER TO ADD TO NETWORK PREFABS
     [SerializeField]
     private GameObject Player;
     [SerializeField]
     private GameObject Platformer;
+    [SerializeField]
+    private GameObject Driver;
 
     private GameObject currentPlayer;
+
+    private PlayerScoring playerScoring;
 
     [ServerRpc]
     //[ServerRpc(RequireOwnership = false)]
@@ -27,29 +35,41 @@ public class UniversalPlayer : NetworkBehaviour
 
         GameObject player_obj;
 
-        if(scene_name == "Platformer")
+        if (scene_name == "StartLobby")
+        {
+            username.Value = PlayerPrefs.GetString("username", "Player" + clientId);
+        }
+
+        if(scene_name == "Platformer" || scene_name == "Platformer2")
         {
             player_obj = Instantiate(Platformer, Vector3.zero, Quaternion.identity);
         }
-
+        else if(scene_name == "Kart")
+        {
+            Vector3 offset = Vector3.zero;
+            int playerNum = (int)clientId;
+            offset.x = 2 * (playerNum % 4);
+            offset.y = -2 * (playerNum / 4);
+            player_obj = Instantiate(Driver, offset, Quaternion.identity);
+        }
         else
         {
-            player_obj = Instantiate(Player, Vector3.zero, Quaternion.identity);
+            Vector3 offset = Vector3.zero;
+            int playerNum = (int)clientId;
+            offset.x = 4 * (playerNum % 2);
+            offset.y = -4 * (playerNum / 2);
+            player_obj = Instantiate(Player, offset, Quaternion.identity);
         }
         player_obj.GetComponent<NetworkObject>().SpawnAsPlayerObject(clientId, true); // destroyWithScene = true 
         player_obj.GetComponent<NetworkObject>().ChangeOwnership(clientId);
         Debug.Log("UniversalPlayer: Spawned a player object for: " + clientId);
 
-        if (scene_name == "StartLobby")
+        //Setup PlayerScript and PlayerScoring
+        if (scene_name != "StartLobby")
         {
-            //
-        }
-
-        if (scene_name == "Platformer")
-        {
-            PlatformerData playerData = player_obj.GetComponent<PlatformerData>();
-            playerData.universalPlayer = this;
-            
+            PlayerScript playerData = player_obj.GetComponent<PlayerScript>();
+            playerData.playerScoring = playerScoring;
+            playerScoring.NewGame();
         }
         PlayerInitiatedClientRpc();
     }
@@ -61,8 +81,6 @@ public class UniversalPlayer : NetworkBehaviour
         FindPlayer();
         SetPlayerColor();
         SetPlayerName();
-        Debug.Log("client rpc");
-        Debug.Log("color set to " + playerColor.Value.ToString());
     }
     //*/
 
@@ -94,7 +112,7 @@ public class UniversalPlayer : NetworkBehaviour
     {
         if (currentPlayer != null)
         {
-            currentPlayer.GetComponent<SpriteRenderer>().color = playerColor.Value;
+            currentPlayer.GetComponent<PlayerScript>().SetColor(playerColor.Value);
         }
     }
 
@@ -102,7 +120,7 @@ public class UniversalPlayer : NetworkBehaviour
     {
         if (currentPlayer != null)
         {
-            currentPlayer.GetComponent<UsernameScript>().SetUsername(username.Value.ToString());
+            currentPlayer.GetComponent<PlayerScript>().SetUsername(username.Value.ToString());
         }
     }
 
@@ -110,13 +128,13 @@ public class UniversalPlayer : NetworkBehaviour
     public void AddScore(int score)
     {
         if (!IsServer) return;
+
         playerScore.Value += score;
     }
 
     [ServerRpc]
     private void SetColorServerRpc()
     {
-        Debug.Log("setting color");
         switch (OwnerClientId)
         {
             case 0:
@@ -173,6 +191,8 @@ public class UniversalPlayer : NetworkBehaviour
     void Start()
     {
         DontDestroyOnLoad(gameObject);
+
+        playerScoring = GetComponent<PlayerScoring>();
 
         if (IsLocalPlayer)
         {

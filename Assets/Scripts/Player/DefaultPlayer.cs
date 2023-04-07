@@ -33,7 +33,6 @@ public class DefaultPlayer : NetworkBehaviour
                 movementVector = movementVector.normalized;
 
             movementVector *= movementSpeed;
-
             //transform.position += movementVector;
             playerRigidbody.AddForce(movementVector, ForceMode2D.Force);
         }
