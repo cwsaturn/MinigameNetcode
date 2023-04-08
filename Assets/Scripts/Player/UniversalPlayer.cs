@@ -23,6 +23,8 @@ public class UniversalPlayer : NetworkBehaviour
     private GameObject Platformer;
     [SerializeField]
     private GameObject Driver;
+    [SerializeField]
+    private GameObject CardPicker;
 
     private GameObject currentPlayer;
 
@@ -51,6 +53,10 @@ public class UniversalPlayer : NetworkBehaviour
             offset.x = 2 * (playerNum % 4);
             offset.y = -2 * (playerNum / 4);
             player_obj = Instantiate(Driver, offset, Quaternion.identity);
+        }
+        else if(scene_name == "Card")
+        {
+            player_obj = Instantiate(CardPicker, Vector3.zero, Quaternion.identity);
         }
         else
         {
