@@ -13,9 +13,9 @@ GameObject:
   - component: {fileID: 2521488923308336602}
   - component: {fileID: 6669943685139377159}
   - component: {fileID: 1688629656627018557}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: ShellCursor
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -120,7 +120,7 @@ GameObject:
   - component: {fileID: 7567233009659594868}
   - component: {fileID: 7682164472626777437}
   - component: {fileID: 1976472844300848272}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -225,7 +225,7 @@ GameObject:
   - component: {fileID: 3263851525574078704}
   - component: {fileID: 2087302296049401697}
   - component: {fileID: 7486694287154141941}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Username
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -361,7 +361,7 @@ GameObject:
   - component: {fileID: 27152810527340267}
   - component: {fileID: 111977707755559505}
   - component: {fileID: 5102964791875153070}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
