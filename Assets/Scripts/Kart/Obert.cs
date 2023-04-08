@@ -9,6 +9,8 @@ public class Obert : NetworkBehaviour
     SpriteRenderer spriteRenderer;
     [SerializeField]
     Sprite sadObert;
+    [SerializeField]
+    Rigidbody2D rigidbody;
     float lifetime = 30f;
     NetworkVariable<float> health = new NetworkVariable<float>(30f);
     // Start is called before the first frame update
@@ -33,9 +35,13 @@ public class Obert : NetworkBehaviour
 
     void FixedUpdate()
     {
-        Debug.Log("obert health: " + health.Value);
         if (!IsServer) return;
         health.Value -= Time.deltaTime;
+    }
+
+    public void SetVelocity(Vector3 velocity)
+    {
+        rigidbody.velocity = velocity;
     }
 
     [ServerRpc(RequireOwnership = false)]

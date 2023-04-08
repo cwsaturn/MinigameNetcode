@@ -17,6 +17,7 @@ public class KartData : NetworkBehaviour
     private int laps = 3;
 
     float itemDistance = 1.7f;
+    float itemSpeed = 10f;
 
     private TextMeshProUGUI timeText;
     private TextMeshProUGUI lapText;
@@ -72,11 +73,11 @@ public class KartData : NetworkBehaviour
     }
 
     [ServerRpc]
-    void CreateItemServerRpc(Vector3 position, ServerRpcParams rpcParams = default)
+    void CreateItemServerRpc(Vector3 position, Vector3 velocity, ServerRpcParams rpcParams = default)
     {
         GameObject obert = Instantiate(blockingItem, position, Quaternion.identity);
         obert.GetComponent<NetworkObject>().Spawn();
-        Debug.Log("obert");
+        obert.GetComponent<Obert>().SetVelocity(velocity);
     }
 
     void FixedUpdate()
@@ -97,15 +98,24 @@ public class KartData : NetworkBehaviour
             {
                 itemUI.enabled = false;
                 hasItem = false;
-                Debug.Log("local obert");
-
-                Vector3 position = rigidbody.transform.position;
-
-                Vector3 delta = rigidbody.transform.rotation * Vector3.left * itemDistance;
-
-                CreateItemServerRpc(position + delta);
+                CreateItem();
             }
         }
+    }
+
+    private void CreateItem()
+    {
+        Vector3 position = rigidbody.transform.position;
+
+        Vector3 backwardVector = rigidbody.transform.rotation * Vector3.left;
+
+        Vector3 delta = backwardVector * itemDistance;
+
+        float dotProd = Vector3.Dot(rigidbody.velocity, backwardVector);
+
+        Vector3 itemVector = (Mathf.Max(dotProd, 0) + itemSpeed ) * backwardVector;
+        
+        CreateItemServerRpc(position + delta, itemVector);
     }
 
     // Update is called once per frame
