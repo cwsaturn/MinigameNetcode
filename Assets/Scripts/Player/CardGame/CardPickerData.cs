@@ -57,16 +57,22 @@ public class CardPickerData : NetworkBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (!IsOwner) return;
+        //if (!IsOwner) return;
 
-        if (!playerActive) return;
+        //if (!playerActive) return;
 
-        if (collision.gameObject.tag == "Finish")
+        if (collision.gameObject.tag == "Card")
         {
-            playerScript.FinishedServerRpc(timePassed);
-            GetComponent<ClientPlatformer>().active = false;
-            playerActive = false;
-            SetTime(timePassed);
+            Debug.Log("Card");
+
+            collision.gameObject.GetComponent<Animator>().SetBool("flipped", true);
+            collision.gameObject.GetComponent<Collider2D>().enabled = false;
+
+
+            //playerScript.FinishedServerRpc(timePassed);
+            //GetComponent<ClientPlatformer>().active = false;
+            //playerActive = false;
+            //SetTime(timePassed);
         }
     }
 }
