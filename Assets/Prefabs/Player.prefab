@@ -317,7 +317,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 7493cb490f5593d428a614e6c136e377, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -357,6 +357,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementSpeed: 50
+  spriteArray:
+  - {fileID: 1390837506, guid: 50bb2d0d50a2bc34eb16b1a7a782a14c, type: 3}
+  - {fileID: -1153064030, guid: 50bb2d0d50a2bc34eb16b1a7a782a14c, type: 3}
+  - {fileID: 1735146282, guid: 50bb2d0d50a2bc34eb16b1a7a782a14c, type: 3}
+  - {fileID: -76373927, guid: 50bb2d0d50a2bc34eb16b1a7a782a14c, type: 3}
 --- !u!114 &-6882338495106504775
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -446,4 +451,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   text: {fileID: 5541969693599019468}
   playerSprite: {fileID: 6082976955032821127}
+  collider: {fileID: 0}
+  rigidbody: {fileID: 0}
+  colored: 0
   playerScoring: {fileID: 0}

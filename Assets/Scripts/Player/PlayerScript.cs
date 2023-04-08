@@ -14,6 +14,8 @@ public class PlayerScript : NetworkBehaviour
     private Collider2D collider;
     [SerializeField]
     private Rigidbody2D rigidbody;
+    [SerializeField]
+    private bool colored = true;
 
     public PlayerScoring playerScoring;
 
@@ -50,6 +52,7 @@ public class PlayerScript : NetworkBehaviour
 
     public void SetColor(Color color)
     {
+        if (!colored) return;
         playerSprite.color = color;
     }
 
