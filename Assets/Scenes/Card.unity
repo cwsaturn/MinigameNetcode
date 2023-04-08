@@ -185,6 +185,19 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: af71cab5eb7030a4bb4d14093c0756bb, type: 3}
   m_PrefabInstance: {fileID: 726926031}
   m_PrefabAsset: {fileID: 0}
+--- !u!65 &116699684
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 116699679}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.988623, y: 0.58, z: 2.8000007}
+  m_Center: {x: 0, y: 0.000000014901165, z: -3.552714e-15}
 --- !u!1 &345529693
 GameObject:
   m_ObjectHideFlags: 0
@@ -528,7 +541,7 @@ PrefabInstance:
     - target: {fileID: -7511558181221131132, guid: af71cab5eb7030a4bb4d14093c0756bb, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 76a893c44de8e9a42b20cc1ee711c883, type: 2}
+      objectReference: {fileID: 2100000, guid: 3751b9a64298fc648a9cfdbfd31a8916, type: 2}
     - target: {fileID: -7511558181221131132, guid: af71cab5eb7030a4bb4d14093c0756bb, type: 3}
       propertyPath: m_Materials.Array.data[1]
       value: 
@@ -869,15 +882,15 @@ MonoBehaviour:
       m_Calls: []
   m_text: 11
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 55e3116a39466b4418c707c733ce3054, type: 2}
+  m_sharedMaterial: {fileID: 2140032, guid: 55e3116a39466b4418c707c733ce3054, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4290322176
+  m_fontColor: {r: 0, g: 0.12133093, b: 0.7264151, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
