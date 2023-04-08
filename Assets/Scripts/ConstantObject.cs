@@ -46,6 +46,11 @@ public class ConstantObject : MonoBehaviour
 
         if (Input.GetKeyDown("escape"))
         {
+            if(!Cursor.visible)
+            {
+                Cursor.visible = true;
+            }
+
             menu.SetActive(!menu.activeSelf);
         }
 
@@ -78,5 +83,10 @@ public class ConstantObject : MonoBehaviour
 
         NetworkManager.Singleton.Shutdown();
         SceneManager.LoadScene("MainMenu");
+    }
+
+    public bool activated()
+    {
+        return menu.activeSelf;
     }
 }
