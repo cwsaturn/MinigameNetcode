@@ -24,6 +24,12 @@ public class ConstantObject : MonoBehaviour
 
     void Start()
     {
+        GameObject[] constantObjects = GameObject.FindGameObjectsWithTag("ConstantObject");
+        if (constantObjects.Length > 1)
+        {
+            Destroy(gameObject);
+        }
+
         DontDestroyOnLoad(gameObject);
     }
 
