@@ -11,9 +11,9 @@ public class PlayerScript : NetworkBehaviour
     [SerializeField]
     private SpriteRenderer playerSprite;
     [SerializeField]
-    private Collider2D collider;
+    private Collider2D collider2d;
     [SerializeField]
-    private Rigidbody2D rigidbody;
+    private Rigidbody2D rigidbody2d;
     [SerializeField]
     private bool colored = true;
 
@@ -39,13 +39,13 @@ public class PlayerScript : NetworkBehaviour
         {
             playerSprite.enabled = false;
             text.enabled = false;
-            if (collider != null)
+            if (collider2d != null)
             {
-                collider.enabled = false;
+                collider2d.enabled = false;
             }
-            if (rigidbody != null)
+            if (rigidbody2d != null)
             {
-                rigidbody.simulated = false;
+                rigidbody2d.simulated = false;
             }
         }
     }

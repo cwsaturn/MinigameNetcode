@@ -9,6 +9,7 @@ TagManager:
   - Checkpoint
   - ItemBox
   - Obert
+  - ConstantObject
   layers:
   - Default
   - TransparentFX

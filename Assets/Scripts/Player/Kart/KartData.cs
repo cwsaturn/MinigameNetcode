@@ -25,7 +25,7 @@ public class KartData : NetworkBehaviour
     [SerializeField]
     private PlayerScript playerScript;
     [SerializeField]
-    private Rigidbody2D rigidbody;
+    private Rigidbody2D rigidbody2d;
 
     [SerializeField]
     GameObject canvas;
@@ -105,13 +105,13 @@ public class KartData : NetworkBehaviour
 
     private void CreateItem()
     {
-        Vector3 position = rigidbody.transform.position;
+        Vector3 position = rigidbody2d.transform.position;
 
-        Vector3 backwardVector = rigidbody.transform.rotation * Vector3.left;
+        Vector3 backwardVector = rigidbody2d.transform.rotation * Vector3.left;
 
         Vector3 delta = backwardVector * itemDistance;
 
-        float dotProd = Vector3.Dot(rigidbody.velocity, backwardVector);
+        float dotProd = Vector3.Dot(rigidbody2d.velocity, backwardVector);
 
         Vector3 itemVector = (Mathf.Max(dotProd, 0) + itemSpeed ) * backwardVector;
         

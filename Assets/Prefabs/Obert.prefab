@@ -181,4 +181,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sadObert: {fileID: 1953719948, guid: 8215f20c46f1028459d4d922898467c7, type: 3}
-  rigidbody: {fileID: 8503601189579765432}
+  rigidbody2d: {fileID: 8503601189579765432}

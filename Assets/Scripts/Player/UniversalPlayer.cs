@@ -13,6 +13,8 @@ public class UniversalPlayer : NetworkBehaviour
     public NetworkVariable<int> playerScore = new NetworkVariable<int>(0);
     private NetworkVariable<Color> playerColor = new NetworkVariable<Color>(Color.gray);
     private NetworkVariable<FixedString32Bytes> username = new NetworkVariable<FixedString32Bytes>("");
+    public Color PlayerColor
+    { get { return playerColor.Value; } }
     public string Username
     { get { return username.Value.ToString(); } }
 
@@ -65,11 +67,11 @@ public class UniversalPlayer : NetworkBehaviour
         Debug.Log("UniversalPlayer: Spawned a player object for: " + clientId);
 
         //Setup PlayerScript and PlayerScoring
-        if (scene_name != "StartLobby")
+        if (scene_name != "StartLobby" && scene_name != "MidgameLobby")
         {
             PlayerScript playerData = player_obj.GetComponent<PlayerScript>();
             playerData.playerScoring = playerScoring;
-            playerScoring.NewGame();
+            //playerScoring.NewGame();
         }
         PlayerInitiatedClientRpc();
     }

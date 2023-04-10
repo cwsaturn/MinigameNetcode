@@ -10,7 +10,7 @@ public class Obert : NetworkBehaviour
     [SerializeField]
     Sprite sadObert;
     [SerializeField]
-    Rigidbody2D rigidbody;
+    Rigidbody2D rigidbody2d;
     float lifetime = 30f;
     NetworkVariable<float> health = new NetworkVariable<float>(30f);
     // Start is called before the first frame update
@@ -41,7 +41,7 @@ public class Obert : NetworkBehaviour
 
     public void SetVelocity(Vector3 velocity)
     {
-        rigidbody.velocity = velocity;
+        rigidbody2d.velocity = velocity;
     }
 
     [ServerRpc(RequireOwnership = false)]

@@ -65,8 +65,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   text: {fileID: 4262369258767891619}
   playerSprite: {fileID: 5682209929604119116}
-  collider: {fileID: 5797604286863131196}
-  rigidbody: {fileID: 2712984291527297709}
+  collider2d: {fileID: 5797604286863131196}
+  rigidbody2d: {fileID: 2712984291527297709}
+  colored: 1
   playerScoring: {fileID: 0}
 --- !u!1 &7374446556977247790
 GameObject:
@@ -498,7 +499,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerScript: {fileID: 1783688632949241791}
-  rigidbody: {fileID: 2712984291527297709}
+  rigidbody2d: {fileID: 2712984291527297709}
   canvas: {fileID: 7453011634683820725}
   blockingItem: {fileID: 8503601189579765436, guid: 3ac9a93ce06701c41ae4aba5d7b2404d, type: 3}
   itemSpriteArray:
