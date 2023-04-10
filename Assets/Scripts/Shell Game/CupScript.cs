@@ -13,7 +13,7 @@ public class CupScript : MonoBehaviour
         yield return new WaitForSecondsRealtime(1);
         transform.Translate(0, -2, 0);
         yield return new WaitForSecondsRealtime(25);
-        transform.Translate(0, 2, 0);
+        Debug.Log("select your cup");
 
 
     }
@@ -24,4 +24,17 @@ public class CupScript : MonoBehaviour
 
         
     }
+
+    void OnPointerClick()
+    {
+        Debug.Log("on pointer click");
+    }
+
+    void OnSelect()
+    {
+        Debug.Log("on select");
+    }
+
 }
+
+

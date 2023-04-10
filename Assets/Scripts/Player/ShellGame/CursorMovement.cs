@@ -5,21 +5,50 @@ using UnityEngine;
 public class CursorMovement : MonoBehaviour
 {
 
-    public float moveSpeed = 200.0f;
+    // public float moveSpeed = 200.0f;
+
+    private bool playerActive = true;
+    private int position = 0;
+
+    private float x_offset;
+    private float y_offset;
 
 
     // Start is called before the first frame update
     void Start()
     {
-        Cursor.visible = false;
+        // Cursor.visible = false;
+        x_offset = transform.position.x;
+        y_offset = transform.position.y;
+
 
     }
 
     // Update is called once per frame
     void Update()
     {
-        var targetPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        targetPos.z = transform.position.z;
-        transform.position = Vector3.MoveTowards(transform.position, targetPos, moveSpeed * Time.deltaTime);
+        if (!playerActive) return;
+
+        if (Input.GetKeyDown("left") | (Input.GetKeyDown("a")))
+        {
+            if(position > -1)
+            {
+                position -= 1;
+            }
+        }
+
+        if (Input.GetKeyDown("right") || Input.GetKeyDown("d"))
+        {
+            if (position < 1)
+            {
+                position += 1;
+            }
+        }
+
+        transform.position = new Vector3(x_offset + 5 * position, y_offset, transform.position.z);
+
+        // var targetPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        // targetPos.z = transform.position.z;
+        // transform.position = Vector3.MoveTowards(transform.position, targetPos, moveSpeed * Time.deltaTime);
     }
 }
