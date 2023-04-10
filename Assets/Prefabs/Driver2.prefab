@@ -497,9 +497,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d365f823b59850741b85caf0ff19bfce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  checkpointNum: 3
-  laps: 1
   playerScript: {fileID: 1783688632949241791}
+  rigidbody: {fileID: 2712984291527297709}
   canvas: {fileID: 7453011634683820725}
-  text: {fileID: 0}
-  playerSprite: {fileID: 0}
+  blockingItem: {fileID: 8503601189579765436, guid: 3ac9a93ce06701c41ae4aba5d7b2404d, type: 3}
+  itemSpriteArray:
+  - {fileID: 1953719948, guid: 8215f20c46f1028459d4d922898467c7, type: 3}
+  - {fileID: 1871682253, guid: 8215f20c46f1028459d4d922898467c7, type: 3}

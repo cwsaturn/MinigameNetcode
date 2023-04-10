@@ -41,10 +41,12 @@ namespace HelloWorld
             var clientId = NetworkManager.Singleton.LocalClientId;
         }
 
+        /*
+
         void OnGUI()
         {
             GUILayout.BeginArea(new Rect(10, 10, 300, 300));
-            StartButton("Platformer", "Start Platformer");
+            StartButton("Platformer2", "Start Platformer");
             GUILayout.EndArea();
 
             GUILayout.BeginArea(new Rect(10, 40, 300, 300));
@@ -67,7 +69,7 @@ namespace HelloWorld
             }
         }
 
-
+        */
 
 
         //Ref: https://docs-multiplayer.unity3d.com/netcode/current/basics/connection-approval/index.html

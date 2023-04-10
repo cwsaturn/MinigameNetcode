@@ -1,8 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class KartData : NetworkBehaviour
 {
@@ -11,15 +13,19 @@ public class KartData : NetworkBehaviour
     private int previousCheckpoint = 0;
     private int progress = 0;
 
-    [SerializeField]
     private int checkpointNum = 3;
-    [SerializeField]
-    private int laps = 1;
+    private int laps = 3;
+
+    float itemDistance = 1.7f;
+    float itemSpeed = 10f;
 
     private TextMeshProUGUI timeText;
     private TextMeshProUGUI lapText;
+    private Image itemUI;
     [SerializeField]
     private PlayerScript playerScript;
+    [SerializeField]
+    private Rigidbody2D rigidbody;
 
     [SerializeField]
     GameObject canvas;
@@ -27,9 +33,15 @@ public class KartData : NetworkBehaviour
     private bool playerActive = true;
 
     [SerializeField]
-    private TextMeshProUGUI text;
+    private GameObject blockingItem;
+
+    private bool hasItem = false;
+    private bool buttonPressed = false;
+    private float itemWait = 2f;
+    private float itemTime = 0f;
+
     [SerializeField]
-    private SpriteRenderer playerSprite;
+    private Sprite[] itemSpriteArray;
 
     private void Awake()
     {
@@ -44,6 +56,7 @@ public class KartData : NetworkBehaviour
             Camera.main.GetComponent<CameraScript>().setTarget(transform);
             timeText = GameObject.Find("Canvas/Time").GetComponent<TextMeshProUGUI>();
             lapText = GameObject.Find("Canvas/Lap").GetComponent<TextMeshProUGUI>();
+            itemUI = GameObject.Find("Canvas/Item").GetComponent<Image>();
 
             lapText.text = "Lap 1 / " + laps.ToString();
         }
@@ -59,29 +72,73 @@ public class KartData : NetworkBehaviour
         timeText.text = timePassed.ToString();
     }
 
+    [ServerRpc]
+    void CreateItemServerRpc(Vector3 position, Vector3 velocity, ServerRpcParams rpcParams = default)
+    {
+        GameObject obert = Instantiate(blockingItem, position, Quaternion.identity);
+        obert.GetComponent<NetworkObject>().Spawn();
+        obert.GetComponent<Obert>().SetVelocity(velocity);
+    }
+
+    void FixedUpdate()
+    {
+        if (!IsOwner) return;
+
+        itemTime += Time.deltaTime;
+
+        if (itemTime > itemWait)
+        {
+            itemUI.sprite = itemSpriteArray[1];
+        }
+
+        if (buttonPressed)
+        {
+            buttonPressed = false;
+            if (hasItem && itemTime > itemWait)
+            {
+                itemUI.enabled = false;
+                hasItem = false;
+                CreateItem();
+            }
+        }
+    }
+
+    private void CreateItem()
+    {
+        Vector3 position = rigidbody.transform.position;
+
+        Vector3 backwardVector = rigidbody.transform.rotation * Vector3.left;
+
+        Vector3 delta = backwardVector * itemDistance;
+
+        float dotProd = Vector3.Dot(rigidbody.velocity, backwardVector);
+
+        Vector3 itemVector = (Mathf.Max(dotProd, 0) + itemSpeed ) * backwardVector;
+        
+        CreateItemServerRpc(position + delta, itemVector);
+    }
+
     // Update is called once per frame
     void Update()
     {
+        canvas.transform.position = transform.position;
+
+        if (!IsOwner) return;
         if (!playerActive) return;
+
+        if (Input.GetButtonDown("Jump"))
+            buttonPressed = true;
 
         timePassed += Time.deltaTime;
 
         if (IsOwner)
+        {
             timeText.text = timePassed.ToString();
-
-        canvas.transform.position = transform.position;
+        } 
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void checkpointCollision(Collider2D collision)
     {
-        Debug.Log("collision");
-
-        if (!IsOwner) return;
-
-        if (!playerActive) return;
-
-        if (collision.gameObject.tag != "Checkpoint") return;
-
         int index = collision.gameObject.GetComponent<Checkpoint>().Index;
 
         //do nothing if same checkpoint
@@ -101,6 +158,49 @@ public class KartData : NetworkBehaviour
         {
             int currentLap = Mathf.Min(1 + (progress / checkpointNum), laps);
             lapText.text = "Lap " + currentLap + " / " + laps.ToString();
+        }
+    }
+
+    private void itemBoxCollision(Collider2D collision)
+    {
+        ItemBox itemBox = collision.gameObject.GetComponent<ItemBox>();
+        if (itemBox.localOn)
+        {
+            itemBox.PlayerCollision();
+            if (!hasItem)
+            {
+                hasItem = true;
+                itemUI.enabled = true;
+                itemUI.sprite = itemSpriteArray[0];
+                itemTime = 0f;
+                Debug.Log("itembox");
+            }
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (!IsOwner) return;
+
+        if (collision.gameObject.tag == "Obert")
+        {
+            collision.gameObject.GetComponent<Obert>().playerCollisionServerRpc();
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (!IsOwner) return;
+
+        if (!playerActive) return;
+
+        if (collision.gameObject.tag == "Checkpoint")
+        {
+            checkpointCollision(collision);
+        }
+        else if (collision.gameObject.tag == "ItemBox")
+        {
+            itemBoxCollision(collision);
         }
     }
 }

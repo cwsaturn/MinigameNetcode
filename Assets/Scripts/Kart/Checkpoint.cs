@@ -18,6 +18,11 @@ public class Checkpoint : MonoBehaviour
     void Start()
     {
         boxCollider.size = new Vector2(spriteRenderer.size.x, spriteRenderer.size.y);
+
+        if (index != 0)
+        {
+            spriteRenderer.enabled = false;
+        }
     }
 
     // Update is called once per frame
