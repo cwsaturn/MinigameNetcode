@@ -110,6 +110,12 @@ public class PlayerScoring : NetworkBehaviour
         universalPlayer.AddScore(score);
     }
 
+    public NetworkVariable<int> GetScore()
+    {
+
+        return universalPlayer.playerScore;
+    }
+
     // Update is called once per frame
     void Update()
     {

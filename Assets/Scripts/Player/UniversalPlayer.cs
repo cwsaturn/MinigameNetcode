@@ -132,6 +132,12 @@ public class UniversalPlayer : NetworkBehaviour
         playerScore.Value += score;
     }
 
+    public int GetScore()
+    {
+
+        return playerScore.Value;
+    }
+
     [ServerRpc]
     private void SetColorServerRpc()
     {
