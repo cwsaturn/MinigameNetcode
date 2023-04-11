@@ -16,14 +16,9 @@ public class ShellGamePoints : MonoBehaviour
         
     }
 
-    public void CorrectCup()
+    private void OnTriggerStay2D(Collider2D collision)
     {
-        Debug.Log("right cup nerd");
-    }
-
-    public void IncorrectCup()
-    {
-        Debug.Log("wrong cup nerd");
+        Debug.Log("frogs");
     }
 
 }

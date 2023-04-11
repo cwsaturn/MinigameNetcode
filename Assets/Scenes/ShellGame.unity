@@ -393,6 +393,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Cup
       objectReference: {fileID: 0}
+    - target: {fileID: 7376098315704260542, guid: 324c02bc71751cb45b50aef7f2205239, type: 3}
+      propertyPath: points
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 324c02bc71751cb45b50aef7f2205239, type: 3}
 --- !u!1 &1475209812
@@ -581,6 +585,22 @@ PrefabInstance:
     - target: {fileID: 1913609384312978906, guid: 324c02bc71751cb45b50aef7f2205239, type: 3}
       propertyPath: m_Name
       value: Cup 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8409732690287232189, guid: 324c02bc71751cb45b50aef7f2205239, type: 3}
+      propertyPath: m_Size.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8409732690287232189, guid: 324c02bc71751cb45b50aef7f2205239, type: 3}
+      propertyPath: m_Size.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8409732690287232189, guid: 324c02bc71751cb45b50aef7f2205239, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 8409732690287232189, guid: 324c02bc71751cb45b50aef7f2205239, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 324c02bc71751cb45b50aef7f2205239, type: 3}
