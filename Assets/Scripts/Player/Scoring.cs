@@ -7,9 +7,6 @@ using static PlayerScoring;
 
 public class Scoring : MonoBehaviour
 {
-    private int size = 0;
-
-    public NetworkVariable<int> playerScore = new NetworkVariable<int>(0);
     private List<PlayerScoring> playerList = new List<PlayerScoring>();
 
     [SerializeField]
@@ -25,25 +22,25 @@ public class Scoring : MonoBehaviour
     {
         GameObject[] universalPlayers = GameObject.FindGameObjectsWithTag("UniversalPlayer");
 
-        List<PlayerScoring> playerScorings = new List<PlayerScoring>();
+        playerList = new List<PlayerScoring>();
 
         foreach (GameObject universalPlayer in universalPlayers)
         {
-            playerScorings.Add(universalPlayer.GetComponent<PlayerScoring>());
+            playerList.Add(universalPlayer.GetComponent<PlayerScoring>());
         }
 
-        playerScorings.Sort((x, y) => x.TotalScore.CompareTo(y.TotalScore));
-        playerScorings.Reverse();
+        playerList.Sort((x, y) => x.TotalScore.CompareTo(y.TotalScore));
+        playerList.Reverse();
 
         for (int player = 0; player < PlayerGUI.Length; player++)
         {
-            if (player >= playerScorings.Count)
+            if (player >= playerList.Count)
             {
                 PlayerGUI[player].enabled = false;
                 continue;
             }
 
-            PlayerScoring playerScore = playerScorings[player];
+            PlayerScoring playerScore = playerList[player];
             UniversalPlayer universalPlayer = playerScore.GetComponent<UniversalPlayer>();
 
             string playerText = universalPlayer.Username + " : ";
