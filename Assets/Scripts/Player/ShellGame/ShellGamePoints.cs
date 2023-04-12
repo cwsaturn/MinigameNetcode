@@ -3,11 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class ShellGamePoints : MonoBehaviour
+
 {
+    [SerializeField]
+    Collider2D boxCollider;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        boxCollider.isTrigger = true;
     }
 
     // Update is called once per frame
@@ -16,9 +20,9 @@ public class ShellGamePoints : MonoBehaviour
         
     }
 
-    private void OnTriggerStay2D(Collider2D collision)
+    void OnTriggerStay2D(Collider2D collision)
     {
-        Debug.Log("frogs");
+        boxCollider.isTrigger = false;
     }
 
 }

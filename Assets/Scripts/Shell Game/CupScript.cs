@@ -17,8 +17,7 @@ public class CupScript : MonoBehaviour
     // Start is called before the first frame update
     IEnumerator Start()
     {
-        boxCollider.size = new Vector2(spriteRenderer.size.x, spriteRenderer.size.y);
-        boxCollider.isTrigger = false;
+        boxCollider.isTrigger = true;
 
         // Cursor.visible = false;
         yield return new WaitForSecondsRealtime(1);
@@ -28,10 +27,12 @@ public class CupScript : MonoBehaviour
         yield return new WaitForSecondsRealtime(25);
         Debug.Log("select your cup");
 
-        
-        boxCollider.isTrigger = true;
 
+    }
 
+    void OnTriggerStay2D(Collider2D collision)
+    {
+        boxCollider.isTrigger = false;
     }
 
     // Update is called once per frame

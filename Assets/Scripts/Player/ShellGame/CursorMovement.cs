@@ -13,6 +13,9 @@ public class CursorMovement : MonoBehaviour
     private float x_offset;
     private float y_offset;
 
+    [SerializeField]
+    BoxCollider2D boxCollider;
+
 
     // Start is called before the first frame update
     void Start()
@@ -20,6 +23,8 @@ public class CursorMovement : MonoBehaviour
         // Cursor.visible = false;
         x_offset = transform.position.x;
         y_offset = transform.position.y;
+
+        boxCollider.isTrigger = true;
 
 
     }
@@ -50,5 +55,10 @@ public class CursorMovement : MonoBehaviour
         // var targetPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         // targetPos.z = transform.position.z;
         // transform.position = Vector3.MoveTowards(transform.position, targetPos, moveSpeed * Time.deltaTime);
+    }
+
+    void OnTriggerStay2D(Collider2D collision)
+    {
+        boxCollider.isTrigger = false;
     }
 }
