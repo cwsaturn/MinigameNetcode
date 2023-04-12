@@ -15,12 +15,12 @@ public class CardPickerData : NetworkBehaviour
     [SerializeField]
     private SpriteRenderer playerSprite;
 
-    private float timePassed = 0f;
-
     private TextMeshProUGUI timeText;
     private PlayerScript playerScript;
 
     private bool playerActive = true;
+
+    public int score = 0;
 
     private void Awake()
     {
@@ -39,40 +39,29 @@ public class CardPickerData : NetworkBehaviour
         //SyncNetVariables();
     }
 
-    private void SetTime(float time)
-    {
-        //timeText.text = "Time: " + time.ToString("0.00");
-    }
-
     // Update is called once per frame
     void Update()
     {
         if (!playerActive) return;
-
-        timePassed += Time.deltaTime;
-
-        if (IsOwner)
-            SetTime(timePassed);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        //if (!IsOwner) return;
-
-        //if (!playerActive) return;
+        if (!playerActive) return;
 
         if (collision.gameObject.tag == "Card")
         {
             Debug.Log("Card");
 
-            collision.gameObject.GetComponent<Animator>().SetBool("flipped", true);
-            collision.gameObject.GetComponent<Collider2D>().enabled = false;
+            collision.gameObject.GetComponent<Animator>().SetBool("flipped", true);  // Flip card
+            collision.gameObject.GetComponent<Collider2D>().enabled = false;  // Disable trigger
 
+            int temp = 0;
+            int.TryParse(collision.gameObject.GetComponentInChildren<TMP_Text>().text, out temp);
+            score += temp;   // Add value of flipped card to score
 
-            //playerScript.FinishedServerRpc(timePassed);
             //GetComponent<ClientPlatformer>().active = false;
             //playerActive = false;
-            //SetTime(timePassed);
         }
     }
 }

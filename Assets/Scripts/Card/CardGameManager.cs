@@ -9,9 +9,6 @@ public class CardGameManager : MonoBehaviour
 
     public int[] cardValues;
 
-    public TMP_Text cardTexte;
-    
-
     // Start is called before the first frame update
     void Start()
     {
@@ -23,7 +20,6 @@ public class CardGameManager : MonoBehaviour
         foreach(GameObject card in cards)
         {
             TMP_Text cardText = card.GetComponentInChildren<TMP_Text>();
-            cardTexte = cardText;
             int cardVal = Random.Range(0, 30);  // 0 through 29
             cardValues[i] = cardVal;
             cardText.text = cardVal.ToString();
