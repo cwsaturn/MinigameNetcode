@@ -1,10 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class CardGameManager : MonoBehaviour
 {
     public GameObject[] cards;
+
+    public int[] cardValues;
+
+    public TMP_Text cardTexte;
     
 
     // Start is called before the first frame update
@@ -13,8 +18,17 @@ public class CardGameManager : MonoBehaviour
         GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
         int NumPlayers = players.Length;
 
-        Debug.Log("Num Players: " + NumPlayers);
-
+        cardValues = new int[cards.Length];
+        int i = 0;
+        foreach(GameObject card in cards)
+        {
+            TMP_Text cardText = card.GetComponentInChildren<TMP_Text>();
+            cardTexte = cardText;
+            int cardVal = Random.Range(0, 30);  // 0 through 29
+            cardValues[i] = cardVal;
+            cardText.text = cardVal.ToString();
+            i++;
+        }
     }
 
     // Update is called once per frame
