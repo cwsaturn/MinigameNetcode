@@ -7,7 +7,7 @@ public class CursorMovement : MonoBehaviour
 
     // public float moveSpeed = 200.0f;
 
-    private bool playerActive = true;
+    private bool playerActive = false;
     private int position = 0;
 
     private float x_offset;
@@ -16,15 +16,35 @@ public class CursorMovement : MonoBehaviour
     [SerializeField]
     BoxCollider2D boxCollider;
 
+    [SerializeField]
+    private GameObject name;
+
+    [SerializeField]
+    private GameObject sprite;
+
 
     // Start is called before the first frame update
-    void Start()
+    IEnumerator Start()
     {
+        name.SetActive(false);
+        sprite.SetActive(false);
+
         // Cursor.visible = false;
         x_offset = transform.position.x;
         y_offset = transform.position.y;
 
         boxCollider.isTrigger = true;
+
+        yield return new WaitForSecondsRealtime(24);
+
+        name.SetActive(true);
+        sprite.SetActive(true);
+        playerActive = true;
+
+        yield return new WaitForSecondsRealtime(5);
+
+        Debug.Log("locked in");
+        playerActive = false;
 
 
     }

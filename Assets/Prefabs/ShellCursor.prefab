@@ -111,6 +111,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   boxCollider: {fileID: 5215693416465782077}
+  name: {fileID: 8212211959711894008}
+  sprite: {fileID: 4089180229257115628}
 --- !u!114 &1380111668083419795
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -124,6 +126,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   boxCollider: {fileID: 5215693416465782077}
+  winningCup: {x: 0, y: 0, z: 0}
+  playerScript: {fileID: 2521488923308336602}
 --- !u!61 &5215693416465782077
 BoxCollider2D:
   m_ObjectHideFlags: 0

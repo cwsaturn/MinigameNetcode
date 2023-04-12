@@ -26,6 +26,8 @@ public class CupScript : MonoBehaviour
         transform.Translate(0, -2, 0);
         yield return new WaitForSecondsRealtime(25);
         Debug.Log("select your cup");
+        yield return new WaitForSecondsRealtime(5);
+        transform.Translate(0, 2, 0);
 
 
     }
