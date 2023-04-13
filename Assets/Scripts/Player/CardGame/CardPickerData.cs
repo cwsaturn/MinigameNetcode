@@ -22,6 +22,11 @@ public class CardPickerData : NetworkBehaviour
 
     public int score = 0;
 
+    public NetworkVariable<int> player0Score = new NetworkVariable<int>(-1);
+    public NetworkVariable<int> player1Score = new NetworkVariable<int>(-1);
+    public NetworkVariable<int> player2Score = new NetworkVariable<int>(-1);
+    public NetworkVariable<int> player3Score = new NetworkVariable<int>(-1);
+
     private void Awake()
     {
         playerScript = GetComponent<PlayerScript>();
@@ -59,6 +64,8 @@ public class CardPickerData : NetworkBehaviour
             int temp = 0;
             int.TryParse(collision.gameObject.GetComponentInChildren<TMP_Text>().text, out temp);
             score += temp;   // Add value of flipped card to score
+
+            // Update score for player
 
             //GetComponent<ClientPlatformer>().active = false;
             //playerActive = false;
