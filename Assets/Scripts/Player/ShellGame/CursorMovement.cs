@@ -29,8 +29,8 @@ public class CursorMovement : MonoBehaviour
     {
         cupManager = GameObject.Find("Game Manager").GetComponent<ShellGameManager>();
 
-        canvasName.SetActive(false);
-        sprite.SetActive(false);
+        //canvasName.SetActive(false);
+        //sprite.SetActive(false);
 
         // Cursor.visible = false;
         x_offset = transform.position.x;
