@@ -57,6 +57,7 @@ public class UniversalPlayer : NetworkBehaviour
         else if(scene_name == "Card")
         {
             player_obj = Instantiate(CardPicker, Vector3.zero, Quaternion.identity);
+            player_obj.GetComponent<CardPickerData>().playerID = (int)OwnerClientId;
         }
         else
         {
@@ -89,6 +90,7 @@ public class UniversalPlayer : NetworkBehaviour
         SetPlayerName();
     }
     //*/
+
 
     public override void OnNetworkSpawn()
     {
@@ -129,6 +131,7 @@ public class UniversalPlayer : NetworkBehaviour
             currentPlayer.GetComponent<PlayerScript>().SetUsername(username.Value.ToString());
         }
     }
+
 
     //only call with server
     public void AddScore(int score)

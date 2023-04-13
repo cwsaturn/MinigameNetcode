@@ -20,12 +20,11 @@ public class CardPickerData : NetworkBehaviour
 
     private bool playerActive = true;
 
-    public int score = 0;
+    //public int score = 0;
 
-    public NetworkVariable<int> player0Score = new NetworkVariable<int>(-1);
-    public NetworkVariable<int> player1Score = new NetworkVariable<int>(-1);
-    public NetworkVariable<int> player2Score = new NetworkVariable<int>(-1);
-    public NetworkVariable<int> player3Score = new NetworkVariable<int>(-1);
+    
+
+    public int playerID;
 
     private void Awake()
     {
@@ -61,14 +60,46 @@ public class CardPickerData : NetworkBehaviour
             collision.gameObject.GetComponent<Animator>().SetBool("flipped", true);  // Flip card
             collision.gameObject.GetComponent<Collider2D>().enabled = false;  // Disable trigger
 
-            int temp = 0;
-            int.TryParse(collision.gameObject.GetComponentInChildren<TMP_Text>().text, out temp);
-            score += temp;   // Add value of flipped card to score
+
+            // only update score if localplayer
+            if(!IsServer)
+                return;
+
+            int cardPickedUp = 0;
+            int.TryParse(collision.gameObject.GetComponentInChildren<TMP_Text>().text, out cardPickedUp);
 
             // Update score for player
-
-            //GetComponent<ClientPlatformer>().active = false;
-            //playerActive = false;
+            CardPickupServerSide(cardPickedUp);
         }
     }
+
+
+    public void CardPickupServerSide(int cardVal)
+    {
+        Debug.Log("server rpc card pickup");
+        
+        GameObject cardGameManagerObj = GameObject.FindGameObjectWithTag("GameManager");
+        CardGameManager cardGameManager = cardGameManagerObj.GetComponent<CardGameManager>();
+
+        switch(playerID)
+        {
+            case 0:
+                cardGameManager.player0Score.Value += cardVal;
+                break;
+            case 1:
+                cardGameManager.player1Score.Value += cardVal;
+                break;
+            case 2:
+                cardGameManager.player2Score.Value += cardVal;
+                break;
+            case 3:
+                cardGameManager.player3Score.Value += cardVal;
+                break;
+            default:
+                Debug.Log("AAAAAAAAAAA it broke :(");
+                Debug.Log(cardVal + " " + playerID);
+                break;
+        }
+    }
+
 }

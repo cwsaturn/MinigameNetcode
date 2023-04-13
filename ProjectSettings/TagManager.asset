@@ -8,6 +8,8 @@ TagManager:
   - NetworkManager
   - Checkpoint
   - Card
+  - ScoreText
+  - GameManager
   layers:
   - Default
   - TransparentFX

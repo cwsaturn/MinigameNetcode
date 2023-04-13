@@ -13,27 +13,22 @@ public class CardGameManager : NetworkBehaviour
     public int[] cardValues;
 
     public NetworkVariable<int> randomSeverSeed = new NetworkVariable<int>(0);
+    public NetworkVariable<int> player0Score = new NetworkVariable<int>(0);
+    public NetworkVariable<int> player1Score = new NetworkVariable<int>(0);
+    public NetworkVariable<int> player2Score = new NetworkVariable<int>(0);
+    public NetworkVariable<int> player3Score = new NetworkVariable<int>(0);
 
 
     // Start is called before the first frame update
     void Start()
     {
-        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
-        int NumPlayers = players.Length;
-
         if(IsServer)
-            SetSeedServerRpc();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+            ServerSetSeed();
     }
 
 
-    [ServerRpc(RequireOwnership = false)]
-    public void SetSeedServerRpc()
+    //[ServerRpc(RequireOwnership = false)]
+    public void ServerSetSeed()
     {
         randomSeverSeed.Value = Random.Range(-9999, 9999);
 
@@ -50,14 +45,33 @@ public class CardGameManager : NetworkBehaviour
         }
 
         Debug.Log("seed set");
-        CardReceiveSeedClientRpc();
     }
 
 
-    [ClientRpc]
-    public void CardReceiveSeedClientRpc()
+    public override void OnNetworkSpawn()
     {
-        Debug.Log("card assign change");
+        // Subscribe to value changes
+        randomSeverSeed.OnValueChanged += OnSeedChange;
+        player0Score.OnValueChanged += OnScoreChange;
+        player1Score.OnValueChanged += OnScoreChange;
+        player2Score.OnValueChanged += OnScoreChange;
+        player3Score.OnValueChanged += OnScoreChange;
+    }
+
+    public override void OnNetworkDespawn()
+    {
+        // Unsubscribe to value changes
+        randomSeverSeed.OnValueChanged -= OnSeedChange;
+        player0Score.OnValueChanged -= OnScoreChange;
+        player1Score.OnValueChanged -= OnScoreChange;
+        player2Score.OnValueChanged -= OnScoreChange;
+        player3Score.OnValueChanged -= OnScoreChange;
+    }
+
+
+    public void OnSeedChange(int previous, int current)
+    {
+        Debug.Log("card seed change!!! SEED: " + current);
         Random.InitState(randomSeverSeed.Value);    // seed random num
 
         cardValues = new int[cards.Length];
@@ -72,5 +86,36 @@ public class CardGameManager : NetworkBehaviour
         }
     }
 
-    
+
+    public void OnScoreChange(int previous, int current)
+    {
+        Debug.Log("someone did a card pickup... updating text!");
+        GameObject scoreObj = GameObject.FindGameObjectWithTag("ScoreText");
+        TMP_Text scoreText = scoreObj.GetComponent<TMP_Text>();
+
+        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+        int numPlayers = players.Length;
+        string scoreTextTemp = "";
+
+        for(int i = 0; i < numPlayers; i++)
+        {
+            switch(i)
+            {
+                case 0:
+                    scoreTextTemp += "Player " + (i+1) + ": " + player0Score.Value + "\n";
+                    break;
+                case 1:
+                    scoreTextTemp += "Player " + (i+1) + ": " + player1Score.Value + "\n";
+                    break;
+                case 2:
+                    scoreTextTemp += "Player " + (i+1) + ": " + player2Score.Value + "\n";
+                    break;
+                case 3:
+                    scoreTextTemp += "Player " + (i+1) + ": " + player3Score.Value + "\n";
+                    break;
+            }
+        }
+
+        scoreText.text = scoreTextTemp;
+    }
 }
