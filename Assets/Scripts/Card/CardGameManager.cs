@@ -15,31 +15,14 @@ public class CardGameManager : NetworkBehaviour
     public NetworkVariable<int> randomSeverSeed = new NetworkVariable<int>(0);
 
 
-
     // Start is called before the first frame update
     void Start()
     {
-        if(IsClient)
-            return;
-
-        
-        randomSeverSeed.Value = Random.Range(-9999, 9999);
-
-
         GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
         int NumPlayers = players.Length;
 
-        Random.InitState(randomSeverSeed.Value);    // seed random num
-        cardValues = new int[cards.Length];
-        int i = 0;
-        foreach(GameObject card in cards)
-        {
-            TMP_Text cardText = card.GetComponentInChildren<TMP_Text>();
-            int cardVal = Random.Range(0, 30);  // 0 through 29
-            cardValues[i] = cardVal;
-            cardText.text = cardVal.ToString();
-            i++;
-        }
+        if(IsServer)
+            SetSeedServerRpc();
     }
 
     // Update is called once per frame
@@ -49,28 +32,32 @@ public class CardGameManager : NetworkBehaviour
     }
 
 
-    [ServerRpc]
-    void ScoreSetServerRpc(ServerRpcParams rpcParams = default)
+    [ServerRpc(RequireOwnership = false)]
+    public void SetSeedServerRpc()
     {
-        randomSeverSeed.Value++;
+        randomSeverSeed.Value = Random.Range(-9999, 9999);
+
+        Random.InitState(randomSeverSeed.Value);    // seed random num
+        cardValues = new int[cards.Length];
+        int i = 0;
+        foreach(GameObject card in cards)
+        {
+            TMP_Text cardText = card.GetComponentInChildren<TMP_Text>();
+            int cardVal = Random.Range(0, 30);  // 0 through 29
+            cardValues[i] = cardVal;
+            cardText.text = cardVal.ToString();
+            i++;
+        }
+
+        Debug.Log("seed set");
+        CardReceiveSeedClientRpc();
     }
 
 
-    public override void OnNetworkSpawn()
+    [ClientRpc]
+    public void CardReceiveSeedClientRpc()
     {
-        // Subscribe to value changes
-        randomSeverSeed.OnValueChanged += OnRandSeedChange;
-    }
-
-
-    public override void OnNetworkDespawn()
-    {
-        // Unsubscribe to value changes
-        randomSeverSeed.OnValueChanged -= OnRandSeedChange;
-    }
-
-    public void OnRandSeedChange(int previous, int current)
-    {
+        Debug.Log("card assign change");
         Random.InitState(randomSeverSeed.Value);    // seed random num
 
         cardValues = new int[cards.Length];
@@ -84,4 +71,6 @@ public class CardGameManager : NetworkBehaviour
             i++;
         }
     }
+
+    
 }
