@@ -1,13 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
-public class CursorMovement : MonoBehaviour
+public class CursorMovement : NetworkBehaviour
 {
 
     // public float moveSpeed = 200.0f;
 
-    private bool playerActive = false;
+    private bool playerActive = true;
     private int position = 0;
 
     private float x_offset;
@@ -27,27 +28,24 @@ public class CursorMovement : MonoBehaviour
     // Start is called before the first frame update
     IEnumerator Start()
     {
-        cupManager = GameObject.Find("Game Manager").GetComponent<ShellGameManager>();
 
-        //canvasName.SetActive(false);
-        //sprite.SetActive(false);
-
-        // Cursor.visible = false;
         x_offset = transform.position.x;
         y_offset = transform.position.y;
 
+        if (IsServer)
+        {
+            cupManager = GameObject.Find("Game Manager").GetComponent<ShellGameManager>();
 
-        while (!cupManager.getShuffleStatus()) { yield return new WaitForSecondsRealtime(0.1f); }
+            while (!cupManager.getShuffleStatus()) { yield return new WaitForSecondsRealtime(0.1f); }
 
-        canvasName.SetActive(true);
-        sprite.SetActive(true);
-        playerActive = true;
 
-        yield return new WaitForSecondsRealtime(6);
+            yield return new WaitForSecondsRealtime(6);
 
-        Debug.Log("locked in");
-        playerActive = false;
-        locked = true;
+            Debug.Log("locked in");
+            playerActive = false;
+            locked = true;
+        }
+        
 
 
     }

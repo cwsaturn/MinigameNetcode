@@ -14,6 +14,7 @@ public class ShellGameManager : MonoBehaviour
     // Start is called before the first frame update
     IEnumerator Start()
     {
+        Random.InitState(42);
         yield return new WaitForSecondsRealtime(5);
         Vector3 temp;
         for (int i = 0; i < numSwaps; i++)

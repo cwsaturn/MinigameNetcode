@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
-public class ShellGamePoints : MonoBehaviour
+public class ShellGamePoints : NetworkBehaviour
 
 {
     public GameObject winningCup;
@@ -30,12 +31,19 @@ public class ShellGamePoints : MonoBehaviour
         if (winningCupPosition.x - 1 < transform.position.x && winningCupPosition.x + 1 > transform.position.x)
         {
             Debug.Log("A cup won!");
-            playerScript.FinishedServerRpc(10);
+            if(IsOwner)
+            {
+                playerScript.FinishedServerRpc(1);
+            }
+            
         }
         else
         {
             Debug.Log("A cup lost!");
-            playerScript.FinishedServerRpc(0);
+            if(IsOwner)
+            {
+                playerScript.FinishedServerRpc(10000);
+            }
         }
     }
 
