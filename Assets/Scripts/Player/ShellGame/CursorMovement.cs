@@ -14,37 +14,40 @@ public class CursorMovement : MonoBehaviour
     private float y_offset;
 
     [SerializeField]
-    BoxCollider2D boxCollider;
-
-    [SerializeField]
-    private GameObject name;
+    private GameObject canvasName;
 
     [SerializeField]
     private GameObject sprite;
+
+    private ShellGameManager cupManager;
+
+    private bool locked = false;
 
 
     // Start is called before the first frame update
     IEnumerator Start()
     {
-        name.SetActive(false);
+        cupManager = GameObject.Find("Game Manager").GetComponent<ShellGameManager>();
+
+        canvasName.SetActive(false);
         sprite.SetActive(false);
 
         // Cursor.visible = false;
         x_offset = transform.position.x;
         y_offset = transform.position.y;
 
-        boxCollider.isTrigger = true;
 
-        yield return new WaitForSecondsRealtime(24);
+        while (!cupManager.getShuffleStatus()) { yield return new WaitForSecondsRealtime(0.1f); }
 
-        name.SetActive(true);
+        canvasName.SetActive(true);
         sprite.SetActive(true);
         playerActive = true;
 
-        yield return new WaitForSecondsRealtime(5);
+        yield return new WaitForSecondsRealtime(6);
 
         Debug.Log("locked in");
         playerActive = false;
+        locked = true;
 
 
     }
@@ -52,6 +55,7 @@ public class CursorMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
         if (!playerActive) return;
 
         if (Input.GetKeyDown("left") | (Input.GetKeyDown("a")))
@@ -77,8 +81,9 @@ public class CursorMovement : MonoBehaviour
         // transform.position = Vector3.MoveTowards(transform.position, targetPos, moveSpeed * Time.deltaTime);
     }
 
-    void OnTriggerStay2D(Collider2D collision)
+    public bool getLock()
     {
-        boxCollider.isTrigger = false;
+        return locked;
     }
+
 }

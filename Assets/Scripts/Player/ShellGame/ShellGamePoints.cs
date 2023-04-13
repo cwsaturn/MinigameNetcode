@@ -5,27 +5,29 @@ using UnityEngine;
 public class ShellGamePoints : MonoBehaviour
 
 {
-    [SerializeField]
-    Collider2D boxCollider;
+    public GameObject winningCup;
 
-    public Vector3 winningCup;
+    public Vector3 winningCupPosition;
 
     [SerializeField]
     private PlayerScript playerScript;
+
+    [SerializeField]
+    private CursorMovement mv;
 
 
     // Start is called before the first frame update
     IEnumerator Start()
     {
-        boxCollider.isTrigger = true;
+        while (!mv.getLock()) { yield return new WaitForSecondsRealtime(0.1f); }
 
-        yield return new WaitForSecondsRealtime(30);
-
-        winningCup = GameObject.Find("Cup 1").transform.position;
+        winningCup = GameObject.Find("Cup 1");
+        winningCupPosition = winningCup.transform.position;
+        winningCup.GetComponent<CupScript>().raise();
 
         yield return new WaitForSecondsRealtime(5);
 
-        if (winningCup.x - 1 < transform.position.x && winningCup.x + 1 > transform.position.x)
+        if (winningCupPosition.x - 1 < transform.position.x && winningCupPosition.x + 1 > transform.position.x)
         {
             Debug.Log("A cup won!");
             playerScript.FinishedServerRpc(10);
