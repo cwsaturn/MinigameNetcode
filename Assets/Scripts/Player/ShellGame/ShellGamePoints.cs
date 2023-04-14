@@ -16,11 +16,13 @@ public class ShellGamePoints : NetworkBehaviour
     [SerializeField]
     private CursorMovement mv;
 
+    private float time = 0f;
 
     // Start is called before the first frame update
     IEnumerator Start()
     {
-        while (!mv.getLock()) { yield return new WaitForSecondsRealtime(0.1f); }
+        playerScript.SetDisappearingServerRpc(false);
+        while (!mv.Locked) { yield return new WaitForSecondsRealtime(0.1f); }
 
         winningCup = GameObject.Find("Cup 1");
         winningCupPosition = winningCup.transform.position;
@@ -33,7 +35,7 @@ public class ShellGamePoints : NetworkBehaviour
             Debug.Log("A cup won!");
             if(IsOwner)
             {
-                playerScript.FinishedServerRpc(1);
+                playerScript.FinishedServerRpc(time);
             }
             
         }
@@ -42,7 +44,7 @@ public class ShellGamePoints : NetworkBehaviour
             Debug.Log("A cup lost!");
             if(IsOwner)
             {
-                playerScript.FinishedServerRpc(10000);
+                playerScript.FinishedServerRpc(int.MaxValue);
             }
         }
     }
@@ -50,7 +52,8 @@ public class ShellGamePoints : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (!mv.Locked)
+            time += Time.deltaTime;
     }
 
 }

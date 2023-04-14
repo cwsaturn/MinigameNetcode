@@ -23,28 +23,27 @@ public class CursorMovement : NetworkBehaviour
     private ShellGameManager cupManager;
 
     private bool locked = false;
+    public bool Locked
+    { get { return locked;  } }
 
+    private bool lockingAvailable = false;
 
     // Start is called before the first frame update
     IEnumerator Start()
     {
-
         x_offset = transform.position.x;
         y_offset = transform.position.y;
+        cupManager = GameObject.Find("Game Manager").GetComponent<ShellGameManager>();
 
-        if (IsServer)
-        {
-            cupManager = GameObject.Find("Game Manager").GetComponent<ShellGameManager>();
+        while (!cupManager.getShuffleStatus()) { yield return new WaitForSecondsRealtime(0.1f); }
 
-            while (!cupManager.getShuffleStatus()) { yield return new WaitForSecondsRealtime(0.1f); }
+        lockingAvailable = true;
 
+        //yield return new WaitForSecondsRealtime(6);
 
-            yield return new WaitForSecondsRealtime(6);
-
-            Debug.Log("locked in");
-            playerActive = false;
-            locked = true;
-        }
+        //Debug.Log("locked in");
+        //playerActive = false;
+        //locked = true;
         
 
 
@@ -69,6 +68,17 @@ public class CursorMovement : NetworkBehaviour
             if (position < 1)
             {
                 position += 1;
+            }
+        }
+
+        if (lockingAvailable)
+        {
+            if (Input.GetButtonDown("Fire1"))
+            {
+                Debug.Log("locked in");
+                playerActive = false;
+                locked = true;
+
             }
         }
 

@@ -17,6 +17,7 @@ public class UniversalPlayer : NetworkBehaviour
     { get { return username.Value.ToString(); } }
 
     //REMEMBER TO ADD TO NETWORK PREFABS
+    //REMEMBER TO SET PREFAB TAG TO PLAYER
     [SerializeField]
     private GameObject Player;
     [SerializeField]

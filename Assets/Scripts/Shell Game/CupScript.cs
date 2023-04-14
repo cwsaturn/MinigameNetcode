@@ -30,12 +30,6 @@ public class CupScript : MonoBehaviour
         raiseFlag = true;
         yield return new WaitForSecondsRealtime(2);
         lowerFlag = true;
-        yield return new WaitForSecondsRealtime(1);
-        //Debug.Log("select your cup");
-        yield return new WaitForSecondsRealtime(5);
-        //transform.Translate(0, 2, 0);
-
-
     }
 
 
