@@ -7,8 +7,6 @@ namespace HelloWorld
 {
     public class LobbyManager : MonoBehaviour
     {
-        private int maxPlayers = 4; 
-
         void Start()
         {
             string IsPlayerHost = PlayerPrefs.GetString("IsHost");
