@@ -73,7 +73,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: -500
   m_Sprite: {fileID: 21300000, guid: 2d7b6d05676ac8b43b37660ea3c892fb, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -97,8 +97,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e52ee36c14022046bcece6c9d0f311e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  points: 0
+  hasBall: 0
+  ball: {fileID: 0}
   spriteRenderer: {fileID: 2516887470013940923}
-  move0: 0
-  move1: 0
-  move2: 0
+  raiseFlag: 0
+  lowerFlag: 0
+  shuffleFlag: 0
+  targetpos: {x: 0, y: 0, z: 0}

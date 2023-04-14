@@ -60,6 +60,7 @@ public class CupScript : MonoBehaviour
             if (transform.position == targetpos)
             {
                 shuffleFlag = false;
+                spriteRenderer.sortingOrder = (int) Random.Range(-1000, 0);
                 if (hasBall)
                 {
                     //Debug.Log("Ended : " + Time.time);

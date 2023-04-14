@@ -73,7 +73,7 @@ public class CursorMovement : NetworkBehaviour
 
         if (lockingAvailable)
         {
-            if (Input.GetButtonDown("Fire1"))
+            if (Input.GetButtonDown("Jump"))
             {
                 Debug.Log("locked in");
                 playerActive = false;
