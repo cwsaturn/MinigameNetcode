@@ -1,7 +1,6 @@
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-//using Unity.Networking.Transport;
 using Unity.Netcode.Transports.UTP;
 
 namespace HelloWorld
@@ -12,11 +11,6 @@ namespace HelloWorld
 
         void Start()
         {
-            // Enable connection approval 
-            NetworkManager.Singleton.NetworkConfig.ConnectionApproval = true; 
-            NetworkManager.Singleton.ConnectionApprovalCallback = ApprovalCallback; 
-            NetworkManager.Singleton.OnClientDisconnectCallback += OnClientDisconnectCallback;
-
             string IsPlayerHost = PlayerPrefs.GetString("IsHost");
 
             // https://docs-multiplayer.unity3d.com/netcode/current/components/networkmanager
@@ -70,36 +64,6 @@ namespace HelloWorld
         }
 
         */
-
-
-        //Ref: https://docs-multiplayer.unity3d.com/netcode/current/basics/connection-approval/index.html
-        private void ApprovalCallback(NetworkManager.ConnectionApprovalRequest approvalRequest, NetworkManager.ConnectionApprovalResponse approvalResponse)
-        {
-            if(NetworkManager.Singleton.ConnectedClientsList.Count < maxPlayers)
-            {
-                Debug.Log("LobbyManager: Successful Approval");
-                approvalResponse.Approved = true; 
-                approvalResponse.CreatePlayerObject = true; 
-            }
-
-            else
-            {
-                approvalResponse.Approved = false;
-            }
-
-        }
-
-        private void OnClientDisconnectCallback(ulong obj) // Close game for denied connections 
-        {
-            if (!NetworkManager.Singleton.IsHost)
-            {
-                Debug.Log("LobbyManager: Denied Approval");
-                //Application.Quit();
-                NetworkManager.Singleton.Shutdown();
-                SceneManager.LoadScene("MainMenu");
-            }
-        }
-
 
     }
 }
