@@ -15,14 +15,10 @@ public class GameStartButtons : MonoBehaviour
     void OnGUI()
     {
         GUILayout.BeginArea(new Rect(10, 10, 300, 300));
-        StartButton("Platformer", "Start Platformer");
-        GUILayout.EndArea();
-
-        GUILayout.BeginArea(new Rect(10, 40, 300, 300));
         StartButton("Platformer2", "Start Platformer");
         GUILayout.EndArea();
 
-        GUILayout.BeginArea(new Rect(10, 70, 300, 300));
+        GUILayout.BeginArea(new Rect(10, 40, 300, 300));
         StartButton("Kart", "Start Kart Game");
         GUILayout.EndArea();
 
