@@ -17,12 +17,15 @@ public class UniversalPlayer : NetworkBehaviour
     { get { return username.Value.ToString(); } }
 
     //REMEMBER TO ADD TO NETWORK PREFABS
+    //REMEMBER TO SET PREFAB TAG TO PLAYER
     [SerializeField]
     private GameObject Player;
     [SerializeField]
     private GameObject Platformer;
     [SerializeField]
     private GameObject Driver;
+    [SerializeField]
+    private GameObject ShellCursor;
 
     private GameObject currentPlayer;
 
@@ -51,6 +54,32 @@ public class UniversalPlayer : NetworkBehaviour
             offset.x = 2 * (playerNum % 4);
             offset.y = -2 * (playerNum / 4);
             player_obj = Instantiate(Driver, offset, Quaternion.identity);
+        }
+        else if (scene_name == "ShellGame")
+        {
+            Vector3 offset = Vector3.zero;
+            int playerNum = (int)clientId;
+            
+            switch (playerNum)
+            {
+                case 0:
+                    offset = new Vector3(-0.5f, 0.5f, 0);
+                    break;
+                case 1:
+                    offset = new Vector3(0, 0.5f, 0);
+                    break;
+                case 2:
+                    offset = new Vector3(-0.5f, -0.5f, 0);
+                    break;
+                case 3:
+                    offset = new Vector3(0, -0.5f, 0);
+                    break;
+                default:
+                    Debug.Log("too many players");
+                    break;
+            }
+
+            player_obj = Instantiate(ShellCursor, offset, Quaternion.identity);
         }
         else
         {
@@ -87,6 +116,7 @@ public class UniversalPlayer : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         // Subscribe to value changes
+        Debug.Log("Changed color");
         playerColor.OnValueChanged += OnColorChange;
         username.OnValueChanged += OnUsernameChange;
     }
