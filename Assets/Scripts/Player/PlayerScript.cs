@@ -21,6 +21,8 @@ public class PlayerScript : NetworkBehaviour
 
     private NetworkVariable<bool> playerFinished = new NetworkVariable<bool>(false);
 
+    public NetworkVariable<bool> disappearOnFinish = new NetworkVariable<bool>(true);
+
     public override void OnNetworkSpawn()
     {
         // Subscribe to value changes
@@ -62,13 +64,22 @@ public class PlayerScript : NetworkBehaviour
     }
 
     [ServerRpc]
+    public void SetDisappearingServerRpc(bool disappear, ServerRpcParams rpcParams = default)
+    {
+        disappearOnFinish.Value = disappear;
+    }
+
+    [ServerRpc]
     public void FinishedServerRpc(float intermediateScore, ServerRpcParams rpcParams = default)
     {
         playerFinished.Value = true;
-        playerSprite.enabled = false;
+        if (disappearOnFinish.Value)
+            playerSprite.enabled = false;
         playerScoring.SetPlayerFinished(intermediateScore);
         //FindObjectOfType<ServerScript>().CheckPlayersFinished();
     }
+
+
 
     // Start is called before the first frame update
     void Start()

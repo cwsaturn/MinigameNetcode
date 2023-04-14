@@ -40,6 +40,11 @@ public class ConstantObject : MonoBehaviour
 
         if (Input.GetKeyDown("escape"))
         {
+            if(!Cursor.visible)
+            {
+                Cursor.visible = true;
+            }
+
             menu.SetActive(!menu.activeSelf);
         }
 
