@@ -24,19 +24,13 @@ public class ConstantObject : MonoBehaviour
 
     void Start()
     {
-        sceneName = SceneManager.GetActiveScene().name;
-
-        if (sceneName == "MainMenu")
+        GameObject[] constantObjects = GameObject.FindGameObjectsWithTag("ConstantObject");
+        if (constantObjects.Length > 1)
         {
-            Destroy(GameObject.FindGameObjectWithTag("NetworkManager"));
-            /*
-            GameObject[] networkManagers = GameObject.FindGameObjectsWithTag("NetworkManager");
-            foreach(GameObject networkManager in networkManagers)
-            {
-                Destroy(networkManager);
-            }
-            */
+            Destroy(gameObject);
         }
+
+        DontDestroyOnLoad(gameObject);
     }
 
     // Update is called once per frame
@@ -85,8 +79,23 @@ public class ConstantObject : MonoBehaviour
         SceneManager.LoadScene("MainMenu");
     }
 
-    public bool activated()
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        return menu.activeSelf;
+        sceneName = scene.name;
+
+        if (scene.name == "MainMenu")
+        {
+            Destroy(GameObject.FindGameObjectWithTag("NetworkManager"));
+        }
+    }
+
+    void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded; // Hook 'OnSceneLoaded' to Unity's 'SceneManager.sceneLoaded' variable 
+    }
+
+    void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 }

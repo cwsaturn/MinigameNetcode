@@ -11,9 +11,11 @@ public class PlayerScript : NetworkBehaviour
     [SerializeField]
     private SpriteRenderer playerSprite;
     [SerializeField]
-    private Collider2D collider;
+    private Collider2D collider2d;
     [SerializeField]
-    private Rigidbody2D rigidbody;
+    private Rigidbody2D rigidbody2d;
+    [SerializeField]
+    private bool colored = true;
 
     public PlayerScoring playerScoring;
 
@@ -37,24 +39,22 @@ public class PlayerScript : NetworkBehaviour
     {
         if (playerFinished.Value)
         {
-            if (disappearOnFinish.Value)
+            playerSprite.enabled = false;
+            text.enabled = false;
+            if (collider2d != null)
             {
-                playerSprite.enabled = false;
-                text.enabled = false;
+                collider2d.enabled = false;
             }
-            if (collider != null)
+            if (rigidbody2d != null)
             {
-                collider.enabled = false;
-            }
-            if (rigidbody != null)
-            {
-                rigidbody.simulated = false;
+                rigidbody2d.simulated = false;
             }
         }
     }
 
     public void SetColor(Color color)
     {
+        if (!colored) return;
         playerSprite.color = color;
     }
 

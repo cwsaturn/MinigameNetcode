@@ -11,6 +11,9 @@ public class DefaultPlayer : NetworkBehaviour
     private Rigidbody2D playerRigidbody;
     private SpriteRenderer playerSprite;
 
+    [SerializeField]
+    private Sprite[] spriteArray;
+
     private void Awake()
     {
         playerSprite = GetComponent<SpriteRenderer>();
@@ -21,6 +24,10 @@ public class DefaultPlayer : NetworkBehaviour
     {
         //playerSprite = GetComponent<SpriteRenderer>();
         //playerSprite.color = playerColor.Value;
+
+        ulong clientId = GetComponent<NetworkObject>().OwnerClientId;
+        if (clientId < 4)
+            playerSprite.sprite = spriteArray[clientId];
     }
 
     void FixedUpdate()
