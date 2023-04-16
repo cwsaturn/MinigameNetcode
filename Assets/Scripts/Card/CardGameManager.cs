@@ -18,6 +18,10 @@ public class CardGameManager : NetworkBehaviour
     public NetworkVariable<int> player2Score = new NetworkVariable<int>(0);
     public NetworkVariable<int> player3Score = new NetworkVariable<int>(0);
 
+    public NetworkVariable<int> activePlayersID = new NetworkVariable<int>(0);
+
+    public TextMeshProUGUI currentPlayerText;
+
 
     // Start is called before the first frame update
     void Start()
@@ -56,6 +60,7 @@ public class CardGameManager : NetworkBehaviour
         player1Score.OnValueChanged += OnScoreChange;
         player2Score.OnValueChanged += OnScoreChange;
         player3Score.OnValueChanged += OnScoreChange;
+        activePlayersID.OnValueChanged += OnTurnChange;
     }
 
     public override void OnNetworkDespawn()
@@ -66,6 +71,7 @@ public class CardGameManager : NetworkBehaviour
         player1Score.OnValueChanged -= OnScoreChange;
         player2Score.OnValueChanged -= OnScoreChange;
         player3Score.OnValueChanged -= OnScoreChange;
+        activePlayersID.OnValueChanged -= OnTurnChange;
     }
 
 
@@ -117,5 +123,15 @@ public class CardGameManager : NetworkBehaviour
         }
 
         scoreText.text = scoreTextTemp;
+
+        if (IsServer)
+        {
+            activePlayersID.Value = (activePlayersID.Value + 1) % numPlayers;  // Change active player
+        }
+    }
+
+    public void OnTurnChange(int pervious, int current)
+    {
+        currentPlayerText.text = "Current Player: " + (activePlayersID.Value + 1).ToString();
     }
 }

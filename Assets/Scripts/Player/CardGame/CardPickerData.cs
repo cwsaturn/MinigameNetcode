@@ -18,16 +18,20 @@ public class CardPickerData : NetworkBehaviour
     private TextMeshProUGUI timeText;
     private PlayerScript playerScript;
 
-    private bool playerActive = true;
+    private CardGameManager cardGameManager;
+
+    //private bool playerActive = true;
 
     //public int score = 0;
 
+    public int playerID;  // This is only correct on the server side
+    // public int activePlayersID = 0;
     
-
-    public int playerID;
 
     private void Awake()
     {
+        GameObject cardGameManagerObj = GameObject.FindGameObjectWithTag("GameManager");
+        cardGameManager = cardGameManagerObj.GetComponent<CardGameManager>();
         playerScript = GetComponent<PlayerScript>();
     }
 
@@ -43,25 +47,17 @@ public class CardPickerData : NetworkBehaviour
         //SyncNetVariables();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        if (!playerActive) return;
-    }
-
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (!playerActive) return;
+        // if (!playerActive) return;
 
-        if (collision.gameObject.tag == "Card")
+        if (collision.gameObject.tag == "Card" && (playerID == cardGameManager.activePlayersID.Value))  // Only flip the card if you are currently the active player
         {
             Debug.Log("Card");
 
             collision.gameObject.GetComponent<Animator>().SetBool("flipped", true);  // Flip card
             collision.gameObject.GetComponent<Collider2D>().enabled = false;  // Disable trigger
 
-
-            // only update score if localplayer
             if(!IsServer)
                 return;
 
@@ -76,10 +72,7 @@ public class CardPickerData : NetworkBehaviour
 
     public void CardPickupServerSide(int cardVal)
     {
-        Debug.Log("server rpc card pickup");
-        
-        GameObject cardGameManagerObj = GameObject.FindGameObjectWithTag("GameManager");
-        CardGameManager cardGameManager = cardGameManagerObj.GetComponent<CardGameManager>();
+        Debug.Log("server card pickup");
 
         switch(playerID)
         {
