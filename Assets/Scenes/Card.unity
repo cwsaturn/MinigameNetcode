@@ -1788,6 +1788,7 @@ MonoBehaviour:
     m_InternalValue: 0
   activePlayersID:
     m_InternalValue: 0
+  fullTurnsTaken: 0
   currentPlayerText: {fileID: 1445884769}
 --- !u!4 &617676269
 Transform:
@@ -4328,9 +4329,9 @@ RectTransform:
   m_Father: {fileID: 674208385}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 1000, y: -48}
+  m_AnchorMin: {x: 1, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: -232, y: -48}
   m_SizeDelta: {x: 400, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1445884769

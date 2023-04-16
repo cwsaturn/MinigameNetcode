@@ -20,6 +20,9 @@ public class CardGameManager : NetworkBehaviour
 
     public NetworkVariable<int> activePlayersID = new NetworkVariable<int>(0);
 
+    public int fullTurnsTaken = 0;
+    private const int maxTurns = 3;
+
     public TextMeshProUGUI currentPlayerText;
 
 
@@ -140,7 +143,21 @@ public class CardGameManager : NetworkBehaviour
 
         if (IsServer)
         {
-            activePlayersID.Value = (activePlayersID.Value + 1) % numPlayers;  // Change active player
+            //activePlayersID.Value = (activePlayersID.Value + 1) % numPlayers;  // Change active player
+
+            activePlayersID.Value += 1;
+
+            if (activePlayersID.Value + 1 > numPlayers)  // After a full cycle through all of the players, +1 since ID is zero indexed
+            {
+                fullTurnsTaken += 1;
+                activePlayersID.Value = 0;
+            }
+
+            if (fullTurnsTaken >= maxTurns)  // End game after 3 fulls turns
+            {
+                // TODO: Score stuff needs to happen here
+                NetworkManager.Singleton.SceneManager.LoadScene("MidgameLobby", LoadSceneMode.Single);
+            }
         }
     }
 
