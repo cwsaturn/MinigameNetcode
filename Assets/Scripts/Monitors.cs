@@ -11,6 +11,11 @@ public class Monitors : MonoBehaviour
     private float time;
     private int frameCount = 0;
 
+    void Start()
+    {
+        DontDestroyOnLoad(GameObject.Find("Monitors Canvas"));
+    }
+
     // Update is called once per frame
     void Update()
     {

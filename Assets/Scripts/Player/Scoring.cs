@@ -20,6 +20,8 @@ public class Scoring : MonoBehaviour
 
     void SetScores()
     {
+        float playerxp = PlayerPrefs.GetFloat("xp", 0);
+
         GameObject[] universalPlayers = GameObject.FindGameObjectsWithTag("UniversalPlayer");
 
         playerList = new List<PlayerScoring>();
@@ -45,6 +47,7 @@ public class Scoring : MonoBehaviour
 
             string playerText = universalPlayer.Username + " : ";
             playerText += playerScore.TotalScore + " + " + playerScore.RecentScore;
+            PlayerPrefs.SetFloat("xp", playerxp + playerScore.TotalScore);
 
             PlayerGUI[player].text = playerText;
 
