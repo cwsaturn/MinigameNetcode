@@ -18,20 +18,12 @@ public class CardPickerData : NetworkBehaviour
     private TextMeshProUGUI timeText;
     private PlayerScript playerScript;
 
-    private CardGameManager cardGameManager;
-
-    //private bool playerActive = true;
-
-    //public int score = 0;
-
+    public CardGameManager cardGameManager;
     public int playerID;  // This is only correct on the server side
-    // public int activePlayersID = 0;
     
 
     private void Awake()
     {
-        GameObject cardGameManagerObj = GameObject.FindGameObjectWithTag("GameManager");
-        cardGameManager = cardGameManagerObj.GetComponent<CardGameManager>();
         playerScript = GetComponent<PlayerScript>();
     }
 
@@ -41,25 +33,43 @@ public class CardPickerData : NetworkBehaviour
         if (IsLocalPlayer)
         {
             Camera.main.GetComponent<CameraScript>().setTarget(transform);
-            //timeText = GameObject.Find("Canvas/Time").GetComponent<TextMeshProUGUI>();
         }
-
-        //SyncNetVariables();
+        GameObject cardGameManagerObj = GameObject.FindGameObjectWithTag("GameManager");
+        if(cardGameManagerObj != null)
+            cardGameManager = cardGameManagerObj.GetComponent<CardGameManager>();
     }
+
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        // if (!playerActive) return;
+        if(!IsServer)
+                return;
+        
+        Debug.Log("CURRENT PLAYER TOUCHING CARD: " + playerID.ToString());
+        Debug.Log(" & ACTIVE PLAYER: " + cardGameManager.activePlayersID.Value.ToString());
 
         if (collision.gameObject.tag == "Card" && (playerID == cardGameManager.activePlayersID.Value))  // Only flip the card if you are currently the active player
         {
-            Debug.Log("Card");
+            // loop over all the cards to find what index of card was touched... to send a client rpc :)
+            int cardIndexOfCardTouched = -9999999;
 
+            for(int i = 0; i < cardGameManager.cards.Length; i++)
+            {
+                if(GameObject.ReferenceEquals(cardGameManager.cards[i], collision.gameObject))
+                {
+                    cardIndexOfCardTouched = i;
+                    break;
+                }
+            }
+
+            CardTouchedClientRPC(cardIndexOfCardTouched);
+
+            Debug.Log("Card at " + cardIndexOfCardTouched.ToString() + " flipped!");
             collision.gameObject.GetComponent<Animator>().SetBool("flipped", true);  // Flip card
             collision.gameObject.GetComponent<Collider2D>().enabled = false;  // Disable trigger
 
-            if(!IsServer)
-                return;
+            /*if(!IsServer)
+                return;*/
 
             int cardPickedUp = 0;
             int.TryParse(collision.gameObject.GetComponentInChildren<TMP_Text>().text, out cardPickedUp);
@@ -93,6 +103,22 @@ public class CardPickerData : NetworkBehaviour
                 Debug.Log(cardVal + " " + playerID);
                 break;
         }
+    }
+
+
+    [ClientRpc]
+    public void CardTouchedClientRPC(int cardIndex)
+    {
+        if(cardGameManager == null) // cant be null on client side due to client rpc for flipping later!
+        {
+            GameObject cardGameManagerObj = GameObject.FindGameObjectWithTag("GameManager");
+            if(cardGameManagerObj != null)
+                cardGameManager = cardGameManagerObj.GetComponent<CardGameManager>();
+        }
+
+        Debug.Log("Card at " + cardIndex.ToString() + " flipped!");
+        cardGameManager.cards[cardIndex].GetComponent<Animator>().SetBool("flipped", true);  // Flip card
+        cardGameManager.cards[cardIndex].GetComponent<Collider2D>().enabled = false;  // Disable trigger
     }
 
 }

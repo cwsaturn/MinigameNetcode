@@ -28,6 +28,13 @@ public class CardGameManager : NetworkBehaviour
     {
         if(IsServer)
             ServerSetSeed();
+        
+        /*GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+        foreach(GameObject player in players)
+        {
+            CardPickerData cardPickerData = player.GetComponent<CardPickerData>();
+            cardPickerData.cardGameManager = this;
+        }*/
     }
 
 
@@ -61,6 +68,13 @@ public class CardGameManager : NetworkBehaviour
         player2Score.OnValueChanged += OnScoreChange;
         player3Score.OnValueChanged += OnScoreChange;
         activePlayersID.OnValueChanged += OnTurnChange;
+
+        /*GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+        foreach(GameObject player in players)
+        {
+            CardPickerData cardPickerData = player.GetComponent<CardPickerData>();
+            cardPickerData.cardGameManager = this;
+        }*/
     }
 
     public override void OnNetworkDespawn()
