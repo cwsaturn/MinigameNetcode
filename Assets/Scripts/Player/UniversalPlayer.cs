@@ -13,16 +13,21 @@ public class UniversalPlayer : NetworkBehaviour
     public NetworkVariable<int> playerScore = new NetworkVariable<int>(0);
     private NetworkVariable<Color> playerColor = new NetworkVariable<Color>(Color.gray);
     private NetworkVariable<FixedString32Bytes> username = new NetworkVariable<FixedString32Bytes>("");
+    public Color PlayerColor
+    { get { return playerColor.Value; } }
     public string Username
     { get { return username.Value.ToString(); } }
 
     //REMEMBER TO ADD TO NETWORK PREFABS
+    //REMEMBER TO SET PREFAB TAG TO PLAYER
     [SerializeField]
     private GameObject Player;
     [SerializeField]
     private GameObject Platformer;
     [SerializeField]
     private GameObject Driver;
+    [SerializeField]
+    private GameObject ShellCursor;
     [SerializeField]
     private GameObject CardPicker;
 
@@ -46,6 +51,7 @@ public class UniversalPlayer : NetworkBehaviour
         {
             player_obj = Instantiate(Platformer, Vector3.zero, Quaternion.identity);
         }
+        
         else if(scene_name == "Kart")
         {
             Vector3 offset = Vector3.zero;
@@ -54,11 +60,38 @@ public class UniversalPlayer : NetworkBehaviour
             offset.y = -2 * (playerNum / 4);
             player_obj = Instantiate(Driver, offset, Quaternion.identity);
         }
+        else if (scene_name == "ShellGame")
+        {
+            Vector3 offset = Vector3.zero;
+            int playerNum = (int)clientId;
+            
+            switch (playerNum)
+            {
+                case 0:
+                    offset = new Vector3(-0.5f, 0.5f, 0);
+                    break;
+                case 1:
+                    offset = new Vector3(0, 0.5f, 0);
+                    break;
+                case 2:
+                    offset = new Vector3(-0.5f, -0.5f, 0);
+                    break;
+                case 3:
+                    offset = new Vector3(0, -0.5f, 0);
+                    break;
+                default:
+                    Debug.Log("too many players");
+                    break;
+            }
+
+            player_obj = Instantiate(ShellCursor, offset, Quaternion.identity);
+        }
         else if(scene_name == "Card")
         {
             player_obj = Instantiate(CardPicker, Vector3.zero, Quaternion.identity);
             player_obj.GetComponent<CardPickerData>().playerID = (int)OwnerClientId;
         }
+
         else
         {
             Vector3 offset = Vector3.zero;
@@ -72,11 +105,11 @@ public class UniversalPlayer : NetworkBehaviour
         Debug.Log("UniversalPlayer: Spawned a player object for: " + clientId);
 
         //Setup PlayerScript and PlayerScoring
-        if (scene_name != "StartLobby")
+        if (scene_name != "StartLobby" && scene_name != "MidgameLobby")
         {
             PlayerScript playerData = player_obj.GetComponent<PlayerScript>();
             playerData.playerScoring = playerScoring;
-            playerScoring.NewGame();
+            //playerScoring.NewGame();
         }
         PlayerInitiatedClientRpc();
     }
@@ -95,6 +128,7 @@ public class UniversalPlayer : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         // Subscribe to value changes
+        Debug.Log("Changed color");
         playerColor.OnValueChanged += OnColorChange;
         username.OnValueChanged += OnUsernameChange;
     }
@@ -139,6 +173,12 @@ public class UniversalPlayer : NetworkBehaviour
         if (!IsServer) return;
 
         playerScore.Value += score;
+    }
+
+    public int GetScore()
+    {
+
+        return playerScore.Value;
     }
 
     [ServerRpc]

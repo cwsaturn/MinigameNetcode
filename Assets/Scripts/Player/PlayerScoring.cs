@@ -15,6 +15,12 @@ public class PlayerScoring : NetworkBehaviour
     private List<float> finalScores = new List<float>();
     private List<PlayerScoring> playerList = new List<PlayerScoring>();
 
+    public int TotalScore
+    { get { return universalPlayer.playerScore.Value; } }
+    private NetworkVariable<int> recentScore = new NetworkVariable<int>(0);
+    public int RecentScore
+    { get { return recentScore.Value; } }
+
 
     // Start is called before the first frame update
     void Start()
@@ -108,7 +114,23 @@ public class PlayerScoring : NetworkBehaviour
         int score = 10 * (players - rank + 1) / players;
 
         universalPlayer.AddScore(score);
+
+        recentScore.Value = score;
+        intermediateScore.Value = 0f;
+        playerFinished.Value = false;
     }
+
+    /*
+    public int GetRecentScore()
+    {
+        return recentScore.Value;
+    }
+
+    public int GetScore()
+    {
+        return universalPlayer.playerScore.Value;
+    }
+    */
 
     // Update is called once per frame
     void Update()

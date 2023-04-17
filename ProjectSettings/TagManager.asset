@@ -7,6 +7,9 @@ TagManager:
   - UniversalPlayer
   - NetworkManager
   - Checkpoint
+  - ItemBox
+  - Obert
+  - ConstantObject
   - Card
   - ScoreText
   - GameManager

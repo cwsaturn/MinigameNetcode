@@ -11,13 +11,17 @@ public class PlayerScript : NetworkBehaviour
     [SerializeField]
     private SpriteRenderer playerSprite;
     [SerializeField]
-    private Collider2D collider;
+    private Collider2D collider2d;
     [SerializeField]
-    private Rigidbody2D rigidbody;
+    private Rigidbody2D rigidbody2d;
+    [SerializeField]
+    private bool colored = true;
 
     public PlayerScoring playerScoring;
 
     private NetworkVariable<bool> playerFinished = new NetworkVariable<bool>(false);
+
+    public NetworkVariable<bool> disappearOnFinish = new NetworkVariable<bool>(true);
 
     public override void OnNetworkSpawn()
     {
@@ -37,19 +41,20 @@ public class PlayerScript : NetworkBehaviour
         {
             playerSprite.enabled = false;
             text.enabled = false;
-            if (collider != null)
+            if (collider2d != null)
             {
-                collider.enabled = false;
+                collider2d.enabled = false;
             }
-            if (rigidbody != null)
+            if (rigidbody2d != null)
             {
-                rigidbody.simulated = false;
+                rigidbody2d.simulated = false;
             }
         }
     }
 
     public void SetColor(Color color)
     {
+        if (!colored) return;
         playerSprite.color = color;
     }
 
@@ -59,13 +64,22 @@ public class PlayerScript : NetworkBehaviour
     }
 
     [ServerRpc]
+    public void SetDisappearingServerRpc(bool disappear, ServerRpcParams rpcParams = default)
+    {
+        disappearOnFinish.Value = disappear;
+    }
+
+    [ServerRpc]
     public void FinishedServerRpc(float intermediateScore, ServerRpcParams rpcParams = default)
     {
         playerFinished.Value = true;
-        playerSprite.enabled = false;
+        if (disappearOnFinish.Value)
+            playerSprite.enabled = false;
         playerScoring.SetPlayerFinished(intermediateScore);
         //FindObjectOfType<ServerScript>().CheckPlayersFinished();
     }
+
+
 
     // Start is called before the first frame update
     void Start()

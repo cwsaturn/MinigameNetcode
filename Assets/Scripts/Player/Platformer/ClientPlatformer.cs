@@ -22,45 +22,38 @@ public class ClientPlatformer : NetworkBehaviour
     [SerializeField]
     private float reducedGrav = 8f;
 
-    private bool jumpReleased = true;
+    private bool jumpPressed = false;
 
     private Vector3 inputVector = Vector3.zero;
 
     private List<Vector3> normalVectors = new List<Vector3>();
 
+    private List<Collision2D> collisionList = new List<Collision2D>();
+
     private Rigidbody2D playerRigidbody;
 
-    private int jumpWait = 0;
-    private int jumpWaitFrames = 1;
     public bool active = true;
 
     private void Start()
     {
-        if (!IsClient) return;
         playerRigidbody = GetComponent<Rigidbody2D>();
     }
 
     void FixedUpdate()
     {
         if (!active) return;
-        if (!IsClient) return;
-        Vector3 movementVector = inputVector * movementSpeed;
+        if (!IsOwner) return;
 
-        playerRigidbody.AddForce(movementVector, ForceMode2D.Force);
+        CollectNormals();
 
-        if (normalVectors.Count > 0 && jumpWait <= 0)
+        Movement();
+        
+        if (jumpPressed)
         {
-            jumpWait = jumpWaitFrames;
-        }
-
-        if (jumpWait > 0)
-        {
-            --jumpWait;
-
-            if (jumpWait <= 0)
+            if (collisionList.Count > 0)
             {
                 Jump();
-                jumpReleased = false;
+                jumpPressed = false;
             }
         }
     }
@@ -68,7 +61,7 @@ public class ClientPlatformer : NetworkBehaviour
 
     private void Update()
     {
-        if (!IsClient) return;
+        if (!IsOwner) return;
 
         if (!active)
         {
@@ -81,6 +74,11 @@ public class ClientPlatformer : NetworkBehaviour
         if (inputVector.magnitude > 1)
             inputVector = inputVector.normalized;
 
+        if (Input.GetButtonDown("Jump"))
+        {
+            jumpPressed = true;
+        }
+
         if (Input.GetButton("Jump"))
         {
             playerRigidbody.gravityScale = reducedGrav;
@@ -88,8 +86,47 @@ public class ClientPlatformer : NetworkBehaviour
         else
         {
             playerRigidbody.gravityScale = normalGrav;
-            jumpReleased = true;
+            jumpPressed = false;
         }
+
+        //If on ground reduce gravity
+        if (collisionList.Count > 0)
+        {
+            playerRigidbody.gravityScale = reducedGrav;
+        }
+    }
+
+    private void Movement()
+    {
+        Vector3 movementVector = inputVector * movementSpeed;
+
+        if (collisionList.Count == 0)
+        {
+            //In air
+            playerRigidbody.AddForce(movementVector, ForceMode2D.Force);
+            return;
+        }
+
+        //On ground or slope
+        //Find the vector in direction of slope, add a portion of that vector to movement
+        Vector3 maxYNormal = Vector3.down;
+        foreach (Vector3 normal in normalVectors)
+        {
+            if (normal.y > maxYNormal.y)
+            {
+                maxYNormal = normal;
+            }
+        }
+
+        float dotProduct = Vector3.Dot(maxYNormal, movementVector);
+        Vector3 slopeVector = movementVector - maxYNormal * dotProduct;
+        //Debug.DrawRay(playerRigidbody.position, slopeVector, Color.red, 0.2f);
+
+        float steepness = Mathf.Max(maxYNormal.y, 0);
+
+        Vector3 resultVelocity = slopeVector * steepness + movementVector * (1 - steepness);
+        //Debug.DrawRay(playerRigidbody.position, resultVelocity, Color.cyan, 0.2f);
+        playerRigidbody.AddForce(resultVelocity, ForceMode2D.Force);
     }
 
     private void Jump()
@@ -99,7 +136,7 @@ public class ClientPlatformer : NetworkBehaviour
         {
             averageVector += normal;
         }
-        normalVectors.Clear();
+        //normalVectors.Clear();
 
         averageVector.Normalize();
 
@@ -109,34 +146,51 @@ public class ClientPlatformer : NetworkBehaviour
         playerRigidbody.AddForce(averageVector * jumpPower, ForceMode2D.Impulse);
     }
 
-    private void CollectNormals(Collision2D collision)
+    private void CollectNormals()
     {
+        normalVectors.Clear();
         Vector2 averageNormal = Vector3.zero;
 
-        foreach (ContactPoint2D contact in collision.contacts)
+        foreach (Collision2D collision in collisionList)
         {
-            if (!normalVectors.Contains(contact.normal))
+            foreach (ContactPoint2D contact in collision.contacts)
             {
-                normalVectors.Add(contact.normal);
+                if (!normalVectors.Contains(contact.normal))
+                {
+                    normalVectors.Add(contact.normal);
+                }
+            }
+        }
+    }
+
+    private void RemoveCollision(Collision2D collision)
+    {
+        for (int i = 0; i < collisionList.Count; i++)
+        {
+            if (collisionList[i].gameObject == collision.gameObject)
+            {
+                collisionList.RemoveAt(i);
+                return;
             }
         }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (!IsClient) return;
-        if (Input.GetButton("Jump") && jumpReleased)
-        {
-            CollectNormals(collision);
-        }
+        if (!IsOwner) return;
+        collisionList.Add(collision);
     }
 
     private void OnCollisionStay2D(Collision2D collision)
     {
-        if (!IsClient) return;
-        if (Input.GetButton("Jump") && jumpReleased)
-        {
-            CollectNormals(collision);
-        }
+        if (!IsOwner) return;
+        RemoveCollision(collision);
+        collisionList.Add(collision);
+    }
+
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        if (!IsOwner) return;
+        RemoveCollision(collision);
     }
 }

@@ -198,6 +198,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   text: {fileID: 424112956786705272}
   playerSprite: {fileID: 8079310319615083927}
+  collider: {fileID: 0}
+  rigidbody: {fileID: 0}
   playerScoring: {fileID: 0}
 --- !u!114 &1995178322784694351
 MonoBehaviour:
@@ -227,8 +229,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d365f823b59850741b85caf0ff19bfce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  checkpointNum: 3
+  laps: 1
   playerScript: {fileID: 4359015175310389415}
   canvas: {fileID: 6461065292123506030}
+  text: {fileID: 0}
+  playerSprite: {fileID: 0}
 --- !u!1 &6382575031556573685
 GameObject:
   m_ObjectHideFlags: 0
