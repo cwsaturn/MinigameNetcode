@@ -242,7 +242,10 @@ MonoBehaviour:
   collider2d: {fileID: -3675157821929384387}
   rigidbody2d: {fileID: 3470494201696424048}
   colored: 1
+  spectatorGame: 1
   playerScoring: {fileID: 0}
+  disappearOnFinish:
+    m_InternalValue: 1
 --- !u!1 &7374446556977247790
 GameObject:
   m_ObjectHideFlags: 0
