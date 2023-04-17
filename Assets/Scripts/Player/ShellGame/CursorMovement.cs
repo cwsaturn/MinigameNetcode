@@ -31,9 +31,13 @@ public class CursorMovement : NetworkBehaviour
     // Start is called before the first frame update
     IEnumerator Start()
     {
+        if (!IsOwner) yield break;
+
         x_offset = transform.position.x;
         y_offset = transform.position.y;
-        cupManager = GameObject.Find("Game Manager").GetComponent<ShellGameManager>();
+        cupManager = GameObject.FindGameObjectWithTag("GameController").GetComponent<ShellGameManager>();
+
+        Debug.Log("here1");
 
         while (!cupManager.getShuffleStatus()) { yield return new WaitForSecondsRealtime(0.1f); }
 
