@@ -18,6 +18,8 @@ public class UniversalPlayer : NetworkBehaviour
     public string Username
     { get { return username.Value.ToString(); } }
 
+    public NetworkVariable<float> xp = new NetworkVariable<float>(0);
+
     //REMEMBER TO ADD TO NETWORK PREFABS
     //REMEMBER TO SET PREFAB TAG TO PLAYER
     [SerializeField]
@@ -33,6 +35,8 @@ public class UniversalPlayer : NetworkBehaviour
 
     private PlayerScoring playerScoring;
 
+    private string publicScene;
+
     [ServerRpc]
     //[ServerRpc(RequireOwnership = false)]
     void CreatePlayerServerRpc(ulong clientId, string scene_name = "StartLobby", ServerRpcParams rpcParams = default)
@@ -43,10 +47,13 @@ public class UniversalPlayer : NetworkBehaviour
         if (scene_name == "StartLobby")
         {
             username.Value = PlayerPrefs.GetString("username", "Player" + clientId);
+            xp.Value = PlayerPrefs.GetFloat("xp", 0);
         }
 
         if(scene_name == "Platformer" || scene_name == "Platformer2")
         {
+            publicScene = "platformer";
+            SetCosmetics();
             player_obj = Instantiate(Platformer, Vector3.zero, Quaternion.identity);
         }
         else if(scene_name == "Kart")
@@ -112,6 +119,7 @@ public class UniversalPlayer : NetworkBehaviour
         FindPlayer();
         SetPlayerColor();
         SetPlayerName();
+        SetCosmetics();
     }
     //*/
 
@@ -145,6 +153,14 @@ public class UniversalPlayer : NetworkBehaviour
         if (currentPlayer != null)
         {
             currentPlayer.GetComponent<PlayerScript>().SetColor(playerColor.Value);
+        }
+    }
+
+    private void SetCosmetics()
+    {
+        if (currentPlayer != null && publicScene == "platformer")
+        {
+            currentPlayer.GetComponent<PlayerScript>().SetCosmetics(xp.Value);
         }
     }
 
@@ -242,6 +258,7 @@ public class UniversalPlayer : NetworkBehaviour
         FindPlayer();
         SetPlayerColor();
         SetPlayerName();
+        SetCosmetics();
     }
 
     void OnEnable()

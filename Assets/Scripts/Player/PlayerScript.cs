@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerScript : NetworkBehaviour
 {
@@ -16,6 +17,9 @@ public class PlayerScript : NetworkBehaviour
     private Rigidbody2D rigidbody2d;
     [SerializeField]
     private bool colored = true;
+
+    public Image hat;
+    public GameObject follower;
 
     public PlayerScoring playerScoring;
 
@@ -61,6 +65,26 @@ public class PlayerScript : NetworkBehaviour
     public void SetUsername(string username)
     {
         text.text = username;
+    }
+
+    public void SetCosmetics(float xp)
+    {
+        if(PlayerPrefs.GetFloat("xp", 0) >= 200)
+        {
+            hat.enabled = true;
+        }
+        else
+        {
+            hat.enabled = false;
+        }
+        if(PlayerPrefs.GetFloat("xp", 0) >= 300)
+        {
+            follower.SetActive(true);
+        }
+        else
+        {
+            follower.SetActive(false);
+        }
     }
 
     [ServerRpc]
