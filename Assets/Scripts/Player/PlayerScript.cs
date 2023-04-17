@@ -69,21 +69,27 @@ public class PlayerScript : NetworkBehaviour
 
     public void SetCosmetics(float xp)
     {
-        if(PlayerPrefs.GetFloat("xp", 0) >= 200)
+        if(hat != null)
         {
-            hat.enabled = true;
+            if(PlayerPrefs.GetFloat("xp", 0) >= 200)
+            {
+                hat.enabled = true;
+            }
+            else
+            {
+                hat.enabled = false;
+            }
         }
-        else
+        if(follower != null)
         {
-            hat.enabled = false;
-        }
-        if(PlayerPrefs.GetFloat("xp", 0) >= 300)
-        {
-            follower.SetActive(true);
-        }
-        else
-        {
-            follower.SetActive(false);
+            if(PlayerPrefs.GetFloat("xp", 0) >= 300)
+            {
+                follower.SetActive(true);
+            }
+            else
+            {
+                follower.SetActive(false);
+            }
         }
     }
 

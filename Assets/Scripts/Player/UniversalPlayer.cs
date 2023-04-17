@@ -35,8 +35,6 @@ public class UniversalPlayer : NetworkBehaviour
 
     private PlayerScoring playerScoring;
 
-    private string publicScene;
-
     [ServerRpc]
     //[ServerRpc(RequireOwnership = false)]
     void CreatePlayerServerRpc(ulong clientId, string scene_name = "StartLobby", ServerRpcParams rpcParams = default)
@@ -52,7 +50,6 @@ public class UniversalPlayer : NetworkBehaviour
 
         if(scene_name == "Platformer" || scene_name == "Platformer2")
         {
-            publicScene = "platformer";
             SetCosmetics();
             player_obj = Instantiate(Platformer, Vector3.zero, Quaternion.identity);
         }
@@ -158,7 +155,7 @@ public class UniversalPlayer : NetworkBehaviour
 
     private void SetCosmetics()
     {
-        if (currentPlayer != null && publicScene == "platformer")
+        if (currentPlayer != null)
         {
             currentPlayer.GetComponent<PlayerScript>().SetCosmetics(xp.Value);
         }
