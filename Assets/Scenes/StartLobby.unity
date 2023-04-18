@@ -2464,6 +2464,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e4b5d5c303fbe44da9fdcad84c588c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerDisconnected:
+    m_InternalValue: 0
 --- !u!4 &1402612463
 Transform:
   m_ObjectHideFlags: 0
