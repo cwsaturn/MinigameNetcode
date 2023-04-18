@@ -22,10 +22,7 @@ public class PlayerScript : NetworkBehaviour
     //In order to spectate, player must have a rigidbody set in PlayerScript
     [SerializeField]
     private bool spectatorGame = false;
-
-    private bool spectating = false;
-    private int playerSpectating = 0;
-    private PlayerScript playerSpectatingObj = null;
+    private Spectator spectatorScript = new();
 
     public PlayerScoring playerScoring;
 
@@ -63,8 +60,7 @@ public class PlayerScript : NetworkBehaviour
             }
             if (spectatorGame)
             {
-                spectating = true;
-                SwitchPlayerSpectating();
+                spectatorScript.spectating = true;
             }
         }
     }
@@ -93,58 +89,22 @@ public class PlayerScript : NetworkBehaviour
         if (disappearOnFinish.Value)
             playerSprite.enabled = false;
         playerScoring.SetPlayerFinished(intermediateScore);
-
-        //FindObjectOfType<ServerScript>().CheckPlayersFinished();
-    }
-
-    public void SwitchPlayerSpectating()
-    {
-        if (!IsLocalPlayer) return;
-
-        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
-        int previousSpectating = playerSpectating;
-        playerSpectating = (playerSpectating + 1) % players.Length;
-
-        while (previousSpectating != playerSpectating)
-        {
-            GameObject player = players[playerSpectating];
-            PlayerScript playerScript = player.GetComponent<PlayerScript>();
-            if (!playerScript.PlayerFinished)
-            {
-                Debug.Log("player found: " + playerSpectating);
-                Transform playerTransform = playerScript.Rigidbody2D.transform;
-                Camera.main.GetComponent<CameraScript>().setTarget(playerTransform);
-                playerSpectatingObj = playerScript;
-                return;
-            }
-            playerSpectating = (playerSpectating + 1) % players.Length;
-        }
-        playerSpectating = -1;
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        //playerSprite = GetComponent<SpriteRenderer>();
 
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (!IsOwner) return;
-        if (!spectating) return;
-        if (playerSpectating < 0) return;
-
-        if (playerSpectatingObj == null)
-        {
-            SwitchPlayerSpectating();
-            return;
-        }
+        if (!IsLocalPlayer) return;
         
-        if (playerSpectatingObj.PlayerFinished || Input.GetButtonDown("Jump"))
+        if (spectatorGame)
         {
-            SwitchPlayerSpectating();
+            spectatorScript.Update();
         }
     }
 }
