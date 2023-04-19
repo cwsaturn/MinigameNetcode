@@ -104,7 +104,7 @@ public class TargetCrosshair : NetworkBehaviour
 
     private IEnumerator CrosshairShootEffect()
     {
-        playerSprite.color = UnityEngine.Random.ColorHSV(0f, 1f, 1f, 1f, 0.5f, 1f);
+        playerSprite.color = Color.white; 
         yield return new WaitForSeconds(0.05f);
         playerSprite.color = originalColor;
     }

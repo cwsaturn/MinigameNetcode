@@ -7,8 +7,10 @@ public class TargetScript : NetworkBehaviour
 {
 
     private Rigidbody2D rigidbody2d; 
-    private bool triggered = false; 
-    private Collider2D colliderObject; 
+    private Collider2D colliderObject;
+    private float maxSize = 6.0f;
+    private float growthRate = 1.0f;
+    private float scale = 1.0f; 
     // Start is called before the first frame update
     void Start()
     {
@@ -19,6 +21,11 @@ public class TargetScript : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(scale < maxSize)
+        {
+            transform.localScale = new Vector3(1.0f,1.0f,1.0f) * scale;
+            scale += growthRate * Time.deltaTime * 5;
+        }
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -56,6 +63,5 @@ public class TargetScript : NetworkBehaviour
     private void OnTriggerEnter2D(Collider2D col)
     {
         colliderObject = col; 
-        triggered = true; 
     }
 }
