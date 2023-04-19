@@ -28,6 +28,8 @@ public class UniversalPlayer : NetworkBehaviour
     private GameObject Driver;
     [SerializeField]
     private GameObject ShellCursor;
+    [SerializeField]
+    private GameObject TankShooter;
 
     private GameObject currentPlayer;
 
@@ -82,6 +84,10 @@ public class UniversalPlayer : NetworkBehaviour
             }
 
             player_obj = Instantiate(ShellCursor, offset, Quaternion.identity);
+        }
+        else if (scene_name == "Shootemup")
+        {
+            player_obj = Instantiate(TankShooter, Vector3.zero, Quaternion.identity);
         }
         else
         {

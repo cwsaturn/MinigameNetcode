@@ -18,18 +18,21 @@ EditorBuildSettings:
     path: Assets/Scenes/MidgameLobby.unity
     guid: b82f251a32d05f346ba62e465e224b69
   - enabled: 1
-    path: Assets/Scenes/Platformer.unity
-    guid: fb8b43eef3e8eb94db5809b397e9bc15
-  - enabled: 1
     path: Assets/Scenes/Kart.unity
     guid: e6ac692c3dae16b4c807d2775e2f15cf
   - enabled: 1
     path: Assets/Scenes/Platformer2.unity
     guid: a757b4399894a1341a4ae4ebf3658750
-  - enabled: 0
-    path: Assets/Scenes/SampleScene.unity
-    guid: 2cda990e2423bbf4892e6590ba056729
   - enabled: 1
     path: Assets/Scenes/ShellGame.unity
     guid: 00bcae25066da7a44bb7edd853b9eb00
+  - enabled: 1
+    path: Assets/Scenes/Shootemup.unity
+    guid: 5a6f103fbc7399348b4cfcb552419126
+  - enabled: 0
+    path: Assets/Scenes/Platformer.unity
+    guid: fb8b43eef3e8eb94db5809b397e9bc15
+  - enabled: 0
+    path: Assets/Scenes/SampleScene.unity
+    guid: 2cda990e2423bbf4892e6590ba056729
   m_configObjects: {}
