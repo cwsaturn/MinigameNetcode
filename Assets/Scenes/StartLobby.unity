@@ -447,7 +447,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &644159205
 GameObject:
@@ -535,6 +535,16 @@ MonoBehaviour:
       OverridingTargetPrefab: {fileID: 0}
     - Override: 0
       Prefab: {fileID: 8503601189579765436, guid: 3ac9a93ce06701c41ae4aba5d7b2404d, type: 3}
+      SourcePrefabToOverride: {fileID: 0}
+      SourceHashToOverride: 0
+      OverridingTargetPrefab: {fileID: 0}
+    - Override: 0
+      Prefab: {fileID: 6082976955032821125, guid: 18b5a9820181c6a4dbc974c9e0c2f2b4, type: 3}
+      SourcePrefabToOverride: {fileID: 0}
+      SourceHashToOverride: 0
+      OverridingTargetPrefab: {fileID: 0}
+    - Override: 0
+      Prefab: {fileID: 2140460080064828270, guid: 08f130719285cb54eb442ea989ff01d7, type: 3}
       SourcePrefabToOverride: {fileID: 0}
       SourceHashToOverride: 0
       OverridingTargetPrefab: {fileID: 0}
@@ -2467,7 +2477,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1521794993
 GameObject:

@@ -51,7 +51,7 @@ public class SettingsMenu : MonoBehaviour
 
         //resolution
         selectedResolution = PlayerPrefs.GetInt("res_index", 3);
-        fullscreen = PlayerPrefs.GetInt("fullscreen", 1) == 1 ? true : false;
+        fullscreen = PlayerPrefs.GetInt("fullscreen", 0) == 1 ? true : false;
         fullscreenToggle.isOn = fullscreen;
         setScreen();
         dropdown.value = selectedResolution;

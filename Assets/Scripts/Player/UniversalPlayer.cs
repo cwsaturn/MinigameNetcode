@@ -28,6 +28,8 @@ public class UniversalPlayer : NetworkBehaviour
     private GameObject Driver;
     [SerializeField]
     private GameObject ShellCursor;
+    [SerializeField]
+    private GameObject CardPicker;
 
     private GameObject currentPlayer;
 
@@ -49,6 +51,7 @@ public class UniversalPlayer : NetworkBehaviour
         {
             player_obj = Instantiate(Platformer, Vector3.zero, Quaternion.identity);
         }
+        
         else if(scene_name == "Kart")
         {
             Vector3 offset = Vector3.zero;
@@ -83,6 +86,12 @@ public class UniversalPlayer : NetworkBehaviour
 
             player_obj = Instantiate(ShellCursor, offset, Quaternion.identity);
         }
+        else if(scene_name == "Card")
+        {
+            player_obj = Instantiate(CardPicker, Vector3.zero, Quaternion.identity);
+            player_obj.GetComponent<CardPickerData>().playerID = (int)OwnerClientId;
+        }
+
         else
         {
             Vector3 offset = Vector3.zero;
@@ -114,6 +123,7 @@ public class UniversalPlayer : NetworkBehaviour
         SetPlayerName();
     }
     //*/
+
 
     public override void OnNetworkSpawn()
     {
@@ -155,6 +165,7 @@ public class UniversalPlayer : NetworkBehaviour
             currentPlayer.GetComponent<PlayerScript>().SetUsername(username.Value.ToString());
         }
     }
+
 
     //only call with server
     public void AddScore(int score)

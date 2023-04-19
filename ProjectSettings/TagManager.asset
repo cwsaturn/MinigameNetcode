@@ -10,6 +10,9 @@ TagManager:
   - ItemBox
   - Obert
   - ConstantObject
+  - Card
+  - ScoreText
+  - GameManager
   layers:
   - Default
   - TransparentFX
