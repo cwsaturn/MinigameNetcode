@@ -453,7 +453,7 @@ MonoBehaviour:
   playerSprite: {fileID: 6082976955032821127}
   collider2d: {fileID: 0}
   rigidbody2d: {fileID: 0}
-  colored: 0
+  preColored: 1
   spectatorGame: 0
   playerScoring: {fileID: 0}
   disappearOnFinish:

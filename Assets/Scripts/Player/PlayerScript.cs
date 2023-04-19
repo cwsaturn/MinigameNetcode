@@ -17,7 +17,7 @@ public class PlayerScript : NetworkBehaviour
     public Rigidbody2D Rigidbody2D
     { get { return rigidbody2d; } }
     [SerializeField]
-    private bool colored = true;
+    private bool preColored = false;
 
     //In order to spectate, player must have a rigidbody set in PlayerScript
     [SerializeField]
@@ -67,7 +67,7 @@ public class PlayerScript : NetworkBehaviour
 
     public void SetColor(Color color)
     {
-        if (!colored) return;
+        if (preColored) return;
         playerSprite.color = color;
     }
 

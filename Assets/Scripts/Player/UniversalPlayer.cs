@@ -32,6 +32,8 @@ public class UniversalPlayer : NetworkBehaviour
     private GameObject CardPicker;
     [SerializeField]
     private GameObject TargetCrosshair; 
+    [SerializeField]
+    private GameObject TankShooter;
 
     private GameObject currentPlayer;
 
@@ -104,6 +106,10 @@ public class UniversalPlayer : NetworkBehaviour
             player_obj = Instantiate(TargetCrosshair, offset, Quaternion.identity);
         }
 
+        else if (scene_name == "Shootemup")
+        {
+            player_obj = Instantiate(TankShooter, Vector3.zero, Quaternion.identity);
+        }
         else
         {
             Vector3 offset = Vector3.zero;
