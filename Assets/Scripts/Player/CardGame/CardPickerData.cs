@@ -121,4 +121,11 @@ public class CardPickerData : NetworkBehaviour
         cardGameManager.cards[cardIndex].GetComponent<Collider2D>().enabled = false;  // Disable trigger
     }
 
+
+    [ClientRpc]
+    public void FinishedGameClientRpc(int immediateScore)
+    {
+        playerScript.FinishedServerRpc(immediateScore);
+    }
+
 }

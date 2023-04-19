@@ -125,16 +125,16 @@ public class CardGameManager : NetworkBehaviour
             switch(i)
             {
                 case 0:
-                    scoreTextTemp += "Player " + (i+1) + ": " + player0Score.Value + "\n";
+                    scoreTextTemp += "Red Player: " + player0Score.Value + "\n";
                     break;
                 case 1:
-                    scoreTextTemp += "Player " + (i+1) + ": " + player1Score.Value + "\n";
+                    scoreTextTemp += "Blue Player: " + player1Score.Value + "\n";
                     break;
                 case 2:
-                    scoreTextTemp += "Player " + (i+1) + ": " + player2Score.Value + "\n";
+                    scoreTextTemp += "Green Player: " + player2Score.Value + "\n";
                     break;
                 case 3:
-                    scoreTextTemp += "Player " + (i+1) + ": " + player3Score.Value + "\n";
+                    scoreTextTemp += "Yellow Player: " + player3Score.Value + "\n";
                     break;
             }
         }
@@ -143,8 +143,6 @@ public class CardGameManager : NetworkBehaviour
 
         if (IsServer)
         {
-            //activePlayersID.Value = (activePlayersID.Value + 1) % numPlayers;  // Change active player
-
             activePlayersID.Value += 1;
 
             if (activePlayersID.Value + 1 > numPlayers)  // After a full cycle through all of the players, +1 since ID is zero indexed
@@ -155,14 +153,56 @@ public class CardGameManager : NetworkBehaviour
 
             if (fullTurnsTaken >= maxTurns)  // End game after 3 fulls turns
             {
-                // TODO: Score stuff needs to happen here
-                NetworkManager.Singleton.SceneManager.LoadScene("MidgameLobby", LoadSceneMode.Single);
+                // wait for 2 seconds before sending end message!
+                StartCoroutine(Wait2SecondsEndGame(players));
+
             }
         }
     }
 
     public void OnTurnChange(int pervious, int current)
     {
-        currentPlayerText.text = "Current Player: " + (activePlayersID.Value + 1).ToString();
+        //currentPlayerText.text = "Current Player: " + (activePlayersID.Value + 1).ToString();
+        switch(activePlayersID.Value)
+        {
+            case 0:
+                currentPlayerText.text = "Red Player's Turn!";
+                break;
+            case 1:
+                currentPlayerText.text = "Blue Player's Turn!";
+                break;
+            case 2:
+                currentPlayerText.text = "Green Player's Turn!";
+                break;
+            case 3:
+                currentPlayerText.text = "Yellow Player's Turn!";
+                break;
+        }
+    }
+
+
+    IEnumerator Wait2SecondsEndGame(GameObject[] players)
+    {
+        yield return new WaitForSecondsRealtime(.2f);
+
+        for(int i = 0; i < players.Length; i++)
+        {
+            CardPickerData cpd = players[i].GetComponent<CardPickerData>();
+            switch(i)
+            {
+                case 0:
+                    cpd.FinishedGameClientRpc(-player0Score.Value);     // negative because lowest is the best in scoring func... but in our game highest is the best
+                    break;
+                case 1:
+                    cpd.FinishedGameClientRpc(-player1Score.Value);
+                    break;
+                case 2:
+                    cpd.FinishedGameClientRpc(-player2Score.Value);
+                    break;
+                case 3:
+                    cpd.FinishedGameClientRpc(-player3Score.Value);
+                    break;
+            }
+        }
     }
 }
