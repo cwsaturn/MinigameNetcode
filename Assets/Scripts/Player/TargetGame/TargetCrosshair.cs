@@ -66,12 +66,16 @@ public class TargetCrosshair : NetworkBehaviour
     void FixedUpdate()
     {
         if (!IsOwner) return; 
-        Vector3 movementVector = Vector3.right * Input.GetAxisRaw("Horizontal") + Vector3.up * Input.GetAxisRaw("Vertical");
-        if (movementVector.magnitude > 1)
-            movementVector = movementVector.normalized;
+        // Vector3 movementVector = Vector3.right * Input.GetAxisRaw("Horizontal") + Vector3.up * Input.GetAxisRaw("Vertical");
+        // if (movementVector.magnitude > 1)
+        //     movementVector = movementVector.normalized;
 
-        movementVector *= movementSpeed;
-        playerRigidbody.AddForce(movementVector, ForceMode2D.Force);
+        // movementVector *= movementSpeed;
+        // playerRigidbody.AddForce(movementVector, ForceMode2D.Force);
+        Vector3 movementVector = Vector3.right * Input.GetAxisRaw("Horizontal") + Vector3.up * Input.GetAxisRaw("Vertical");
+        movementVector = movementVector.normalized * Time.deltaTime * movementSpeed;
+
+        transform.position += movementVector;
         
     }
 
@@ -100,8 +104,8 @@ public class TargetCrosshair : NetworkBehaviour
 
     private IEnumerator CrosshairShootEffect()
     {
-        playerSprite.color = Color.white;
-        yield return new WaitForSeconds(0.03f);
+        playerSprite.color = UnityEngine.Random.ColorHSV(0f, 1f, 1f, 1f, 0.5f, 1f);
+        yield return new WaitForSeconds(0.05f);
         playerSprite.color = originalColor;
     }
 

@@ -147,12 +147,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c310539241cce440a5ba225d81464be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementSpeed: 30
+  movementSpeed: 10
   playerScript: {fileID: 24905804657622565}
   score: 0
   totalTargets: 5
-  hitTargets:
-    m_InternalValue: 0
+  targetSpawner: {fileID: 0}
 --- !u!212 &7702352029518125879
 SpriteRenderer:
   m_ObjectHideFlags: 0
