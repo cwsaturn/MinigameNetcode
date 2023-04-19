@@ -19,17 +19,6 @@ public class TargetScript : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(triggered)
-        {
-            if (Input.GetButtonDown("Jump"))
-            {
-                triggered = false; 
-                ulong ownerClientId =  colliderObject.gameObject.GetComponent<NetworkObject>().OwnerClientId;
-                DestroyTargetServerRpc();
-                ScoredUpdateServerRpc(ownerClientId);
-            }
-        }
-
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -57,9 +46,11 @@ public class TargetScript : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    void DestroyTargetServerRpc()
+    public void DestroyTargetServerRpc()
     {
         Destroy(gameObject);
+        ulong ownerClientId = colliderObject.gameObject.GetComponent<NetworkObject>().OwnerClientId;
+        ScoredUpdateServerRpc(ownerClientId); 
     }
 
     private void OnTriggerEnter2D(Collider2D col)
@@ -67,12 +58,4 @@ public class TargetScript : NetworkBehaviour
         colliderObject = col; 
         triggered = true; 
     }
-
-    private void OnTriggerExit2D(Collider2D col)
-    {
-        colliderObject = null; 
-        triggered = false; 
-    }
-
-
 }

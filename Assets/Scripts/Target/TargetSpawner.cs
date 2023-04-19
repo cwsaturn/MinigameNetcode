@@ -12,7 +12,7 @@ public class TargetSpawner : NetworkBehaviour
     private float initTime = 1f; 
     private float timer = 0f;
 
-    private int totalTargets = 5; 
+    private int totalTargets = 20; 
     private int currentTargets = 1; 
 
     public int hitTargets = 0; 
@@ -21,7 +21,7 @@ public class TargetSpawner : NetworkBehaviour
     void Start()
     {
         if(!NetworkManager.Singleton.IsHost) return; 
-        Vector3 spawnLocation = new Vector3(0,0,0);
+        Vector3 spawnLocation = new Vector3(Random.Range(-5,5),Random.Range(-3,3),0);
         GameObject spawnedTarget = Instantiate(target, spawnLocation, Quaternion.identity);
         spawnedTarget.GetComponent<NetworkObject>().Spawn(); 
         
