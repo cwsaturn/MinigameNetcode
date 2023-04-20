@@ -26,6 +26,8 @@ public class TargetCrosshair : NetworkBehaviour
 
     private Color originalColor; 
 
+    private TargetPlayerScore targetPlayerScore; 
+
     private void Awake()
     {
         playerSprite = GetComponent<SpriteRenderer>();
@@ -38,6 +40,7 @@ public class TargetCrosshair : NetworkBehaviour
         if(IsServer)
             targetSpawner = GameObject.Find("TargetSpawner").GetComponent<TargetSpawner>();
         originalColor = playerSprite.color; 
+        targetPlayerScore = GameObject.Find("Canvas/Score").GetComponent<TargetPlayerScore>();
     }
 
 
@@ -84,6 +87,7 @@ public class TargetCrosshair : NetworkBehaviour
     {
         if(!IsOwner) return; 
         score++; 
+        targetPlayerScore.UpdateScoreOnUI(score); 
         UpdateScoreOnTargetSpawnerServerRpc();
     }
 
