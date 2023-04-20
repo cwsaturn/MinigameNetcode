@@ -8,8 +8,9 @@ TagManager:
   - NetworkManager
   - Checkpoint
   - ItemBox
-  - Obert
   - ConstantObject
+  - Projectile
+  - Tank
   layers:
   - Default
   - TransparentFX

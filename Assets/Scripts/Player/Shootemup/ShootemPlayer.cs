@@ -5,8 +5,6 @@ using Unity.Netcode;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
-using static System.Net.Mime.MediaTypeNames;
-using static UnityEditor.Progress;
 
 public class ShootemPlayer : NetworkBehaviour
 {
@@ -32,6 +30,8 @@ public class ShootemPlayer : NetworkBehaviour
     private Canvas myCanvas;
     [SerializeField]
     private PlayerScript playerScript;
+    [SerializeField]
+    private NetworkObject networkObject;
 
     private float shotDistance = 1.5f;
     private float shotSpeed = 10f;
@@ -76,13 +76,7 @@ public class ShootemPlayer : NetworkBehaviour
 
     private void Start()
     {
-        SetHealthServerRpc(maxHealth);
-        //playerSprite = GetComponent<SpriteRenderer>();
-        //playerSprite.color = playerColor.Value;
-
-        //ulong clientId = GetComponent<NetworkObject>().OwnerClientId;
-        ulong clientId = NetworkManager.Singleton.LocalClientId;
-
+        ulong clientId = networkObject.OwnerClientId;
         if (clientId < 4)
         {
             playerSprite.sprite = spriteArray[clientId];
@@ -90,6 +84,8 @@ public class ShootemPlayer : NetworkBehaviour
 
         if (!IsLocalPlayer) return;
         Camera.main.GetComponent<CameraScript>().setTarget(transform);
+        SetHealthServerRpc(maxHealth);
+        projectile.GetComponent<Bullet>().type = Bullet.bulletType.red;
     }
 
     void FixedUpdate()
@@ -131,7 +127,7 @@ public class ShootemPlayer : NetworkBehaviour
 
     private void ShotCollision(GameObject shot)
     {
-        SetHealthServerRpc(health.Value -= 20f);
+        SetHealthServerRpc(health.Value - 20f);
     }
 
     private void FireShot()
@@ -159,12 +155,16 @@ public class ShootemPlayer : NetworkBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (!IsLocalPlayer) return;
+        Debug.Log("hit");
 
-
-        if (collision.gameObject.tag == "Obert")
+        if (IsServer || IsLocalPlayer)
         {
-            ShotCollision(collision.gameObject);
+            if (collision.gameObject.tag == "Projectile")
+            {
+                ShotCollision(collision.gameObject);
+            }
         }
     }
+
+
 }

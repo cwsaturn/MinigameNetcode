@@ -90,6 +90,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   healthImage: {fileID: 384144006701109527}
+  backImage: {fileID: 8943234181173310796}
 --- !u!1 &2272723580370418885
 GameObject:
   m_ObjectHideFlags: 0
@@ -233,7 +234,7 @@ MonoBehaviour:
   playerSprite: {fileID: 5682209929604119116}
   collider2d: {fileID: 5797604286863131196}
   rigidbody2d: {fileID: 2712984291527297709}
-  preColored: 0
+  preColored: 1
   spectatorGame: 1
   playerScoring: {fileID: 0}
   disappearOnFinish:
@@ -493,7 +494,7 @@ GameObject:
   - component: {fileID: 465323006956714511}
   m_Layer: 0
   m_Name: Tank
-  m_TagString: Untagged
+  m_TagString: Tank
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -660,6 +661,7 @@ MonoBehaviour:
   - {fileID: -1152607053, guid: 5f2bd0b6f2ee09747b019efa1abf43ae, type: 3}
   healthbar: {fileID: 8510401976732457310}
   maxHealth: 100
-  projectile: {fileID: 8503601189579765436, guid: 3ac9a93ce06701c41ae4aba5d7b2404d, type: 3}
+  projectile: {fileID: 8503601189579765436, guid: 313c36a917f45aa43b437b941f2b86d7, type: 3}
   myCanvas: {fileID: 8171039826313460453}
   playerScript: {fileID: 1783688632949241791}
+  networkObject: {fileID: 4293545291588328128}
