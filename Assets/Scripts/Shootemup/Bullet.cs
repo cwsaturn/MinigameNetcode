@@ -2,11 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Bullet : NetworkBehaviour
 {
     [SerializeField]
     private Sprite[] spriteArray;
+    [SerializeField]
+    private Rigidbody2D rigidbody2d;
+    public Rigidbody2D Rigidbody2d
+    { get { return rigidbody2d; } }
 
     SpriteRenderer spriteRenderer;
 
@@ -14,8 +19,15 @@ public class Bullet : NetworkBehaviour
 
     public bulletType type = bulletType.yellow;
 
+    private float damage = 10;
+    public float Damage
+    { get { return damage; } }
+
+    float lifetime = 30f;
+    NetworkVariable<float> health = new NetworkVariable<float>(30f);
+
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
 
@@ -23,15 +35,19 @@ public class Bullet : NetworkBehaviour
         {
             case bulletType.red:
                 spriteRenderer.sprite = spriteArray[1];
+                damage = 20;
                 break;
             case bulletType.magenta:
                 spriteRenderer.sprite = spriteArray[2];
                 break;
             case bulletType.green:
                 spriteRenderer.sprite = spriteArray[3];
+                damage = 5;
                 break;
             case bulletType.cyan:
                 spriteRenderer.sprite = spriteArray[4];
+                damage = 5;
+                gameObject.layer = 8;
                 break;
             case bulletType.blue:
                 spriteRenderer.sprite = spriteArray[5];
@@ -41,26 +57,44 @@ public class Bullet : NetworkBehaviour
         }
     }
 
-    // Update is called once per frame
-    void Update()
+    public void SetVelocity(Vector3 velocity)
     {
-        
+        rigidbody2d.velocity = velocity;
+    }
+
+    // Update is called once per frame
+    void FixedUpdate()
+    {
+        if (!IsServer) return;
+        health.Value -= Time.deltaTime;
+        if (health.Value <= 0f)
+            DestroySelf();
+    }
+
+    public void DestroySelf()
+    {
+        if (!IsServer) return;
+        Destroy(gameObject);
     }
 
     [ServerRpc]
-    private void destroyServerRpc(ServerRpcParams rpcParams = default)
+    public void destroyServerRpc()
     {
         Destroy(gameObject);
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        if (!IsServer) return;
+        destroyServerRpc();
+    }
 
-        if (collision.gameObject.tag == "Tank")
-        {
-            Debug.Log("hit player");
-            destroyServerRpc();
-        }
+    void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded; // Hook 'OnSceneLoaded' to Unity's 'SceneManager.sceneLoaded' variable 
+    }
+
+    void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 }
