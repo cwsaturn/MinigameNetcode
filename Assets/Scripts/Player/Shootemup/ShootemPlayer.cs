@@ -85,7 +85,7 @@ public class ShootemPlayer : NetworkBehaviour
         if (!IsLocalPlayer) return;
         Camera.main.GetComponent<CameraScript>().setTarget(transform);
         SetHealthServerRpc(maxHealth);
-        projectile.GetComponent<Bullet>().type = Bullet.bulletType.red;
+        projectile.GetComponent<Bullet>().type = Bullet.bulletType.cyan;
     }
 
     void FixedUpdate()
@@ -125,9 +125,10 @@ public class ShootemPlayer : NetworkBehaviour
         }
     }
 
-    private void ShotCollision(GameObject shot)
+    public void ShotCollision(float damage)
     {
-        SetHealthServerRpc(health.Value - 20f);
+        if (!IsServer) return;
+        health.Value -= damage;
     }
 
     private void FireShot()
@@ -150,20 +151,12 @@ public class ShootemPlayer : NetworkBehaviour
     {
         GameObject shot = Instantiate(projectile, position, Quaternion.identity);
         shot.GetComponent<NetworkObject>().Spawn();
-        shot.GetComponent<Obert>().SetVelocity(velocity);
+        shot.GetComponent<Bullet>().SetVelocity(velocity);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        Debug.Log("hit");
 
-        if (IsServer || IsLocalPlayer)
-        {
-            if (collision.gameObject.tag == "Projectile")
-            {
-                ShotCollision(collision.gameObject);
-            }
-        }
     }
 
 
