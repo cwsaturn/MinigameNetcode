@@ -548,6 +548,16 @@ MonoBehaviour:
       SourcePrefabToOverride: {fileID: 0}
       SourceHashToOverride: 0
       OverridingTargetPrefab: {fileID: 0}
+    - Override: 0
+      Prefab: {fileID: 6082976955032821125, guid: 550e0bd752ef04342bd16982f25259f4, type: 3}
+      SourcePrefabToOverride: {fileID: 0}
+      SourceHashToOverride: 0
+      OverridingTargetPrefab: {fileID: 0}
+    - Override: 0
+      Prefab: {fileID: 3502671706422642191, guid: c5a0afa0163c16346bb169fb2b1e4e36, type: 3}
+      SourcePrefabToOverride: {fileID: 0}
+      SourceHashToOverride: 0
+      OverridingTargetPrefab: {fileID: 0}
     TickRate: 30
     ClientConnectionBufferTimeout: 10
     ConnectionApproval: 0
@@ -2464,8 +2474,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e4b5d5c303fbe44da9fdcad84c588c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerDisconnected:
-    m_InternalValue: 0
 --- !u!4 &1402612463
 Transform:
   m_ObjectHideFlags: 0
