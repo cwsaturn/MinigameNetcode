@@ -7,6 +7,8 @@ public class Healthbar : MonoBehaviour
 {
     [SerializeField]
     private Image healthImage;
+    [SerializeField]
+    private Image backImage;
 
     // Start is called before the first frame update
 
@@ -18,5 +20,11 @@ public class Healthbar : MonoBehaviour
         float hue = health / 3f;
 
         healthImage.color = Color.HSVToRGB(hue, 1f, 1f);
+
+        if (health <= 0f)
+        {
+            healthImage.enabled = false;
+            backImage.enabled = false;
+        }
     }
 }

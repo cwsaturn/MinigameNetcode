@@ -7,9 +7,12 @@ public class Spectator
     public bool spectating = false;
     private int playerSpectating = 0;
     private PlayerScript playerSpectatingObj = null;
+    private bool noPlayers = false;
 
     private void SwitchPlayerSpectating()
     {
+        /*
+         * CRASHES ???
         GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
         int previousSpectating = playerSpectating;
         playerSpectating = (playerSpectating + 1) % players.Length;
@@ -29,12 +32,30 @@ public class Spectator
             playerSpectating = (playerSpectating + 1) % players.Length;
         }
         playerSpectating = -1;
+        */
+
+        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+        PlayerScript tempPlayerScript;
+        foreach (GameObject player in players)
+        {
+            tempPlayerScript = player.GetComponent<PlayerScript>();
+            if (tempPlayerScript == null) continue;
+            if (!tempPlayerScript.PlayerFinished)
+            {
+                Debug.Log("player found: " + playerSpectating);
+                Camera.main.GetComponent<CameraScript>().setTarget(player.transform);
+                playerSpectatingObj = tempPlayerScript;
+                return;
+            }
+        }
+        noPlayers = true;
+        return;
     }
 
     public void Update()
     {
         if (!spectating) return;
-        if (playerSpectating < 0) return;
+        if (noPlayers) return;
 
         if (playerSpectatingObj == null)
         {

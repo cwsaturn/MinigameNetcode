@@ -15,8 +15,9 @@ GameObject:
   - component: {fileID: 8503601189579765415}
   - component: {fileID: 8503601189579765414}
   - component: {fileID: 2829186379446048080}
+  - component: {fileID: 5957518553898889066}
   m_Layer: 0
-  m_Name: Obert
+  m_Name: Bullet
   m_TagString: Projectile
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -31,7 +32,7 @@ Transform:
   m_GameObject: {fileID: 8503601189579765436}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 6.06, y: 10.3, z: 0}
-  m_LocalScale: {x: 1.5, y: 1.5, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -78,7 +79,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 1c95af05452e75e4283b44bde88fda8c, type: 3}
+  m_Sprite: {fileID: 253819382, guid: d17037dbd40b3aa4cabc008b3ae173c9, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -104,7 +105,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 0.5
+  m_Radius: 0.45
 --- !u!50 &8503601189579765432
 Rigidbody2D:
   serializedVersion: 4
@@ -117,7 +118,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 60
+  m_Mass: 0.01
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 0
@@ -182,3 +183,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sadObert: {fileID: 1953719948, guid: 8215f20c46f1028459d4d922898467c7, type: 3}
   rigidbody2d: {fileID: 8503601189579765432}
+--- !u!114 &5957518553898889066
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8503601189579765436}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d1459b3c5a84ca4daf9cb3d34ec2c18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spriteArray:
+  - {fileID: 253819382, guid: d17037dbd40b3aa4cabc008b3ae173c9, type: 3}
+  - {fileID: 375571720, guid: d17037dbd40b3aa4cabc008b3ae173c9, type: 3}
+  - {fileID: -2012016418, guid: d17037dbd40b3aa4cabc008b3ae173c9, type: 3}
+  - {fileID: -592191830, guid: d17037dbd40b3aa4cabc008b3ae173c9, type: 3}
+  - {fileID: 2071791603, guid: d17037dbd40b3aa4cabc008b3ae173c9, type: 3}
+  - {fileID: 731770846, guid: d17037dbd40b3aa4cabc008b3ae173c9, type: 3}
+  type: 0

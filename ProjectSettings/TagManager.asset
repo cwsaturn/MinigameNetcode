@@ -8,11 +8,12 @@ TagManager:
   - NetworkManager
   - Checkpoint
   - ItemBox
-  - Obert
   - ConstantObject
   - Card
   - ScoreText
   - GameManager
+  - Projectile
+  - Tank
   layers:
   - Default
   - TransparentFX
