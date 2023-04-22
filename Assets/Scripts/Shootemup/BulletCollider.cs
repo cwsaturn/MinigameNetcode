@@ -29,10 +29,15 @@ public class BulletCollider : NetworkBehaviour
 
         if (!IsServer) return;
 
-        if (collision.gameObject.tag == "Tank")
+        GameObject obj = collision.gameObject;
+
+        if (obj.tag == "Tank")
         {
-            collision.gameObject.GetComponent<ShootemPlayer>().ShotCollision(bulletData.Damage);
-            bulletData.DestroySelf();
+            if (bulletData.owner != obj || bulletData.lifetime > 1.5f)
+            {
+                obj.GetComponent<ShootemPlayer>().ShotCollision(bulletData.Damage);
+                bulletData.DestroySelf();
+            }
         }
     }
 }
