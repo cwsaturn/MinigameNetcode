@@ -25,6 +25,9 @@ public class ShootemPlayer : NetworkBehaviour
     NetworkVariable<float> health = new NetworkVariable<float>(100f);
 
     [SerializeField]
+    private float timeAlive = 0f;
+
+    [SerializeField]
     private GameObject projectile;
     [SerializeField]
     private Canvas myCanvas;
@@ -58,7 +61,7 @@ public class ShootemPlayer : NetworkBehaviour
 
         if (health.Value <= 0f)
         {
-            playerScript.FinishedServerRpc(1f);
+            playerScript.FinishedServerRpc(-timeAlive);
         }
     }
 
@@ -91,6 +94,8 @@ public class ShootemPlayer : NetworkBehaviour
     void FixedUpdate()
     {
         if (!IsLocalPlayer) return;
+
+        timeAlive += Time.deltaTime;
 
         Vector3 movementVector = Vector3.right * Input.GetAxisRaw("Horizontal") + Vector3.up * Input.GetAxisRaw("Vertical");
         if (movementVector.magnitude > 1)

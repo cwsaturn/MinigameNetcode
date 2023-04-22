@@ -19,11 +19,10 @@ public class Bullet : NetworkBehaviour
 
     public bulletType type = bulletType.yellow;
 
-    private float damage = 10;
+    private float damage = 20;
     public float Damage
     { get { return damage; } }
 
-    float lifetime = 30f;
     NetworkVariable<float> health = new NetworkVariable<float>(30f);
 
     // Start is called before the first frame update
@@ -35,18 +34,18 @@ public class Bullet : NetworkBehaviour
         {
             case bulletType.red:
                 spriteRenderer.sprite = spriteArray[1];
-                damage = 20;
+                damage = 40;
                 break;
             case bulletType.magenta:
                 spriteRenderer.sprite = spriteArray[2];
                 break;
             case bulletType.green:
                 spriteRenderer.sprite = spriteArray[3];
-                damage = 5;
+                damage = 15;
                 break;
             case bulletType.cyan:
                 spriteRenderer.sprite = spriteArray[4];
-                damage = 5;
+                damage = 10;
                 gameObject.layer = 8;
                 break;
             case bulletType.blue:

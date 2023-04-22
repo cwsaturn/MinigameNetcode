@@ -91,6 +91,15 @@ public class PlayerScript : NetworkBehaviour
         playerScoring.SetPlayerFinished(intermediateScore);
     }
 
+    public void ServerFinish(float intermediateScore)
+    {
+        if (!IsServer) return;
+        playerFinished.Value = true;
+        if (disappearOnFinish.Value)
+            playerSprite.enabled = false;
+        playerScoring.SetPlayerFinished(intermediateScore);
+    }
+
     // Start is called before the first frame update
     void Start()
     {
