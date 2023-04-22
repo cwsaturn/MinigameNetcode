@@ -23,7 +23,13 @@ public class Bullet : NetworkBehaviour
     public float Damage
     { get { return damage; } }
 
+    private float collisionHealthDrop = 10f;
+
+    public GameObject owner;
+
     NetworkVariable<float> health = new NetworkVariable<float>(30f);
+
+    public float lifetime = 0f;
 
     // Start is called before the first frame update
     void Awake()
@@ -35,13 +41,17 @@ public class Bullet : NetworkBehaviour
             case bulletType.red:
                 spriteRenderer.sprite = spriteArray[1];
                 damage = 40;
+                collisionHealthDrop = 30f;
                 break;
             case bulletType.magenta:
                 spriteRenderer.sprite = spriteArray[2];
+                damage = 12;
+                transform.localScale = 0.75f * Vector3.one;
                 break;
             case bulletType.green:
                 spriteRenderer.sprite = spriteArray[3];
-                damage = 15;
+                damage = 12;
+                collisionHealthDrop = 5;
                 break;
             case bulletType.cyan:
                 spriteRenderer.sprite = spriteArray[4];
@@ -50,6 +60,8 @@ public class Bullet : NetworkBehaviour
                 break;
             case bulletType.blue:
                 spriteRenderer.sprite = spriteArray[5];
+                damage = 30;
+                transform.localScale = 2 * Vector3.one;
                 break;
             default:
                 break;
@@ -65,6 +77,7 @@ public class Bullet : NetworkBehaviour
     void FixedUpdate()
     {
         if (!IsServer) return;
+        lifetime += Time.deltaTime;
         health.Value -= Time.deltaTime;
         if (health.Value <= 0f)
             DestroySelf();
@@ -95,5 +108,12 @@ public class Bullet : NetworkBehaviour
     void OnDisable()
     {
         SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (!IsServer) return;
+
+        health.Value -= collisionHealthDrop;
     }
 }

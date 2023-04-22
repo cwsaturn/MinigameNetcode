@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using Unity.Netcode;
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
@@ -23,6 +24,8 @@ public class ShootemPlayer : NetworkBehaviour
     [SerializeField]
     private float maxHealth = 100f;
     NetworkVariable<float> health = new NetworkVariable<float>(100f);
+    NetworkVariable<bool> invincibility = new NetworkVariable<bool>(true);
+    private float invincibleTime = 5f;
 
     [SerializeField]
     private float timeAlive = 0f;
@@ -38,19 +41,27 @@ public class ShootemPlayer : NetworkBehaviour
 
     private float shotDistance = 1.5f;
     private float shotSpeed = 10f;
+    private float fireRate = 0.5f;
+    private float defaultShotSpeed = 10f;
+    private float defaultFireRate = 0.5f;
+    
+    private float shotTimer = 0f;
 
-    bool mouseClick = false;
+    private bool mouseClick = false;
+    private bool playerActive = true;
 
     public override void OnNetworkSpawn()
     {
         // Subscribe to value changes
         health.OnValueChanged += OnHealthChange;
+        invincibility.OnValueChanged += OnInvincibilityChange;
     }
 
     public override void OnNetworkDespawn()
     {
         // Unsubscribe to value changes
         health.OnValueChanged -= OnHealthChange;
+        invincibility.OnValueChanged -= OnInvincibilityChange;
     }
 
     public void OnHealthChange(float previous, float current)
@@ -61,14 +72,26 @@ public class ShootemPlayer : NetworkBehaviour
 
         if (health.Value <= 0f)
         {
+            playerActive = false;
             playerScript.FinishedServerRpc(-timeAlive);
         }
+    }
+
+    public void OnInvincibilityChange(bool previous, bool currnet)
+    {
+        playerSprite.color = Color.white;
     }
 
     [ServerRpc]
     void SetHealthServerRpc(float newHealth, ServerRpcParams rpcParams = default)
     {
         health.Value = newHealth;
+    }
+
+    [ServerRpc]
+    void TurnVincibleServerRpc(ServerRpcParams rpcParams = default)
+    {
+        invincibility.Value = false;
     }
 
     private void Awake()
@@ -88,14 +111,24 @@ public class ShootemPlayer : NetworkBehaviour
         if (!IsLocalPlayer) return;
         Camera.main.GetComponent<CameraScript>().setTarget(transform);
         SetHealthServerRpc(maxHealth);
-        projectile.GetComponent<Bullet>().type = Bullet.bulletType.cyan;
+
+        Bullet projBullet = projectile.GetComponent<Bullet>();
+        projBullet.type = Bullet.bulletType.yellow;
+        projBullet.owner = gameObject;
     }
 
     void FixedUpdate()
     {
         if (!IsLocalPlayer) return;
+        if (!playerActive) return;
 
         timeAlive += Time.deltaTime;
+        shotTimer -= Time.deltaTime;
+
+        if (timeAlive > invincibleTime)
+        {
+            TurnVincibleServerRpc();
+        }
 
         Vector3 movementVector = Vector3.right * Input.GetAxisRaw("Horizontal") + Vector3.up * Input.GetAxisRaw("Vertical");
         if (movementVector.magnitude > 1)
@@ -104,7 +137,7 @@ public class ShootemPlayer : NetworkBehaviour
         movementVector *= movementSpeed;
         playerRigidbody.AddForce(movementVector, ForceMode2D.Force);
 
-        if (mouseClick)
+        if (mouseClick && shotTimer <= 0f)
         {
             //playerRigidbody.transform.LookAt(Input.mousePosition);
             Vector3 midscreenVector = new Vector3(Screen.width, Screen.height, 0f) / 2f;
@@ -114,7 +147,7 @@ public class ShootemPlayer : NetworkBehaviour
             transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
 
             FireShot();
-            mouseClick = false;
+            shotTimer = fireRate;
         }
     }
 
@@ -124,15 +157,20 @@ public class ShootemPlayer : NetworkBehaviour
 
         if (!IsLocalPlayer) return;
 
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButton(0))
         {
             mouseClick = true;
+        }
+        else
+        {
+            mouseClick = false;
         }
     }
 
     public void ShotCollision(float damage)
     {
         if (!IsServer) return;
+        if (invincibility.Value) return;
         health.Value -= damage;
     }
 
@@ -159,9 +197,51 @@ public class ShootemPlayer : NetworkBehaviour
         shot.GetComponent<Bullet>().SetVelocity(velocity);
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void itemBoxCollision(Collider2D collision)
     {
+        Gem gem = collision.gameObject.GetComponent<Gem>();
+        if (gem.localOn)
+        {
+            gem.PlayerCollision();
+            projectile.GetComponent<Bullet>().type = gem.BulletType;
+            SetShotTypeVariables(gem.BulletType);
+        }
+    }
 
+    private void SetShotTypeVariables(Bullet.bulletType type)
+    {
+        fireRate = defaultFireRate;
+        shotSpeed = defaultShotSpeed;
+
+        switch (type)
+        {
+            case Bullet.bulletType.yellow:
+                break;
+            case Bullet.bulletType.red:
+                fireRate = defaultFireRate * 1.5f;
+                break;
+            case Bullet.bulletType.magenta:
+                fireRate = defaultFireRate / 1.5f;
+                break;
+            case Bullet.bulletType.green:
+                break;
+            case Bullet.bulletType.cyan:
+                break;
+            case Bullet.bulletType.blue:
+                shotSpeed = defaultShotSpeed / 1.2f;
+                fireRate = defaultFireRate * 1.2f;
+                break;
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (!IsLocalPlayer) return;
+
+        if (collision.gameObject.tag == "ItemBox")
+        {
+            itemBoxCollision(collision);
+        }
     }
 
 
