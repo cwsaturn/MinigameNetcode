@@ -112,10 +112,6 @@ public class ShootemPlayer : NetworkBehaviour
         if (!IsLocalPlayer) return;
         Camera.main.GetComponent<CameraScript>().setTarget(transform);
         SetHealthServerRpc(maxHealth);
-
-        Bullet projBullet = projectile.GetComponent<Bullet>();
-        projBullet.type = Bullet.bulletType.yellow;
-        projBullet.owner = gameObject;
     }
 
     void FixedUpdate()
