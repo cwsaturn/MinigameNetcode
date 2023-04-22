@@ -17,7 +17,9 @@ public class Bullet : NetworkBehaviour
 
     public enum bulletType { yellow, red, magenta, green, cyan, blue }
 
-    public bulletType type = bulletType.yellow;
+    //public bulletType type = bulletType.yellow;
+
+    public NetworkVariable<bulletType> type = new NetworkVariable<bulletType>(bulletType.yellow);
 
     private float damage = 20;
     public float Damage
@@ -32,11 +34,49 @@ public class Bullet : NetworkBehaviour
     public float lifetime = 0f;
 
     // Start is called before the first frame update
+    /*
+    public override void OnNetworkSpawn()
+    {
+        // Subscribe to value changes
+        health.OnValueChanged += OnHealthChange;
+        invincibility.OnValueChanged += OnInvincibilityChange;
+    }
+
+    public override void OnNetworkDespawn()
+    {
+        // Unsubscribe to value changes
+        health.OnValueChanged -= OnHealthChange;
+        invincibility.OnValueChanged -= OnInvincibilityChange;
+    }
+
+    private void OnHealthChange(float previous, float current)
+    {
+        healthbar.UpdateHealth(health.Value / maxHealth);
+
+        if (!IsLocalPlayer) return;
+
+        if (health.Value <= 0f)
+        {
+            playerActive = false;
+            playerScript.FinishedServerRpc(-timeAlive);
+        }
+    }
+    */
+
     void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
+        SetBulletType();
+    }
 
-        switch (type)
+    private void Start()
+    {
+        SetBulletType();
+    }
+
+    private void SetBulletType()
+    {
+        switch (type.Value)
         {
             case bulletType.red:
                 spriteRenderer.sprite = spriteArray[1];

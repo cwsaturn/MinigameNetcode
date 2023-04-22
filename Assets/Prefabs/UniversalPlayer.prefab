@@ -70,6 +70,7 @@ MonoBehaviour:
   ShellCursor: {fileID: 2140460080064828270, guid: 08f130719285cb54eb442ea989ff01d7, type: 3}
   CardPicker: {fileID: 6082976955032821125, guid: 18b5a9820181c6a4dbc974c9e0c2f2b4, type: 3}
   TargetCrosshair: {fileID: 6082976955032821125, guid: 550e0bd752ef04342bd16982f25259f4, type: 3}
+  TankShooter: {fileID: 6082976955032821125, guid: c2d87125e1eaaf0479988ab48c129c72, type: 3}
 --- !u!114 &8626011257086364263
 MonoBehaviour:
   m_ObjectHideFlags: 0

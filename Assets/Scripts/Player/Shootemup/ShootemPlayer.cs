@@ -44,6 +44,7 @@ public class ShootemPlayer : NetworkBehaviour
     private float fireRate = 0.5f;
     private float defaultShotSpeed = 10f;
     private float defaultFireRate = 0.5f;
+    private Bullet.bulletType bulletType = Bullet.bulletType.yellow;
     
     private float shotTimer = 0f;
 
@@ -64,7 +65,7 @@ public class ShootemPlayer : NetworkBehaviour
         invincibility.OnValueChanged -= OnInvincibilityChange;
     }
 
-    public void OnHealthChange(float previous, float current)
+    private void OnHealthChange(float previous, float current)
     {
         healthbar.UpdateHealth(health.Value / maxHealth);
 
@@ -77,7 +78,7 @@ public class ShootemPlayer : NetworkBehaviour
         }
     }
 
-    public void OnInvincibilityChange(bool previous, bool currnet)
+    private void OnInvincibilityChange(bool previous, bool currnet)
     {
         playerSprite.color = Color.white;
     }
@@ -111,10 +112,6 @@ public class ShootemPlayer : NetworkBehaviour
         if (!IsLocalPlayer) return;
         Camera.main.GetComponent<CameraScript>().setTarget(transform);
         SetHealthServerRpc(maxHealth);
-
-        Bullet projBullet = projectile.GetComponent<Bullet>();
-        projBullet.type = Bullet.bulletType.yellow;
-        projBullet.owner = gameObject;
     }
 
     void FixedUpdate()
@@ -186,12 +183,15 @@ public class ShootemPlayer : NetworkBehaviour
 
         Vector3 itemVector = shotSpeed * forwardVector + (Vector3)playerRigidbody.velocity;
 
-        CreateItemServerRpc(position + delta, itemVector);
+        CreateItemServerRpc(bulletType, position + delta, itemVector);
     }
 
     [ServerRpc]
-    void CreateItemServerRpc(Vector3 position, Vector3 velocity, ServerRpcParams rpcParams = default)
+    void CreateItemServerRpc(Bullet.bulletType sentType, Vector3 position, Vector3 velocity, ServerRpcParams rpcParams = default)
     {
+        projectile.GetComponent<Bullet>().type.Value = sentType;
+        projectile.GetComponent<Bullet>().owner = gameObject;
+
         GameObject shot = Instantiate(projectile, position, Quaternion.identity);
         shot.GetComponent<NetworkObject>().Spawn();
         shot.GetComponent<Bullet>().SetVelocity(velocity);
@@ -203,7 +203,7 @@ public class ShootemPlayer : NetworkBehaviour
         if (gem.localOn)
         {
             gem.PlayerCollision();
-            projectile.GetComponent<Bullet>().type = gem.BulletType;
+            //projectile.GetComponent<Bullet>().type = gem.BulletType;
             SetShotTypeVariables(gem.BulletType);
         }
     }
@@ -212,6 +212,7 @@ public class ShootemPlayer : NetworkBehaviour
     {
         fireRate = defaultFireRate;
         shotSpeed = defaultShotSpeed;
+        bulletType = type;
 
         switch (type)
         {
@@ -243,6 +244,4 @@ public class ShootemPlayer : NetworkBehaviour
             itemBoxCollision(collision);
         }
     }
-
-
 }
