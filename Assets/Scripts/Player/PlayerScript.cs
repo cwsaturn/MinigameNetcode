@@ -14,12 +14,21 @@ public class PlayerScript : NetworkBehaviour
     private Collider2D collider2d;
     [SerializeField]
     private Rigidbody2D rigidbody2d;
+    public Rigidbody2D Rigidbody2D
+    { get { return rigidbody2d; } }
     [SerializeField]
-    private bool colored = true;
+    private bool preColored = false;
+
+    //In order to spectate, player must have a rigidbody set in PlayerScript
+    [SerializeField]
+    private bool spectatorGame = false;
+    private Spectator spectatorScript = new();
 
     public PlayerScoring playerScoring;
 
     private NetworkVariable<bool> playerFinished = new NetworkVariable<bool>(false);
+    public bool PlayerFinished
+    { get { return playerFinished.Value; } }
 
     public NetworkVariable<bool> disappearOnFinish = new NetworkVariable<bool>(true);
 
@@ -49,12 +58,16 @@ public class PlayerScript : NetworkBehaviour
             {
                 rigidbody2d.simulated = false;
             }
+            if (spectatorGame)
+            {
+                spectatorScript.spectating = true;
+            }
         }
     }
 
     public void SetColor(Color color)
     {
-        if (!colored) return;
+        if (preColored) return;
         playerSprite.color = color;
     }
 
@@ -63,7 +76,7 @@ public class PlayerScript : NetworkBehaviour
         text.text = username;
     }
 
-    [ServerRpc]
+    [ServerRpc(RequireOwnership = false)]
     public void SetDisappearingServerRpc(bool disappear, ServerRpcParams rpcParams = default)
     {
         disappearOnFinish.Value = disappear;
@@ -76,20 +89,31 @@ public class PlayerScript : NetworkBehaviour
         if (disappearOnFinish.Value)
             playerSprite.enabled = false;
         playerScoring.SetPlayerFinished(intermediateScore);
-        //FindObjectOfType<ServerScript>().CheckPlayersFinished();
     }
 
-
+    public void ServerFinish(float intermediateScore)
+    {
+        if (!IsServer) return;
+        playerFinished.Value = true;
+        if (disappearOnFinish.Value)
+            playerSprite.enabled = false;
+        playerScoring.SetPlayerFinished(intermediateScore);
+    }
 
     // Start is called before the first frame update
     void Start()
     {
-        //playerSprite = GetComponent<SpriteRenderer>();
+
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (!IsLocalPlayer) return;
         
+        if (spectatorGame)
+        {
+            spectatorScript.Update();
+        }
     }
 }

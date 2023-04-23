@@ -182,7 +182,7 @@ public class KartData : NetworkBehaviour
     {
         if (!IsOwner) return;
 
-        if (collision.gameObject.tag == "Obert")
+        if (collision.gameObject.tag == "Projectile")
         {
             collision.gameObject.GetComponent<Obert>().playerCollisionServerRpc();
         }

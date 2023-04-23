@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 2829186379446048080}
   m_Layer: 0
   m_Name: Obert
-  m_TagString: Obert
+  m_TagString: Projectile
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
