@@ -6,23 +6,32 @@ using UnityEngine.SceneManagement;
 
 public class GameStartButtons : MonoBehaviour
 {
+    private static string[] FullGameSequence = {"Platformer2", "Kart", "ShellGame", "Card", "TargetGame", "Shootemup"};
     private static string MenuState = "BaseMenu";
-    private static int GamesLeftToPlay = 0;
+    private static string LastGamePlayed = "NULL";
+    private static int RandomGamesLeftToPlay = 0;
+    private static int FullSequenceGamesLeftToPlay = 0;
 
     void OnGUI()
     {
-        if (MenuState == "BaseMenu")  // Layer 1 buttons
+        // Top layer 1 buttons
+        if (MenuState == "BaseMenu")  
         {
             GUILayout.BeginArea(new Rect(10, 10, 300, 300));
-            StartButton("StartSequence", "Game Sequence Thing");
+            StartButton("StartFullSequence", "Full Game Sequence");
             GUILayout.EndArea();
 
             GUILayout.BeginArea(new Rect(10, 40, 300, 300));
+            StartButton("StartRandomSequence", "Ramdom Game Sequence");
+            GUILayout.EndArea();
+
+            GUILayout.BeginArea(new Rect(10, 70, 300, 300));
             StartButton("StartFreePlay", "Free Play Mode");
             GUILayout.EndArea();
         }
         
-        else if (MenuState == "SequenceMenu")  // Buttons for game sequence submenu
+        // Buttons for random game sequence starting submenu
+        else if (MenuState == "StartRandomSequenceMenu")  
         {
             GUILayout.BeginArea(new Rect(10, 10, 300, 300));
             StartButton("Sequence3", "Play 3 Random Games");
@@ -45,10 +54,15 @@ public class GameStartButtons : MonoBehaviour
             GUILayout.EndArea();
         }
 
-        else if (MenuState == "MidSequenceMenu")
+        // Buttons for mid random game sequence submenu
+        else if (MenuState == "MidFullSequenceMenu")  
         {
             GUILayout.BeginArea(new Rect(10, 10, 300, 300));
-            StartButton("ContinueSequence", "Continue");
+
+            // Grammar is important kids
+            if (FullSequenceGamesLeftToPlay != 1) {StartButton("ContinueFullSequence", "Continue - " + FullSequenceGamesLeftToPlay + " Games Left");}
+            else {StartButton("ContinueFullSequence", "Continue - " + FullSequenceGamesLeftToPlay + " Game Left");}
+
             GUILayout.EndArea();
 
             GUILayout.BeginArea(new Rect(10, 40, 300, 300));
@@ -56,7 +70,24 @@ public class GameStartButtons : MonoBehaviour
             GUILayout.EndArea();
         }
 
-        else  // Buttons for free play sub menu
+        // Buttons for mid random game sequence submenu
+        else if (MenuState == "MidRandomSequenceMenu")
+        {
+            GUILayout.BeginArea(new Rect(10, 10, 300, 300));
+
+            // Grammar is still important kids
+            if (RandomGamesLeftToPlay != 1) {StartButton("ContinueRandomSequence", "Continue - " + RandomGamesLeftToPlay + " Games Left");}
+            else {StartButton("ContinueRandomSequence", "Continue - " + RandomGamesLeftToPlay + " Game Left");}
+
+            GUILayout.EndArea();
+
+            GUILayout.BeginArea(new Rect(10, 40, 300, 300));
+            StartButton("EndSequence", "End");
+            GUILayout.EndArea();
+        }
+
+        // Buttons for free play sub menu
+        else  
         {
             GUILayout.BeginArea(new Rect(10, 10, 300, 300));
             StartButton("Platformer2", "Start Platformer");
@@ -104,37 +135,57 @@ public class GameStartButtons : MonoBehaviour
                 // Flags for menu navigation
                 if (sceneName == "StartFreePlay") {MenuState = "FreePlay";}
                 else if (sceneName == "LeaveFreePlay" || sceneName == "LeaveSequence") {MenuState = "BaseMenu";}
-                else if (sceneName == "StartSequence") {MenuState = "SequenceMenu";}
+                else if (sceneName == "StartRandomSequence") {MenuState = "StartRandomSequenceMenu";}
 
                 else if (sceneName == "EndSequence")  // Quiting a sequence of games early
                 {
                     MenuState = "BaseMenu";
-                    GamesLeftToPlay = 0;
+                    RandomGamesLeftToPlay = 0;
+                    FullSequenceGamesLeftToPlay = 0;
                 }
 
                 // Game selection and transition
                 else
                 {
-                    if (sceneName == "Sequence3") {GamesLeftToPlay = 3;}  // Set count for sequence play
-                    else if (sceneName == "Sequence5") {GamesLeftToPlay = 5;}
-                    else if (sceneName == "Sequence7") {GamesLeftToPlay = 7;}
+                    if (sceneName == "Sequence3") {RandomGamesLeftToPlay = 3;}  // Set count for sequence play
+                    else if (sceneName == "Sequence5") {RandomGamesLeftToPlay = 5;}
+                    else if (sceneName == "Sequence7") {RandomGamesLeftToPlay = 7;}
 
-                    if (sceneName == "RandomGame" || sceneName == "ContinueSequence" || GamesLeftToPlay > 0)  // Get a random game to start if needed
+                    else if (sceneName == "StartFullSequence") {FullSequenceGamesLeftToPlay = FullGameSequence.Length;}
+
+                    if (sceneName == "RandomGame" || sceneName == "ContinueRandomSequence" || RandomGamesLeftToPlay > 0)  // Get a random game to start if needed
                     {
-                        string[] games = {"Platformer2", "Kart", "ShellGame", "Card", "TargetGame", "Shootemup"};
-                        sceneName = games[Random.Range(0, games.Length)];  // Get random game from list
+                        sceneName = FullGameSequence[Random.Range(0, FullGameSequence.Length)];  // Get random game from list
+
+                        // I acknowledge that this is a very stupid way of doing this but the better way I tried had issues
+                        while (sceneName == LastGamePlayed) 
+                        {
+                            sceneName = FullGameSequence[Random.Range(0, FullGameSequence.Length)];  // Prevent playing the same game twice in a row
+                        }
                     }
 
-                    if (GamesLeftToPlay > 0)  // If currently doing a sequence of games
+                    // If currently doing a random sequence of games
+                    if (RandomGamesLeftToPlay > 0)  
                     {
-                        MenuState = "MidSequenceMenu";
-                        GamesLeftToPlay -= 1;
-                        Debug.Log("Games left to play: " + GamesLeftToPlay);
+                        MenuState = "MidRandomSequenceMenu";  // This needs to be set the first time so it has to here
+                        RandomGamesLeftToPlay -= 1;
+                        Debug.Log("Random games left to play: " + RandomGamesLeftToPlay);
 
-                        if (GamesLeftToPlay <= 0) {MenuState = "BaseMenu";}  // Return to base menu when done with the sequence of games
+                        if (RandomGamesLeftToPlay <= 0) {MenuState = "BaseMenu";}  // Return to base menu when done with the sequence of games
                     }
-            
-                    NetworkManager.Singleton.SceneManager.LoadScene(sceneName, LoadSceneMode.Single);
+
+                    // If currently doing a set sequence of games
+                    if (sceneName == "ContinueFullSequence" || FullSequenceGamesLeftToPlay > 0)
+                    {
+                        MenuState = "MidFullSequenceMenu";
+                        sceneName = FullGameSequence[FullSequenceGamesLeftToPlay - 1];
+                        FullSequenceGamesLeftToPlay -= 1;
+
+                        if (FullSequenceGamesLeftToPlay <= 0) {MenuState = "BaseMenu";}  // Return to base menu when done with the sequence of games
+                    }
+
+                    LastGamePlayed = sceneName;
+                    NetworkManager.Singleton.SceneManager.LoadScene(sceneName, LoadSceneMode.Single);  // The actual scene transition
                 }
             }
         }
