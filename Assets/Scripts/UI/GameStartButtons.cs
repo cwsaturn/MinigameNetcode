@@ -6,12 +6,6 @@ using UnityEngine.SceneManagement;
 
 public class GameStartButtons : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
     void OnGUI()
     {
         GUILayout.BeginArea(new Rect(10, 10, 300, 300));
@@ -37,6 +31,10 @@ public class GameStartButtons : MonoBehaviour
         GUILayout.BeginArea(new Rect(10, 160, 300, 300));
         StartButton("Shootemup", "Start Shoot 'Em Up");
         GUILayout.EndArea();
+
+        GUILayout.BeginArea(new Rect(10, 190, 300, 300));
+        StartButton("RandomGame", "Start a Random Game");
+        GUILayout.EndArea();
     }
 
     static void StartButton(string sceneName, string buttonText)
@@ -48,15 +46,15 @@ public class GameStartButtons : MonoBehaviour
         {
             if (GUILayout.Button(buttonText))
             {
-                //SceneManager.LoadScene("Platformer", LoadSceneMode.Single);
+                if (sceneName == "RandomGame")  // If the random game button is pressed
+                {
+                    string[] games = {"Platformer2", "Kart", "ShellGame", "Card", "TargetGame", "Shootemup"};
+                    sceneName = games[Random.Range(0, games.Length)];  // Get random game from list
+                    Debug.Log("Random scene: " + sceneName);
+                }
+
                 NetworkManager.Singleton.SceneManager.LoadScene(sceneName, LoadSceneMode.Single);
             }
         }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }
