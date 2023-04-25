@@ -9,12 +9,12 @@ public class GameStartButtons : MonoBehaviour
     private static string[] FullGameSequence = {"Platformer2", "Kart", "ShellGame", "Card", "TargetGame", "Shootemup"};
     private static string MenuState = "BaseMenu";
     private static string LastGamePlayed = "NULL";
-    private static int RandomGamesLeftToPlay = 0;
     private static int FullSequenceGamesLeftToPlay = 0;
+    private static int RandomGamesLeftToPlay = 0;
 
     void OnGUI()
     {
-        // Top layer 1 buttons
+        // Top layer buttons
         if (MenuState == "BaseMenu")  
         {
             GUILayout.BeginArea(new Rect(10, 10, 300, 300));
@@ -137,7 +137,8 @@ public class GameStartButtons : MonoBehaviour
                 else if (sceneName == "LeaveFreePlay" || sceneName == "LeaveSequence") {MenuState = "BaseMenu";}
                 else if (sceneName == "StartRandomSequence") {MenuState = "StartRandomSequenceMenu";}
 
-                else if (sceneName == "EndSequence")  // Quiting a sequence of games early
+                // Quiting a sequence of games early
+                else if (sceneName == "EndSequence")
                 {
                     MenuState = "BaseMenu";
                     RandomGamesLeftToPlay = 0;
@@ -147,13 +148,15 @@ public class GameStartButtons : MonoBehaviour
                 // Game selection and transition
                 else
                 {
-                    if (sceneName == "Sequence3") {RandomGamesLeftToPlay = 3;}  // Set count for sequence play
+                    // Set count for sequence play
+                    if (sceneName == "Sequence3") {RandomGamesLeftToPlay = 3;}
                     else if (sceneName == "Sequence5") {RandomGamesLeftToPlay = 5;}
                     else if (sceneName == "Sequence7") {RandomGamesLeftToPlay = 7;}
 
                     else if (sceneName == "StartFullSequence") {FullSequenceGamesLeftToPlay = FullGameSequence.Length;}
 
-                    if (sceneName == "RandomGame" || sceneName == "ContinueRandomSequence" || RandomGamesLeftToPlay > 0)  // Get a random game to start if needed
+                    // Get a random game to start if needed
+                    if (sceneName == "RandomGame" || sceneName == "ContinueRandomSequence" || RandomGamesLeftToPlay > 0)
                     {
                         sceneName = FullGameSequence[Random.Range(0, FullGameSequence.Length)];  // Get random game from list
 
@@ -184,8 +187,9 @@ public class GameStartButtons : MonoBehaviour
                         if (FullSequenceGamesLeftToPlay <= 0) {MenuState = "BaseMenu";}  // Return to base menu when done with the sequence of games
                     }
 
+                    // The actual scene transition
                     LastGamePlayed = sceneName;
-                    NetworkManager.Singleton.SceneManager.LoadScene(sceneName, LoadSceneMode.Single);  // The actual scene transition
+                    NetworkManager.Singleton.SceneManager.LoadScene(sceneName, LoadSceneMode.Single);
                 }
             }
         }
