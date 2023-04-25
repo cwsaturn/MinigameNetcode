@@ -25,6 +25,18 @@ public class GameStartButtons : MonoBehaviour
         GUILayout.BeginArea(new Rect(10, 70, 300, 300));
         StartButton("ShellGame", "Start Cup Game");
         GUILayout.EndArea();
+
+        GUILayout.BeginArea(new Rect(10, 100, 300, 300));
+        StartButton("Card", "Start Random Card Game");
+        GUILayout.EndArea();
+
+        GUILayout.BeginArea(new Rect(10, 130, 300, 300));
+        StartButton("TargetGame", "Start Target Game");
+        GUILayout.EndArea(); 
+
+        GUILayout.BeginArea(new Rect(10, 160, 300, 300));
+        StartButton("Shootemup", "Start Shoot 'Em Up");
+        GUILayout.EndArea();
     }
 
     static void StartButton(string sceneName, string buttonText)

@@ -30,6 +30,12 @@ public class UniversalPlayer : NetworkBehaviour
     private GameObject Driver;
     [SerializeField]
     private GameObject ShellCursor;
+    [SerializeField]
+    private GameObject CardPicker;
+    [SerializeField]
+    private GameObject TargetCrosshair; 
+    [SerializeField]
+    private GameObject TankShooter;
 
     private GameObject currentPlayer;
 
@@ -53,6 +59,7 @@ public class UniversalPlayer : NetworkBehaviour
             SetCosmetics();
             player_obj = Instantiate(Platformer, Vector3.zero, Quaternion.identity);
         }
+        
         else if(scene_name == "Kart")
         {
             Vector3 offset = Vector3.zero;
@@ -87,6 +94,31 @@ public class UniversalPlayer : NetworkBehaviour
 
             player_obj = Instantiate(ShellCursor, offset, Quaternion.identity);
         }
+        else if(scene_name == "Card")
+        {
+            player_obj = Instantiate(CardPicker, Vector3.zero, Quaternion.identity);
+            player_obj.GetComponent<CardPickerData>().playerID = (int)OwnerClientId;
+        }
+
+
+        else if (scene_name == "TargetGame")
+        {
+            Vector3 offset = Vector3.zero;
+            int playerNum = (int)clientId;
+            offset.x = 2 * (playerNum % 4);
+            offset.y = -2 * (playerNum / 4);
+            player_obj = Instantiate(TargetCrosshair, offset, Quaternion.identity);
+        }
+
+        else if (scene_name == "Shootemup")
+        {
+            Vector3 offset = Vector3.zero;
+            int playerNum = (int)clientId;
+            offset.x = 6 * (playerNum % 4);
+            offset.y = -6 * (playerNum / 4);
+
+            player_obj = Instantiate(TankShooter, offset, Quaternion.identity);
+        }
         else
         {
             Vector3 offset = Vector3.zero;
@@ -119,6 +151,7 @@ public class UniversalPlayer : NetworkBehaviour
         SetCosmetics();
     }
     //*/
+
 
     public override void OnNetworkSpawn()
     {
@@ -168,6 +201,7 @@ public class UniversalPlayer : NetworkBehaviour
             currentPlayer.GetComponent<PlayerScript>().SetUsername(username.Value.ToString());
         }
     }
+
 
     //only call with server
     public void AddScore(int score)
