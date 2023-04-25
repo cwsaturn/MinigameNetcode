@@ -1,11 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Audio;
 
 public class MusicManager : MonoBehaviour
 {
     private AudioSource _audiosource;
     public AudioClip[] songs;
+
+    public Animator musicAnim;
 
     [SerializeField] private float _songsPlayed;
     [SerializeField] private bool[] _beenPlayed;
@@ -28,7 +31,9 @@ public class MusicManager : MonoBehaviour
     void Update()
     {
         if(!_audiosource.isPlaying)
+        {
             ChangeSong(Random.Range(0, songs.Length));
+        }
 
         if(_songsPlayed == songs.Length)
         {
@@ -51,14 +56,18 @@ public class MusicManager : MonoBehaviour
     {
         if (!_beenPlayed[songPicked])
         {
-        _songsPlayed++;
-        _beenPlayed[songPicked] = true;
-        _audiosource.clip = songs[songPicked];
-        _audiosource.Play();
+            _songsPlayed++;
+            _beenPlayed[songPicked] = true;
+            _audiosource.clip = songs[songPicked];
+            float song_length = _audiosource.clip.length;
+            _audiosource.time = Random.Range(0, _audiosource.clip.length * 0.75f);
+            musicAnim.Play("fadein");
+            _audiosource.Play();
         }
         else
         {
             _audiosource.Stop();
         }
     }
+
 }

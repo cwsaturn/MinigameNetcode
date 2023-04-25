@@ -21704,7 +21704,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   audioMixer: {fileID: 24100000, guid: fe5f753c62ab2ca469b29045a59b29de, type: 2}
-  increasingVolume: {fileID: 1787154414}
   decreasingVolume: {fileID: 311821229}
   music: {fileID: 1704155875}
   announcer: {fileID: 1210641578}
@@ -39896,6 +39895,58 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 797416875072816224, guid: ef057ae6ffce48543a6691ed42260e48, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 797416875072816224, guid: ef057ae6ffce48543a6691ed42260e48, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1453840861751156389, guid: ef057ae6ffce48543a6691ed42260e48, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1453840861751156389, guid: ef057ae6ffce48543a6691ed42260e48, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1628996545683801168, guid: ef057ae6ffce48543a6691ed42260e48, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 1484.3103
+      objectReference: {fileID: 0}
+    - target: {fileID: 1819312248378110867, guid: ef057ae6ffce48543a6691ed42260e48, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1819312248378110867, guid: ef057ae6ffce48543a6691ed42260e48, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1819312248378110867, guid: ef057ae6ffce48543a6691ed42260e48, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3327553445374584915, guid: ef057ae6ffce48543a6691ed42260e48, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3327553445374584915, guid: ef057ae6ffce48543a6691ed42260e48, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5938647894006290959, guid: ef057ae6ffce48543a6691ed42260e48, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5938647894006290959, guid: ef057ae6ffce48543a6691ed42260e48, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5938647894006290959, guid: ef057ae6ffce48543a6691ed42260e48, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6551400759770234062, guid: ef057ae6ffce48543a6691ed42260e48, type: 3}
       propertyPath: m_Name
       value: ConstantObject
@@ -39942,6 +39993,30 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6551400759770234064, guid: ef057ae6ffce48543a6691ed42260e48, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6932371399769051596, guid: ef057ae6ffce48543a6691ed42260e48, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6932371399769051596, guid: ef057ae6ffce48543a6691ed42260e48, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6932371399769051596, guid: ef057ae6ffce48543a6691ed42260e48, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7100009161108249547, guid: ef057ae6ffce48543a6691ed42260e48, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7100009161108249547, guid: ef057ae6ffce48543a6691ed42260e48, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7100009161108249547, guid: ef057ae6ffce48543a6691ed42260e48, type: 3}
+      propertyPath: m_AnchorMin.y
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
