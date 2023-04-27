@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+using TMPro;
 
 public class GameStartButtons : MonoBehaviour
 {
@@ -11,9 +13,15 @@ public class GameStartButtons : MonoBehaviour
     private static string LastGamePlayed = "NULL";
     private static int FullSequenceGamesLeftToPlay = 0;
     private static int RandomGamesLeftToPlay = 0;
+    public static GameObject gameNumberInputField; 
 
     void OnGUI()
     {
+
+        if(!gameNumberInputField)
+        {
+            gameNumberInputField = GameObject.FindWithTag("GameNumberInputField");
+        }
         // Top layer buttons
         if (MenuState == "BaseMenu")  
         {
@@ -46,7 +54,7 @@ public class GameStartButtons : MonoBehaviour
             GUILayout.EndArea();
 
             GUILayout.BeginArea(new Rect(10, 100, 300, 300));
-            StartButton("This Doesn't do Anything yet", "Custom");
+            StartButton("CustomGame", "Custom");
             GUILayout.EndArea();
 
             GUILayout.BeginArea(new Rect(10, 130, 300, 300));
@@ -154,7 +162,17 @@ public class GameStartButtons : MonoBehaviour
                     else if (sceneName == "Sequence7") {RandomGamesLeftToPlay = 7;}
 
                     else if (sceneName == "StartFullSequence") {FullSequenceGamesLeftToPlay = FullGameSequence.Length;}
-
+                    
+                    if (sceneName == "CustomGame") 
+                    {
+                        gameNumberInputField.SetActive(true);
+                        Debug.Log("Input field........");
+                        Debug.Log(gameNumberInputField);
+                        GameObject gn_input = gameNumberInputField.GetComponentInChildren<TMP_InputField>(true).gameObject;
+                        gn_input.SetActive(true);
+                        gn_input.GetComponent<TMP_InputField>().onSubmit.AddListener((gameNum) => SetCustomGame(sceneName, int.Parse(gameNum))); //Host enters ip address
+                    }
+                
                     // Get a random game to start if needed
                     if (sceneName == "RandomGame" || sceneName == "ContinueRandomSequence" || RandomGamesLeftToPlay > 0)
                     {
@@ -193,5 +211,15 @@ public class GameStartButtons : MonoBehaviour
                 }
             }
         }
+    }
+
+    // Separate function is the easiest way to deal with waiting on input field submit 
+    static void SetCustomGame(string sceneName, int gameNum)
+    {
+        RandomGamesLeftToPlay = gameNum - 1;
+        sceneName = FullGameSequence[Random.Range(0, FullGameSequence.Length)];
+        MenuState = "MidRandomSequenceMenu";
+        LastGamePlayed = sceneName;
+        NetworkManager.Singleton.SceneManager.LoadScene(sceneName, LoadSceneMode.Single);
     }
 }
