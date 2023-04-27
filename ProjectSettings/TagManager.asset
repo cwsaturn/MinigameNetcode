@@ -14,6 +14,7 @@ TagManager:
   - GameManager
   - Projectile
   - Tank
+  - GameNumberInputField
   layers:
   - Default
   - TransparentFX
