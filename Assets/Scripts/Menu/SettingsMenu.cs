@@ -63,6 +63,7 @@ public class SettingsMenu : MonoBehaviour
     public void SetMusicVolume (float volume)
     {
         audioMixer.SetFloat("Music Volume", volume);
+        PlayerPrefs.SetFloat("music_vol", volume);
     }
 
     public void SetAnnouncerVolume (float volume)
@@ -86,6 +87,7 @@ public class SettingsMenu : MonoBehaviour
     public void SetSFXVolume (float volume)
     {
         audioMixer.SetFloat("SFX Volume", volume);
+        PlayerPrefs.SetFloat("sfx_vol", volume);
     }
 
     public void ResDropdown(int index)
@@ -114,8 +116,10 @@ public class SettingsMenu : MonoBehaviour
 
     private void setScreen()
     {
+        selectedResolution = PlayerPrefs.GetInt("res_index", 0);
         Screen.SetResolution(resolutions[selectedResolution].horizontal, resolutions[selectedResolution].vertical, fullscreen);
     }
+
 }
 
 [System.Serializable]

@@ -427,6 +427,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   songs:
   - {fileID: 8300000, guid: da91ded30a275274ab5a719b83d015b2, type: 3}
+  audioMixer: {fileID: 24100000, guid: fe5f753c62ab2ca469b29045a59b29de, type: 2}
   musicAnim: {fileID: 626749204}
   _songsPlayed: 0
   _beenPlayed: 
@@ -3423,7 +3424,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1628996545683801168, guid: ef057ae6ffce48543a6691ed42260e48, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 16825.12
+      value: 20217.05
       objectReference: {fileID: 0}
     - target: {fileID: 6551400759770234062, guid: ef057ae6ffce48543a6691ed42260e48, type: 3}
       propertyPath: m_Name
