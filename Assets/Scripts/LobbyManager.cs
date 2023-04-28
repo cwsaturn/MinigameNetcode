@@ -15,7 +15,7 @@ namespace HelloWorld
             // Set IP and port 
             NetworkManager.Singleton.GetComponent<UnityTransport>().SetConnectionData(
             PlayerPrefs.GetString("HostIpAddr"),  // The IP address is a string
-            (ushort)12345 // The port number is an unsigned short
+            ushort.Parse(PlayerPrefs.GetString("HostPort")) // The port number is an unsigned short
             );
 
             if (IsPlayerHost == "True")
@@ -32,36 +32,5 @@ namespace HelloWorld
 
             var clientId = NetworkManager.Singleton.LocalClientId;
         }
-
-        /*
-
-        void OnGUI()
-        {
-            GUILayout.BeginArea(new Rect(10, 10, 300, 300));
-            StartButton("Platformer2", "Start Platformer");
-            GUILayout.EndArea();
-
-            GUILayout.BeginArea(new Rect(10, 40, 300, 300));
-            StartButton("Kart", "Start Kart Game");
-            GUILayout.EndArea();
-        }
-
-        static void StartButton(string sceneName, string buttonText)
-        {
-            var mode = NetworkManager.Singleton.IsHost ?
-                "Host" : NetworkManager.Singleton.IsServer ? "Server" : "Client";
-
-            if (mode == "Host")
-            {
-                if (GUILayout.Button(buttonText))
-                { 
-                    //SceneManager.LoadScene("Platformer", LoadSceneMode.Single);
-                    NetworkManager.Singleton.SceneManager.LoadScene(sceneName, LoadSceneMode.Single);
-                }
-            }
-        }
-
-        */
-
     }
 }
