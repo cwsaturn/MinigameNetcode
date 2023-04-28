@@ -118,9 +118,9 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: -8448815395330320638, guid: fe5f753c62ab2ca469b29045a59b29de, type: 2}
-  m_audioClip: {fileID: 8300000, guid: 08112f6b77d11204b874c5ff2a6c750d, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 97a186e92d8e7594ab414d7eda1c8013, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.671
+  m_Volume: 0.522
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -597,7 +597,8 @@ MonoBehaviour:
   playerSprite: {fileID: 6082976955032821127}
   collider2d: {fileID: -3675157821929384387}
   rigidbody2d: {fileID: 3470494201696424048}
-  colored: 1
+  preColored: 0
+  spectatorGame: 0
   hat: {fileID: 3824518471700341854}
   follower: {fileID: 6131052507732828488}
   playerScoring: {fileID: 0}
@@ -5829,7 +5830,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: -8448815395330320638, guid: fe5f753c62ab2ca469b29045a59b29de, type: 2}
-  m_audioClip: {fileID: 8300000, guid: a04e8112fb4cca944baabc0048ff839d, type: 3}
+  m_audioClip: {fileID: 8300000, guid: f42760acdd77d6c459020ab0f9db4f30, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1

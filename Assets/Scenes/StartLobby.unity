@@ -336,7 +336,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   songs:
-  - {fileID: 8300000, guid: 806b8fa1561c0bc4892c93a63944233a, type: 3}
+  - {fileID: 8300000, guid: da91ded30a275274ab5a719b83d015b2, type: 3}
   musicAnim: {fileID: 626749204}
   _songsPlayed: 0
   _beenPlayed: 
@@ -350,7 +350,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: -1913271179316340186, guid: fe5f753c62ab2ca469b29045a59b29de, type: 2}
-  m_audioClip: {fileID: 8300000, guid: 806b8fa1561c0bc4892c93a63944233a, type: 3}
+  m_audioClip: {fileID: 8300000, guid: da91ded30a275274ab5a719b83d015b2, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 0.194
   m_Pitch: 1
@@ -2851,6 +2851,22 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1538144062102830713, guid: ef057ae6ffce48543a6691ed42260e48, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1538144062102830713, guid: ef057ae6ffce48543a6691ed42260e48, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1538144062102830713, guid: ef057ae6ffce48543a6691ed42260e48, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1628996545683801168, guid: ef057ae6ffce48543a6691ed42260e48, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 16825.12
+      objectReference: {fileID: 0}
     - target: {fileID: 6551400759770234062, guid: ef057ae6ffce48543a6691ed42260e48, type: 3}
       propertyPath: m_Name
       value: ConstantObject
@@ -2897,6 +2913,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6551400759770234064, guid: ef057ae6ffce48543a6691ed42260e48, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7100009161108249547, guid: ef057ae6ffce48543a6691ed42260e48, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7100009161108249547, guid: ef057ae6ffce48543a6691ed42260e48, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7100009161108249547, guid: ef057ae6ffce48543a6691ed42260e48, type: 3}
+      propertyPath: m_AnchorMin.y
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

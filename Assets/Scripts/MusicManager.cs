@@ -13,6 +13,7 @@ public class MusicManager : MonoBehaviour
     [SerializeField] private float _songsPlayed;
     [SerializeField] private bool[] _beenPlayed;
 
+    private bool init_music = false;
 
     // Start is called before the first frame update
     void Start()
@@ -54,14 +55,23 @@ public class MusicManager : MonoBehaviour
 
     public void ChangeSong(int songPicked)
     {
+        Debug.Log("init music: " + init_music);
         if (!_beenPlayed[songPicked])
         {
             _songsPlayed++;
             _beenPlayed[songPicked] = true;
             _audiosource.clip = songs[songPicked];
-            float song_length = _audiosource.clip.length;
-            _audiosource.time = Random.Range(0, _audiosource.clip.length * 0.75f);
-            musicAnim.Play("fadein");
+            if(!init_music)
+            {
+                float song_length = _audiosource.clip.length;
+                _audiosource.time = Random.Range(0, _audiosource.clip.length * 0.75f);
+                musicAnim.Play("fadein");
+                init_music = true;
+            }
+            else
+            {
+                _audiosource.time = 0;
+            }
             _audiosource.Play();
         }
         else
