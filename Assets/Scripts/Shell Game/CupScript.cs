@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CupScript : MonoBehaviour
 {
@@ -69,7 +70,6 @@ public class CupScript : MonoBehaviour
                 }
             }
         }
-
     }
 
     public void moveTo(Vector3 pos)

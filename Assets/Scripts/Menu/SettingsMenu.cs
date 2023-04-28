@@ -10,7 +10,6 @@ using System.Reflection;
 public class SettingsMenu : MonoBehaviour
 {
     public AudioMixer audioMixer;
-    public AudioSource increasingVolume;
     public AudioSource decreasingVolume;
 
     private float prev_vol;
@@ -73,7 +72,6 @@ public class SettingsMenu : MonoBehaviour
         if ((volume > prev_vol) && (volumeUpdate > 0.02))
         {
             volumeUpdate = 0;
-            increasingVolume.Play();
         } 
         else if ((volume < prev_vol) && (volumeUpdate > 0.02))
         {

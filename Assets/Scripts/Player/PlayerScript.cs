@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerScript : NetworkBehaviour
 {
@@ -23,6 +24,9 @@ public class PlayerScript : NetworkBehaviour
     [SerializeField]
     private bool spectatorGame = false;
     private Spectator spectatorScript = new();
+
+    public Image hat;
+    public GameObject follower;
 
     public PlayerScoring playerScoring;
 
@@ -74,6 +78,32 @@ public class PlayerScript : NetworkBehaviour
     public void SetUsername(string username)
     {
         text.text = username;
+    }
+
+    public void SetCosmetics(float xp)
+    {
+        if(hat != null)
+        {
+            if(PlayerPrefs.GetFloat("xp", 0) >= 200)
+            {
+                hat.enabled = true;
+            }
+            else
+            {
+                hat.enabled = false;
+            }
+        }
+        if(follower != null)
+        {
+            if(PlayerPrefs.GetFloat("xp", 0) >= 300)
+            {
+                follower.SetActive(true);
+            }
+            else
+            {
+                follower.SetActive(false);
+            }
+        }
     }
 
     [ServerRpc(RequireOwnership = false)]

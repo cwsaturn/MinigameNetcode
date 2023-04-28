@@ -8,8 +8,8 @@ public class CarSounds : MonoBehaviour
     public float maxSpeed;
     private float currentSpeed;
 
-    private Rigidbody2D carRb;
-    private AudioSource carAudio;
+    public Rigidbody2D carRb;
+    public AudioSource carAudio;
 
     public float minPitch;
     public float maxPitch;
@@ -17,8 +17,8 @@ public class CarSounds : MonoBehaviour
 
     void Start()
     {
-        carAudio = GameObject.Find("Engine").GetComponent<AudioSource>();
-        carRb = GameObject.Find("Kart").GetComponent<Rigidbody2D>();
+        //carAudio = GameObject.Find("Engine").GetComponent<AudioSource>();
+        //carRb = GameObject.Find("Kart").GetComponent<Rigidbody2D>();
     }
 
     void Update()
