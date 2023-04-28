@@ -8,6 +8,8 @@ public class MusicManager : MonoBehaviour
     private AudioSource _audiosource;
     public AudioClip[] songs;
 
+    public AudioMixer audioMixer;
+
     public Animator musicAnim;
 
     [SerializeField] private float _songsPlayed;
@@ -31,6 +33,8 @@ public class MusicManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        audioMixer.SetFloat("music_vol", PlayerPrefs.GetFloat("music_vol", 0));
+
         if(!_audiosource.isPlaying)
         {
             ChangeSong(Random.Range(0, songs.Length));
@@ -55,6 +59,7 @@ public class MusicManager : MonoBehaviour
 
     public void ChangeSong(int songPicked)
     {
+
         Debug.Log("init music: " + init_music);
         if (!_beenPlayed[songPicked])
         {
