@@ -218,7 +218,8 @@ public class GameStartButtons : MonoBehaviour
     {
         RandomGamesLeftToPlay = gameNum - 1;
         sceneName = FullGameSequence[Random.Range(0, FullGameSequence.Length)];
-        MenuState = "MidRandomSequenceMenu";
+        if(RandomGamesLeftToPlay <= 0) {MenuState = "BaseMenu";}
+        else{MenuState = "MidRandomSequenceMenu";}
         LastGamePlayed = sceneName;
         NetworkManager.Singleton.SceneManager.LoadScene(sceneName, LoadSceneMode.Single);
     }
