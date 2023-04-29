@@ -11,7 +11,7 @@ public class TargetSpawner : NetworkBehaviour
     private GameObject target;
     private float initTime = 1f; 
     private float timer = 0f;
-
+    
     private int totalTargets = 20; 
     private int currentTargets = 1; 
 
@@ -52,7 +52,7 @@ public class TargetSpawner : NetworkBehaviour
     public void UpdateHitTargetsServerRpc()
     {
         hitTargets += 1; 
-        if(hitTargets == totalTargets)
+        if(hitTargets >= totalTargets)
         {
             finishGame.Value = true; 
         }

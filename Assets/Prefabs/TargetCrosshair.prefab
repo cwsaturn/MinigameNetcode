@@ -81,7 +81,7 @@ MonoBehaviour:
   RotAngleThreshold: 0.01
   ScaleThreshold: 0.01
   InLocalSpace: 0
-  Interpolate: 0
+  Interpolate: 1
 --- !u!50 &3470494201696424048
 Rigidbody2D:
   serializedVersion: 4
@@ -131,7 +131,10 @@ MonoBehaviour:
   playerSprite: {fileID: 7702352029518125879}
   collider2d: {fileID: 6823112982142425504}
   rigidbody2d: {fileID: 3470494201696424048}
-  colored: 1
+  preColored: 0
+  spectatorGame: 0
+  hat: {fileID: 0}
+  follower: {fileID: 0}
   playerScoring: {fileID: 0}
   disappearOnFinish:
     m_InternalValue: 1
