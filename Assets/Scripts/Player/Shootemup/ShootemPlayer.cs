@@ -45,11 +45,14 @@ public class ShootemPlayer : NetworkBehaviour
     private float defaultShotSpeed = 10f;
     private float defaultFireRate = 0.5f;
     private Bullet.bulletType bulletType = Bullet.bulletType.yellow;
+    private Vector3 joystickAim = Vector3.zero;
     
     private float shotTimer = 0f;
 
     private bool mouseClick = false;
+    private bool buttonFire = false;
     private bool playerActive = true;
+    private bool lastClicked = true;
 
     public override void OnNetworkSpawn()
     {
@@ -119,6 +122,13 @@ public class ShootemPlayer : NetworkBehaviour
         if (!IsLocalPlayer) return;
         if (!playerActive) return;
 
+        if (!lastClicked)
+        {
+            float joyAngle = Mathf.Atan2(-joystickAim.x, -joystickAim.y) * Mathf.Rad2Deg;
+            transform.rotation = Quaternion.AngleAxis(joyAngle, Vector3.forward);
+        }
+        
+
         timeAlive += Time.deltaTime;
         shotTimer -= Time.deltaTime;
 
@@ -139,8 +149,15 @@ public class ShootemPlayer : NetworkBehaviour
             //playerRigidbody.transform.LookAt(Input.mousePosition);
             Vector3 midscreenVector = new Vector3(Screen.width, Screen.height, 0f) / 2f;
             Vector3 dir = Input.mousePosition - midscreenVector;
-            Debug.Log(dir);
             float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg - 90f;
+            transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+
+            FireShot();
+            shotTimer = fireRate;
+        }
+        else if (buttonFire && shotTimer <= 0f)
+        {
+            float angle = Mathf.Atan2(-joystickAim.x, -joystickAim.y) * Mathf.Rad2Deg;
             transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
 
             FireShot();
@@ -157,10 +174,31 @@ public class ShootemPlayer : NetworkBehaviour
         if (Input.GetMouseButton(0))
         {
             mouseClick = true;
+            lastClicked = true;
         }
         else
         {
             mouseClick = false;
+        }
+
+        if (Input.GetButton("Fire3") || Input.GetButton("Jump"))
+        {
+            buttonFire = true;
+            lastClicked = false;
+        }
+        else
+        {
+            buttonFire = false;
+        }
+
+        Vector3 rawJoystickUp = Vector3.right * Input.GetAxisRaw("Vertical2");
+        Vector3 rawJoystickRight = Vector3.up * Input.GetAxisRaw("Horizontal2");
+        Vector3 rawJoystick = rawJoystickUp + rawJoystickRight;
+
+        if (rawJoystick.magnitude > 0.7)
+        {
+            lastClicked = false;
+            joystickAim = rawJoystick;
         }
     }
 
