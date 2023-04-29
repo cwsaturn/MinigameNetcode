@@ -62,6 +62,9 @@ public class TargetCrosshair : NetworkBehaviour
             {
                 triggered = false; 
                 colliderObject.gameObject.GetComponent<TargetScript>().DestroyTargetServerRpc();
+                score++;
+                targetPlayerScore.UpdateScoreOnUI(score); 
+                UpdateScoreOnTargetSpawnerServerRpc();
             }
         }
     }
@@ -69,26 +72,11 @@ public class TargetCrosshair : NetworkBehaviour
     void FixedUpdate()
     {
         if (!IsOwner) return; 
-        // Vector3 movementVector = Vector3.right * Input.GetAxisRaw("Horizontal") + Vector3.up * Input.GetAxisRaw("Vertical");
-        // if (movementVector.magnitude > 1)
-        //     movementVector = movementVector.normalized;
-
-        // movementVector *= movementSpeed;
-        // playerRigidbody.AddForce(movementVector, ForceMode2D.Force);
         Vector3 movementVector = Vector3.right * Input.GetAxisRaw("Horizontal") + Vector3.up * Input.GetAxisRaw("Vertical");
         movementVector = movementVector.normalized * Time.deltaTime * movementSpeed;
 
         transform.position += movementVector;
         
-    }
-
-    [ClientRpc]
-    public void UpdateTargetCrosshairScoreClientRpc(ulong passed_ownerClientId)
-    {
-        if(!IsOwner) return; 
-        score++; 
-        targetPlayerScore.UpdateScoreOnUI(score); 
-        UpdateScoreOnTargetSpawnerServerRpc();
     }
 
     [ServerRpc(RequireOwnership = false)]
