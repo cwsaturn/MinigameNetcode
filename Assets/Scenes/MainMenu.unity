@@ -1880,6 +1880,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: 
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &182488697
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -39796,7 +39808,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1628996545683801168, guid: ef057ae6ffce48543a6691ed42260e48, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 346964.1
+      value: 360487.72
       objectReference: {fileID: 0}
     - target: {fileID: 1819312248378110867, guid: ef057ae6ffce48543a6691ed42260e48, type: 3}
       propertyPath: m_AnchorMax.x
